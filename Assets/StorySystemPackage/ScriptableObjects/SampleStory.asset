@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc466f932e1365446b2a41087e8c80c9, type: 3}
+  m_Name: SampleStory
+  m_EditorClassIdentifier: Assembly-CSharp::StorySystem.Data.StoryData
+  slides:
+  - backgroundSprite: {fileID: 0}
+    foregroundSprite: {fileID: 1509957327031361751, guid: be142756c0969924bac11e1b81e0ca1d, type: 3}
+    captionText: Its a very cold and chilly weather outside, unfortunately the window
+      of Tapu's home is broken because of which the cold air is coming inside the
+      room.
+    displayDuration: 2.5
+    transitionIn: 0
+    transitionOut: 1
+    narrationClip: {fileID: 0}
+    slideEnterSFX: {fileID: 0}
+  - backgroundSprite: {fileID: 0}
+    foregroundSprite: {fileID: 8236883615645201464, guid: 83f0b9e9dd028f249babf5107dfddc24, type: 3}
+    captionText: The mom and son, Daya and Tapu, are shivering in this cold air in
+      the room.
+    displayDuration: 3
+    transitionIn: 2
+    transitionOut: 1
+    narrationClip: {fileID: 0}
+    slideEnterSFX: {fileID: 0}
+  - backgroundSprite: {fileID: 0}
+    foregroundSprite: {fileID: -609519758892664570, guid: 66899e0a52e0f884e9ffbcaddedd5c8f, type: 3}
+    captionText: I will fix the broken window and help them feel warm and avoid catching
+      a cold!
+    displayDuration: 3
+    transitionIn: 0
+    transitionOut: 1
+    narrationClip: {fileID: 0}
+    slideEnterSFX: {fileID: 0}
+  isSkippable: 1
+  storyBGM: {fileID: 0}
+  bgmVolume: 0.7

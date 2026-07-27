@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Drives the frost overlay off the freeze meter value (which already

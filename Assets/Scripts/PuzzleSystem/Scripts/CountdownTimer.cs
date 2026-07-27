@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Pure countdown timer. Knows nothing about the puzzle - just counts down

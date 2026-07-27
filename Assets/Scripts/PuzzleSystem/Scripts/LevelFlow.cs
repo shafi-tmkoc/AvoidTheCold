@@ -3,7 +3,7 @@ using System.Collections;
 using StorySystem.Story;
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Decides which level to load and when: shows the intro story only on

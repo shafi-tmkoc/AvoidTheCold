@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Shows the Game Complete banner when LevelFlow finishes the last level,

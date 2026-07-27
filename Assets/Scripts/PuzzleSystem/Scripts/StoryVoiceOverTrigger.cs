@@ -1,7 +1,7 @@
 using UnityEngine;
 using StorySystem.Story;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Plays the matching Storyboard{N} voiceover each time StoryController

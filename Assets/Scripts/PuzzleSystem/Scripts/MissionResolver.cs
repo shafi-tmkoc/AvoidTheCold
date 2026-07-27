@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Decides the mission outcome by racing puzzle completion against

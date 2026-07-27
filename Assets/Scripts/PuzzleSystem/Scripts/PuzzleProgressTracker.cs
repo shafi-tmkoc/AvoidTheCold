@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Tracks how many of the assigned ShapeDropSlots have been filled and

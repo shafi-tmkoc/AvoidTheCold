@@ -1,15 +1,15 @@
 using System;
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Defines one level's puzzle layout and time limit: how many pieces,
     /// where each piece starts (tray) and where it belongs (slot), and how
     /// long the player has. Create new levels via
-    /// Assets > Create > Puzzle > Level Data.
+    /// Assets > Create > AvoidTheCold > Level Data.
     /// </summary>
-    [CreateAssetMenu(fileName = "Level_", menuName = "Puzzle/Level Data")]
+    [CreateAssetMenu(fileName = "Level_", menuName = "AvoidTheCold/Level Data")]
     public class LevelData : ScriptableObject
     {
         [Serializable]

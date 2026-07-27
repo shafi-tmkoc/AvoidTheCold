@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Visualizes the freeze meter as a fill-type Image. Single job: keep the

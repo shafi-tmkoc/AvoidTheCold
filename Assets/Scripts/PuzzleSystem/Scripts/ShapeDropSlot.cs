@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Attach to a silhouette drop target. Accepts a DraggableShape only if its

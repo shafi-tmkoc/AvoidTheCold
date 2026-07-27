@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Maps in-game situations (piece progress, danger threshold, mission

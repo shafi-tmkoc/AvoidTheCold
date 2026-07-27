@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Reads/writes level progress to PlayerPrefs: which level the player is

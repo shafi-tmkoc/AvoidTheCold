@@ -1,4 +1,4 @@
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Exact voiceover_title strings from the VO sheet (activity_name

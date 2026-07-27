@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Single source of truth for the freeze meter's 0..1 value. Drains

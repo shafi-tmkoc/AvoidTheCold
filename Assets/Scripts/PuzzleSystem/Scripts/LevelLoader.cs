@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Builds the scene for a given LevelData: clears any previously spawned

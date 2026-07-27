@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Drives the hand-tutorial hint through the first few pieces of level 1

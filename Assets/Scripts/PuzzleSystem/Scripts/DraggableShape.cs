@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Attach to a draggable puzzle piece (UI Image). Handles pointer/touch drag,

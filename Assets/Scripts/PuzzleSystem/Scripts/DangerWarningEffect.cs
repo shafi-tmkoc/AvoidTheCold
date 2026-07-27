@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Watches the freeze meter value. When it drops to/below the danger

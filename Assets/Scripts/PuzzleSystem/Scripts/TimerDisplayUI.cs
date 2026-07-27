@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Displays the CountdownTimer's remaining time as text. Single job:

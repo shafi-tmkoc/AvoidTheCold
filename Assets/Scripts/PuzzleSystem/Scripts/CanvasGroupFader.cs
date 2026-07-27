@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Smoothly fades a CanvasGroup's alpha toward a target value over time

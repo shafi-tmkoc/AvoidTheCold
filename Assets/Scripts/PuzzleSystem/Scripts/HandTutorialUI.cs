@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Puzzle
+namespace AvoidTheCold
 {
     /// <summary>
     /// Loops a simple placeholder hint indicator back and forth between two

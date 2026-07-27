@@ -88,6 +88,7 @@ namespace AvoidTheCold
             transform.SetParent(slot, false);
             _rectTransform.anchoredPosition = Vector2.zero;
             _canvasGroup.blocksRaycasts = false; // placed pieces no longer need to be draggable
+            AudioManager.Instance.Connect();
         }
 
         /// <summary>Bounces the piece back to where it started (wrong slot or dropped in empty space).</summary>

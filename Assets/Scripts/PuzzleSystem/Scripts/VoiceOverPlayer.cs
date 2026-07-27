@@ -84,13 +84,16 @@ namespace AvoidTheCold
         /// </summary>
         private void PlayFromServer(string voiceoverTitle)
         {
-            /*float clipLength = RuntimeAudioLoader.Instance.PlayRuntimeAudio(audioScript.levelAudio[levelIndex].Outro);
-            if (onComplete != null)
+            if (RuntimeAudioLoader.Instance != null)
+            {
+                float clipLength = RuntimeAudioLoader.Instance.PlayRuntimeAudio(voiceoverTitle);
+            }
+            /*if (onComplete != null)
             {
                 if (clipLength < 0) clipLength = 0;
                 DOVirtual.DelayedCall(clipLength, () => onComplete.Invoke());
-            }
+            }*/
             Debug.Log($"[VoiceOverPlayer] (stub) Would request server VO for '{voiceoverTitle}' - wire up the real package call in PlayFromServer()");
-        */}
+        }
     }
 }

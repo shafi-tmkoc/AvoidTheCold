@@ -10,6 +10,8 @@ namespace StorySystem.Data
         [Header("Visuals")]
         public Sprite  backgroundSprite;
         public Sprite  foregroundSprite;
+
+        public string vo_title;
         [TextArea(2, 4)]
         public string  captionText;
 

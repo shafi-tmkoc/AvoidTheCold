@@ -75,6 +75,7 @@ namespace AvoidTheCold
                 LevelProgressStore.HasSeenIntroStory = true;
                 LevelProgressStore.Save();
 
+                AudioManager.Instance.StopBG();
                 introStory.OnStoryFinished += HandleStoryFinished;
                 introStory.gameObject.SetActive(true);
             }
@@ -89,6 +90,7 @@ namespace AvoidTheCold
             introStory.OnStoryFinished -= HandleStoryFinished;
             introStory.gameObject.SetActive(false);
             Debug.Log("[LevelFlow] Intro story finished");
+            AudioManager.Instance.PlayBG();
             PlayTutorialVoiceOver();
             LoadCurrentLevel();
         }
@@ -125,7 +127,7 @@ namespace AvoidTheCold
         {
             int next = LevelProgressStore.CurrentLevel + 1;
             bool wasLastLevel = levels != null && next > levels.Length;
-
+            AudioManager.Instance.Win();
             if (wasLastLevel)
             {
                 LevelProgressStore.CurrentLevel = 1;

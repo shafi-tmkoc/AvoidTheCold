@@ -23,6 +23,7 @@ namespace AvoidTheCold
         [SerializeField] private ResultScreenUI resultScreenUI;
         [SerializeField] private GameplayVoiceOverTrigger gameplayVoiceOverTrigger;
         [SerializeField] private LevelTutorialSequencer tutorialSequencer;
+        [SerializeField] private IdleHandTutorial idleHandTutorial;
 
         private readonly List<GameObject> _spawned = new List<GameObject>();
 
@@ -71,6 +72,7 @@ namespace AvoidTheCold
             if (missionResolver != null) missionResolver.ResetForNewAttempt();
             if (gameplayVoiceOverTrigger != null) gameplayVoiceOverTrigger.ResetForNewAttempt(pieces);
             if (tutorialSequencer != null) tutorialSequencer.BeginForFirstLevel(data.levelNumber, pieces, slots);
+            if (idleHandTutorial != null) idleHandTutorial.SetPieces(pieces, slots);
 
             if (countdownTimer != null)
             {

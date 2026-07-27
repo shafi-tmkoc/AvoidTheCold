@@ -20,6 +20,9 @@ namespace AvoidTheCold
         private int _hintIndex;
         private bool _active;
 
+        /// <summary>True while this one-time sequence is actively guiding a piece - lets other hint systems stay out of the way.</summary>
+        public bool IsActive => _active;
+
         /// <summary>
         /// Call after spawning a level's pieces/slots. Does nothing unless
         /// this is level 1 and the hint has never been shown before.

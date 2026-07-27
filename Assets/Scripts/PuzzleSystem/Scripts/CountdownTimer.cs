@@ -84,13 +84,13 @@ namespace AvoidTheCold
                 if (wholeSecond != _lastLoggedSecond)
                 {
                     _lastLoggedSecond = wholeSecond;
-                    Debug.Log($"[CountdownTimer] {wholeSecond}s remaining");
+                    //Debug.Log($"[CountdownTimer] {wholeSecond}s remaining");
                 }
 
                 if (_remaining <= 0f)
                 {
                     _isRunning = false;
-                    Debug.Log("[CountdownTimer] Expired");
+                    //Debug.Log("[CountdownTimer] Expired");
                     OnExpired?.Invoke();
                 }
             }

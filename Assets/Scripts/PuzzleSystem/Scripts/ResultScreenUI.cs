@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,9 +6,10 @@ namespace AvoidTheCold
 {
     /// <summary>
     /// Shows the matching win/lose banner when the mission resolves (after a
-    /// short delay), fading it in via CanvasGroupFader. Fades it back out (no
-    /// abrupt SetActive) when a new level starts loading, so it crossfades
-    /// with the next level's puzzle appearing underneath.
+    /// short delay), holds it fully visible for a while, then fades it back
+    /// out and reports that the cycle is complete - so whoever loads the
+    /// next level (LevelFlow) knows when it's safe to do so, instead of
+    /// running its own separate timer.
     /// </summary>
     public class ResultScreenUI : MonoBehaviour
     {
@@ -18,11 +20,17 @@ namespace AvoidTheCold
         [Tooltip("Seconds to wait after the mission resolves before the banner fades in")]
         [SerializeField] private float showDelaySeconds = 2f;
 
+        [Tooltip("Seconds the banner stays fully visible before fading out")]
+        [SerializeField] private float holdSeconds = 5f;
+
+        /// <summary>Raised once the banner has finished its show/hold/fade-out cycle.</summary>
+        public event Action OnResultCycleComplete;
+
         private CanvasGroupFader _winFader;
         private CanvasGroupFader _loseFader;
         private CanvasGroup _winGroup;
         private CanvasGroup _loseGroup;
-        private Coroutine _pendingShowRoutine;
+        private Coroutine _pendingCycleRoutine;
 
         private void Awake()
         {
@@ -57,47 +65,53 @@ namespace AvoidTheCold
             }
         }
 
-        /// <summary>Fades both banners out and cancels any pending delayed show - call before starting a new level attempt.</summary>
+        /// <summary>Fades both banners out and cancels any pending cycle - call before starting a new level attempt.</summary>
         public void HideAll()
         {
-            CancelPendingShow();
+            CancelPendingCycle();
             FadeOut(_loseFader, _loseGroup);
             FadeOut(_winFader, _winGroup);
         }
 
         private void HandleSuccess()
         {
-            Debug.Log($"[ResultScreenUI] Win - showing banner in {showDelaySeconds}s");
+            Debug.Log($"[ResultScreenUI] Win - showing in {showDelaySeconds}s, holding {holdSeconds}s");
             FadeOut(_loseFader, _loseGroup);
-            ShowAfterDelay(winBanner, _winFader, _winGroup);
+            RunResultCycle(winBanner, _winFader, _winGroup);
         }
 
         private void HandleFailed()
         {
-            Debug.Log($"[ResultScreenUI] Lose - showing banner in {showDelaySeconds}s");
+            Debug.Log($"[ResultScreenUI] Lose - showing in {showDelaySeconds}s, holding {holdSeconds}s");
             FadeOut(_winFader, _winGroup);
-            ShowAfterDelay(loseBanner, _loseFader, _loseGroup);
+            RunResultCycle(loseBanner, _loseFader, _loseGroup);
         }
 
-        private void ShowAfterDelay(GameObject banner, CanvasGroupFader fader, CanvasGroup group)
+        private void RunResultCycle(GameObject banner, CanvasGroupFader fader, CanvasGroup group)
         {
-            CancelPendingShow();
-            _pendingShowRoutine = StartCoroutine(ShowAfterDelayRoutine(banner, fader, group));
+            CancelPendingCycle();
+            _pendingCycleRoutine = StartCoroutine(ResultCycleRoutine(banner, fader, group));
         }
 
-        private IEnumerator ShowAfterDelayRoutine(GameObject banner, CanvasGroupFader fader, CanvasGroup group)
+        private IEnumerator ResultCycleRoutine(GameObject banner, CanvasGroupFader fader, CanvasGroup group)
         {
             yield return new WaitForSeconds(showDelaySeconds);
-            _pendingShowRoutine = null;
             FadeIn(banner, fader, group);
+
+            yield return new WaitForSeconds(holdSeconds);
+            FadeOut(fader, group);
+
+            _pendingCycleRoutine = null;
+            Debug.Log("[ResultScreenUI] Result cycle complete");
+            OnResultCycleComplete?.Invoke();
         }
 
-        private void CancelPendingShow()
+        private void CancelPendingCycle()
         {
-            if (_pendingShowRoutine == null) return;
+            if (_pendingCycleRoutine == null) return;
 
-            StopCoroutine(_pendingShowRoutine);
-            _pendingShowRoutine = null;
+            StopCoroutine(_pendingCycleRoutine);
+            _pendingCycleRoutine = null;
         }
 
         private static void FadeIn(GameObject banner, CanvasGroupFader fader, CanvasGroup group)

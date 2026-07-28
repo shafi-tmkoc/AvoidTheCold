@@ -17,18 +17,21 @@ namespace AvoidTheCold
         [SerializeField] private LevelLoader levelLoader;
         [SerializeField] private LevelData[] levels;
         [SerializeField] private MissionResolver missionResolver;
+        [SerializeField] private ResultScreenUI resultScreenUI;
         [SerializeField] private StoryController introStory;
         [SerializeField] private IntroPanel introPanel;
         [SerializeField] private VoiceOverPlayer voicePlayer;
-
-        [Tooltip("Seconds the win/lose banner stays up before auto-continuing")]
-        [SerializeField] private float resultDisplaySeconds = 4f;
 
         [Tooltip("Delay between Tutorial1 and Tutorial2 VO lines, played once on the very first gameplay start")]
         [SerializeField] private float tutorialVoiceOverGap = 3f;
 
         /// <summary>Raised when the last level is won, instead of auto-looping to level 1.</summary>
         public event Action OnGameCompleted;
+
+        // The final level's win banner is superseded by the Game Complete
+        // screen, so its ResultScreenUI cycle-complete should not also try
+        // to auto-advance to a (non-existent) next level.
+        private bool _suppressNextResultCycle;
 
         private void OnEnable()
         {
@@ -37,6 +40,8 @@ namespace AvoidTheCold
                 missionResolver.OnMissionSuccess += HandleSuccess;
                 missionResolver.OnMissionFailed += HandleFailed;
             }
+
+            if (resultScreenUI != null) resultScreenUI.OnResultCycleComplete += HandleResultCycleComplete;
         }
 
         private void OnDisable()
@@ -46,6 +51,8 @@ namespace AvoidTheCold
                 missionResolver.OnMissionSuccess -= HandleSuccess;
                 missionResolver.OnMissionFailed -= HandleFailed;
             }
+
+            if (resultScreenUI != null) resultScreenUI.OnResultCycleComplete -= HandleResultCycleComplete;
         }
 
         private void Start()
@@ -130,6 +137,7 @@ namespace AvoidTheCold
             AudioManager.Instance.Win();
             if (wasLastLevel)
             {
+                _suppressNextResultCycle = true;
                 LevelProgressStore.CurrentLevel = 1;
                 LevelProgressStore.Save();
                 Debug.Log("[LevelFlow] Final level complete - showing Game Complete screen");
@@ -139,8 +147,7 @@ namespace AvoidTheCold
 
             LevelProgressStore.CurrentLevel = next;
             LevelProgressStore.Save();
-            Debug.Log($"[LevelFlow] Win - advancing to level {next}");
-            StartCoroutine(ContinueAfterDelay());
+            Debug.Log($"[LevelFlow] Win - advancing to level {next} once the win banner finishes");
         }
 
         /// <summary>Called by the Game Complete screen's Replay button - starts a fresh run from level 1.</summary>
@@ -152,13 +159,18 @@ namespace AvoidTheCold
 
         private void HandleFailed()
         {
-            Debug.Log("[LevelFlow] Lose - retrying same level");
-            StartCoroutine(ContinueAfterDelay());
+            Debug.Log("[LevelFlow] Lose - retrying same level once the lose banner finishes");
         }
 
-        private IEnumerator ContinueAfterDelay()
+        /// <summary>Fired by ResultScreenUI once the win/lose banner has shown, held, and faded out.</summary>
+        private void HandleResultCycleComplete()
         {
-            yield return new WaitForSeconds(resultDisplaySeconds);
+            if (_suppressNextResultCycle)
+            {
+                _suppressNextResultCycle = false;
+                return;
+            }
+
             LoadCurrentLevel();
         }
     }

@@ -27,7 +27,9 @@ namespace AvoidTheCold
             if (timerText == null) return;
 
             int whole = Mathf.CeilToInt(remainingSeconds);
-            timerText.text = $"{whole}s";
+            int minutes = whole / 60;
+            int seconds = whole % 60;
+            timerText.text = $"{minutes:00}:{seconds:00}";
         }
     }
 }

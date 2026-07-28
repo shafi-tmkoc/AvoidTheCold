@@ -54,6 +54,8 @@ namespace AvoidTheCold
             _tickRoutine = StartCoroutine(TickLoop());
         }
 
+        
+
         public void StopTimer()
         {
             _isRunning = false;
@@ -99,3 +101,4 @@ namespace AvoidTheCold
         }
     }
 }
+    

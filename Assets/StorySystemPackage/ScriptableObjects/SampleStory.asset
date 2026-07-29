@@ -18,7 +18,7 @@ MonoBehaviour:
     vo_title: Storyboard1
     captionText: Brrr! It's very cold outside today. The window is broken, and cold
       air is blowing into the room.
-    displayDuration: 2.5
+    displayDuration: 9
     transitionIn: 0
     transitionOut: 1
     narrationClip: {fileID: 0}
@@ -27,7 +27,7 @@ MonoBehaviour:
     foregroundSprite: {fileID: 0}
     vo_title: Storyboard2
     captionText: Daya and Tapu are shivering from the cold.
-    displayDuration: 3
+    displayDuration: 4
     transitionIn: 2
     transitionOut: 1
     narrationClip: {fileID: 0}
@@ -37,7 +37,7 @@ MonoBehaviour:
     vo_title: Storyboard3
     captionText: I will fix the broken window and help them feel warm and avoid catching
       a cold!
-    displayDuration: 3
+    displayDuration: 6
     transitionIn: 0
     transitionOut: 1
     narrationClip: {fileID: 0}

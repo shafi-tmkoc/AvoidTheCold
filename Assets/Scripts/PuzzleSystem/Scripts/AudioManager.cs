@@ -21,7 +21,8 @@ namespace AvoidTheCold
         {
             base.Awake();
             PlayBG();
-
+            //RuntimeAudioLoader.Instance.PlayRuntimeAudio("Intro");
+            Debug.Log("Audio Manager Play");
         }
 
         private void OnEnable()

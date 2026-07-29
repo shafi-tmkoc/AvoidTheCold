@@ -16,7 +16,7 @@ namespace AvoidTheCold
         public const string Tutorial1 = "Tutorial1";
         public const string Tutorial2 = "Tutorial2";
 
-        public const string TimerWarning1 = "TimerWarning1";
+        public const string TimerWarning1 = "Fail2";
 
         public const string Encouragement1 = "Encouragement1";
         public const string Encouragement2 = "Encouragement2";
@@ -33,6 +33,7 @@ namespace AvoidTheCold
 
         public const string Fail1 = "Fail1";
         public const string Fail2 = "Fail2";
+        public const string Fail3 = "Fail3";
         public const string FailOutro = "FailOutro";
     }
 }

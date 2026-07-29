@@ -7,11 +7,11 @@ namespace AvoidTheCold
     /// voiceover_title. Guarantees only one VO plays at a time - starting a
     /// new one always stops whatever was already playing.
     ///
-    /// The actual "load and play audio from the server" call is not wired up
-    /// yet (no such package exists in this project). PlayFromServer is the
-    /// one place to replace once it is imported - see the TODO there. Until
-    /// then, optional local test clips can be assigned in the Inspector so
-    /// this can be exercised/tested without the server.
+    /// Real playback goes through AudioManager.Instance.PlayFromServer,
+    /// which in turn asks RuntimeAudioLoader for the downloaded clip (that
+    /// call also stops its shared AudioSource before playing, so overlap is
+    /// covered on both ends). Optional local test clips can still be
+    /// assigned in the Inspector to preview VO without a downloaded clip.
     /// </summary>
     public class VoiceOverPlayer : MonoBehaviour
     {
@@ -75,25 +75,17 @@ namespace AvoidTheCold
             return null;
         }
 
-        /// <summary>
-        /// TODO: replace this with the real VO package call once it's
-        /// imported into the project, e.g.:
-        ///   YourVOPackage.Instance.PlayVoiceOver(voiceoverTitle);
-        /// Make sure whatever that call is also stops any VO it has in
-        /// flight first, same as Stop() does for the local test path above.
-        /// </summary>
+        /// <summary>Routes to AudioManager, which owns the real downloaded-clip playback.</summary>
         private void PlayFromServer(string voiceoverTitle)
         {
-            if (RuntimeAudioLoader.Instance != null)
+            if (AudioManager.Instance == null)
             {
-                float clipLength = RuntimeAudioLoader.Instance.PlayRuntimeAudio(voiceoverTitle);
+                Debug.Log($"[VoiceOverPlayer] AudioManager not available - cannot play '{voiceoverTitle}'");
+                return;
             }
-            /*if (onComplete != null)
-            {
-                if (clipLength < 0) clipLength = 0;
-                DOVirtual.DelayedCall(clipLength, () => onComplete.Invoke());
-            }*/
-            Debug.Log($"[VoiceOverPlayer] (stub) Would request server VO for '{voiceoverTitle}' - wire up the real package call in PlayFromServer()");
+
+            Debug.Log($"[VoiceOverPlayer] Requesting server VO '{voiceoverTitle}' via AudioManager");
+            AudioManager.Instance.PlayFromServer(voiceoverTitle);
         }
     }
 }

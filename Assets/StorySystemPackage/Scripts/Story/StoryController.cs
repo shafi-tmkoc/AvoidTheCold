@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using StorySystem.Data;
 using AvoidTheCold;
+
 namespace StorySystem.Story
 {
     public class StoryController : MonoBehaviour
@@ -71,9 +72,10 @@ namespace StorySystem.Story
                 if (slide.slideEnterSFX != null && narrationSource != null)
                     narrationSource.PlayOneShot(slide.slideEnterSFX);
 
-                if(AudioManager.Instance !=null)
+                if (AudioManager.Instance != null)
+                {
                     AudioManager.Instance.PlayFromServer(slide.vo_title);
-
+                }
                 storyUI?.ShowSlide(slide);
                 storyAnimator?.AnimateSlideIn(slide.transitionIn);
                 OnSlideShown?.Invoke(_slideIndex);

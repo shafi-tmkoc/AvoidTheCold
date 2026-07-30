@@ -915,7 +915,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &619394801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1096,6 +1096,8 @@ MonoBehaviour:
   missionResolver: {fileID: 169537783}
   winBanner: {fileID: 2135301524}
   loseBanner: {fileID: 1453290510}
+  showDelaySeconds: 2
+  holdSeconds: 5
 --- !u!4 &848978374
 Transform:
   m_ObjectHideFlags: 0
@@ -1617,6 +1619,7 @@ MonoBehaviour:
   piecePrefab: {fileID: 1973278033951371237, guid: 03d8ef3f737167744920d151c1a9acef, type: 3}
   slotPrefab: {fileID: 826483195685896741, guid: 1a98f8b356df9334b9e763d370fcbe5a, type: 3}
   spawnParent: {fileID: 1455753060}
+  pieceSpawnParent: {fileID: 1455753060}
   progressTracker: {fileID: 885596453}
   freezeMeterValue: {fileID: 210868264}
   countdownTimer: {fileID: 1908355882}
@@ -1624,6 +1627,7 @@ MonoBehaviour:
   resultScreenUI: {fileID: 848978373}
   gameplayVoiceOverTrigger: {fileID: 1302673364}
   tutorialSequencer: {fileID: 341475060}
+  idleHandTutorial: {fileID: 0}
 --- !u!4 &1246234593
 Transform:
   m_ObjectHideFlags: 0
@@ -3197,10 +3201,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7572ba31f2916a8408e445c596ead0af, type: 2}
   - {fileID: 11400000, guid: 92f7dd6ec0e106e4e8e680adb22edeef, type: 2}
   missionResolver: {fileID: 169537783}
+  resultScreenUI: {fileID: 0}
   introStory: {fileID: 881204030}
   introPanel: {fileID: 367823539}
   voicePlayer: {fileID: 1717942201}
-  resultDisplaySeconds: 4
   tutorialVoiceOverGap: 3
 --- !u!4 &1838968607
 Transform:

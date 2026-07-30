@@ -53,6 +53,7 @@ namespace AvoidTheCold
                 var slotRect = (RectTransform)slotGO.transform;
                 slotRect.sizeDelta = slotSize;
                 slot.Initialize(def.shapeId, ClampToVisibleArea(def.slotPosition, slotSize));
+                ApplyArt(slotGO.GetComponent<Image>(), def.sprite, def.placeholderColor);
                 _spawned.Add(slotGO);
                 slots[i] = slot;
 
@@ -60,11 +61,11 @@ namespace AvoidTheCold
                 pieceGO.name = $"Piece_{def.shapeId}";
                 var draggable = pieceGO.GetComponent<DraggableShape>();
                 var pieceRect = (RectTransform)pieceGO.transform;
-                Vector2 fittedPieceSize = AspectFitUtility.FitWithinBox(pieceRect.sizeDelta, slotSize);
+                Vector2 nativeSize = def.pieceSprite != null ? new Vector2(def.pieceSprite.rect.width, def.pieceSprite.rect.height) : pieceRect.sizeDelta;
+                Vector2 fittedPieceSize = AspectFitUtility.FitWithinBox(nativeSize, slotSize);
                 pieceRect.sizeDelta = fittedPieceSize;
                 draggable.Initialize(def.shapeId, ClampToVisibleArea(def.trayPosition, fittedPieceSize));
-                var pieceImage = pieceGO.GetComponent<Image>();
-                if (pieceImage != null) pieceImage.color = def.placeholderColor;
+                ApplyArt(pieceGO.GetComponent<Image>(), def.pieceSprite, def.placeholderColor);
                 _spawned.Add(pieceGO);
                 pieces[i] = draggable;
 
@@ -83,6 +84,26 @@ namespace AvoidTheCold
             {
                 countdownTimer.SetDuration(data.timeLimitSeconds);
                 countdownTimer.StartTimer();
+            }
+        }
+
+        /// <summary>
+        /// Shows the given sprite on this Image if one is assigned (reset to
+        /// white so the art isn't tinted), otherwise falls back to the
+        /// placeholder color square.
+        /// </summary>
+        private static void ApplyArt(Image image, Sprite sprite, Color placeholderColor)
+        {
+            if (image == null) return;
+
+            if (sprite != null)
+            {
+                image.sprite = sprite;
+                image.color = Color.white;
+            }
+            else
+            {
+                image.color = placeholderColor;
             }
         }
 

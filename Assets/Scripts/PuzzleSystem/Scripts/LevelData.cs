@@ -23,6 +23,12 @@ namespace AvoidTheCold
 
             [Tooltip("Width/height of this piece's target slot. Leave as (0,0) to use the level's Default Slot Size instead")]
             public Vector2 slotSize;
+
+            [Tooltip("Artwork shown on the target slot. Leave empty to fall back to the placeholder color square")]
+            public Sprite sprite;
+
+            [Tooltip("Artwork shown on the draggable piece. Leave empty to fall back to the placeholder color square")]
+            public Sprite pieceSprite;
         }
 
         [Min(1)] public int levelNumber = 1;

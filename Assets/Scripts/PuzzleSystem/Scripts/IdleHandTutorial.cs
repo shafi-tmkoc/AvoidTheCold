@@ -18,6 +18,10 @@ namespace AvoidTheCold
         [SerializeField] private LevelTutorialSequencer tutorialSequencer;
         [SerializeField] private float idleThreshold = 7f;
 
+        [Tooltip("Canvas that handTutorialUI lives under - used to convert pieces/slots' world positions (Board2D) into the hint's anchored-position space")]
+        [SerializeField] private RectTransform canvasRect;
+        [SerializeField] private Camera worldCamera;
+
         private DraggableShape[] _pieces = System.Array.Empty<DraggableShape>();
         private ShapeDropSlot[] _slots = System.Array.Empty<ShapeDropSlot>();
         private bool[] _filled = System.Array.Empty<bool>();
@@ -85,9 +89,10 @@ namespace AvoidTheCold
             Debug.Log($"[IdleHandTutorial] Idle for {idleThreshold}s - nudging piece {index}");
             _isShowingHint = true;
 
-            var pieceRect = (RectTransform)piece.transform;
-            var slotRect = (RectTransform)slot.transform;
-            handTutorialUI.Show(pieceRect.anchoredPosition, slotRect.anchoredPosition);
+            var cam = worldCamera != null ? worldCamera : Camera.main;
+            Vector2 fromPos = WorldToCanvasUtility.WorldToCanvasPoint(piece.transform.position, canvasRect, cam);
+            Vector2 toPos = WorldToCanvasUtility.WorldToCanvasPoint(slot.transform.position, canvasRect, cam);
+            handTutorialUI.Show(fromPos, toPos);
         }
 
         private int FindNextUnplacedIndex()

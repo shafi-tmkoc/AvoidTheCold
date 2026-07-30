@@ -14,6 +14,10 @@ namespace AvoidTheCold
         [Tooltip("How many pieces (in level data order) get the hand hint before it stops for good")]
         [SerializeField] private int piecesToHint = 2;
 
+        [Tooltip("Canvas that handTutorialUI lives under - used to convert pieces/slots' world positions (Board2D) into the hint's anchored-position space")]
+        [SerializeField] private RectTransform canvasRect;
+        [SerializeField] private Camera worldCamera;
+
         private DraggableShape[] _pieces;
         private ShapeDropSlot[] _slots;
         private ShapeDropSlot _subscribedSlot;
@@ -65,9 +69,10 @@ namespace AvoidTheCold
             _subscribedSlot = slot;
             _subscribedSlot.OnFilled += HandleSlotFilled;
 
-            var pieceRect = (RectTransform)piece.transform;
-            var slotRect = (RectTransform)slot.transform;
-            handTutorialUI.Show(pieceRect.anchoredPosition, slotRect.anchoredPosition);
+            var cam = worldCamera != null ? worldCamera : Camera.main;
+            Vector2 fromPos = WorldToCanvasUtility.WorldToCanvasPoint(piece.transform.position, canvasRect, cam);
+            Vector2 toPos = WorldToCanvasUtility.WorldToCanvasPoint(slot.transform.position, canvasRect, cam);
+            handTutorialUI.Show(fromPos, toPos);
         }
 
         private void HandleSlotFilled(ShapeDropSlot filledSlot)

@@ -1,26 +1,36 @@
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace AvoidTheCold
 {
     /// <summary>
-    /// Attach to a draggable puzzle piece (UI Image). Handles pointer/touch drag,
-    /// snapping into a matching ShapeDropSlot, and bouncing back to its start
-    /// position when dropped anywhere else.
+    /// Attach to a draggable puzzle piece (world-space SpriteRenderer under
+    /// Board2D). Polls the New Input System for mouse/touch press-drag-release
+    /// directly on this piece's own Collider2D, snaps into a matching
+    /// ShapeDropSlot on a correct drop, and bounces back to its start position
+    /// otherwise. Same public API as the old UI version (ShapeId, Initialize,
+    /// OnReturnedToStart, SnapToSlot, ReturnToStart) so everything else that
+    /// listens to a piece (VO triggers, tutorials, progress tracker) keeps
+    /// working unchanged.
     /// </summary>
-    [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
-    public class DraggableShape : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    [RequireComponent(typeof(SpriteRenderer), typeof(Collider2D))]
+    public class DraggableShape : MonoBehaviour
     {
         [Tooltip("Must match the ShapeDropSlot this piece belongs to")]
         [SerializeField] private string shapeId;
 
-        private RectTransform _rectTransform;
-        private CanvasGroup _canvasGroup;
-        private Canvas _rootCanvas;
+        private SpriteRenderer _spriteRenderer;
+        private Collider2D _collider;
+        private Camera _camera;
+
         private Transform _startParent;
-        private Vector2 _startAnchoredPos;
+        private Vector3 _startPosition;
+        private int _startSortingOrder;
+
         private bool _isPlaced;
+        private bool _isDragging;
+        private Vector3 _dragOffset;
 
         public string ShapeId => shapeId;
 
@@ -29,74 +39,208 @@ namespace AvoidTheCold
 
         private void Awake()
         {
-            _rectTransform = (RectTransform)transform;
-            _canvasGroup = GetComponent<CanvasGroup>();
-            _rootCanvas = GetComponentInParent<Canvas>()?.rootCanvas;
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+            _collider = GetComponent<Collider2D>();
+            _camera = Camera.main;
+
+            if (_camera == null)
+                Debug.Log("[DraggableShape] No main camera found - dragging will not work until one is tagged MainCamera");
+
             CacheStartTransform();
         }
 
         private void CacheStartTransform()
         {
             _startParent = transform.parent;
-            _startAnchoredPos = _rectTransform.anchoredPosition;
+            _startPosition = transform.position;
+            _startSortingOrder = _spriteRenderer.sortingOrder;
         }
 
         /// <summary>
-        /// Configures a freshly spawned piece: sets its shape id and tray
-        /// position, then re-caches that position as its "start" (Awake
-        /// already ran at Instantiate time, before this position was set).
+        /// Configures a freshly spawned piece: sets its shape id and start
+        /// (tray) world position, then re-caches that as its "start".
         /// </summary>
-        public void Initialize(string id, Vector2 trayPosition)
+        public void Initialize(string id, Vector3 trayPosition)
         {
             shapeId = id;
             _isPlaced = false;
-            _canvasGroup.blocksRaycasts = true;
-            _rectTransform.anchoredPosition = trayPosition;
+            _isDragging = false;
+            if (_collider != null) _collider.enabled = true;
+            transform.position = trayPosition;
             CacheStartTransform();
         }
 
-        public void OnBeginDrag(PointerEventData eventData)
+        private void Update()
         {
-            if (_isPlaced) return;
+            if (_isPlaced || _camera == null) return;
 
+            if (_isDragging)
+            {
+                ContinueDrag();
+                if (WasReleasedThisFrame()) EndDrag();
+                return;
+            }
+
+            if (WasPressedThisFrame(out Vector2 screenPos))
+            {
+                Vector3 worldPoint = ScreenToWorld(screenPos);
+                if (_collider.OverlapPoint(worldPoint))
+                    BeginDrag(worldPoint);
+            }
+        }
+
+        private void BeginDrag(Vector3 worldPoint)
+        {
             Debug.Log($"[DraggableShape] Begin drag: {name} (shapeId={shapeId})");
-            _canvasGroup.blocksRaycasts = false; // let the raycast pass through to the slot underneath
-            if (_rootCanvas != null)
-                transform.SetParent(_rootCanvas.transform, true); // render above everything else while dragging
+            _isDragging = true;
+            _dragOffset = transform.position - worldPoint;
+            _spriteRenderer.sortingOrder = 1000; // render above everything else while dragging
         }
 
-        public void OnDrag(PointerEventData eventData)
+        private void ContinueDrag()
         {
-            if (_isPlaced || _rootCanvas == null) return;
-
-            _rectTransform.anchoredPosition += eventData.delta / _rootCanvas.scaleFactor;
+            Vector3 worldPoint = ScreenToWorld(CurrentPointerScreenPos());
+            Vector3 newPos = worldPoint + _dragOffset;
+            newPos.z = _startPosition.z;
+            transform.position = newPos;
         }
 
-        public void OnEndDrag(PointerEventData eventData)
+        private void EndDrag()
         {
-            if (_isPlaced) return;
+            _isDragging = false;
+            _spriteRenderer.sortingOrder = _startSortingOrder;
 
-            _canvasGroup.blocksRaycasts = true;
-            ReturnToStart(); // if a ShapeDropSlot accepted this piece, SnapToSlot already set _isPlaced = true
+            var slot = FindOverlappingSlot();
+            if (slot != null && slot.TryAccept(this))
+                return; // slot already called SnapToSlot
+
+            ReturnToStart();
+        }
+
+        /// <summary>
+        /// Finds the slot whose area overlaps this piece's area the most -
+        /// a bounds overlap check rather than requiring the piece's exact
+        /// center point to land inside the slot, which is far more forgiving
+        /// for small children's imprecise dragging.
+        /// </summary>
+        private ShapeDropSlot FindOverlappingSlot()
+        {
+            // Force sync so Physics2D sees the position we just set in ContinueDrag
+            Physics2D.SyncTransforms();
+
+            Bounds pieceBounds = _collider.bounds;
+
+            // FIXED: Use pieceBounds.center instead of transform.position
+            // transform.position is at the pivot point, which may be offset
+            // from the actual collider center if the sprite's pivot isn't centered
+            Vector2 queryCenter = pieceBounds.center;
+            Vector2 querySize = pieceBounds.size;
+
+            var hits = Physics2D.OverlapBoxAll(queryCenter, querySize, 0f);
+
+            Debug.Log($"[DraggableShape] {name} queryCenter={queryCenter} querySize={querySize} -> {hits.Length} hit(s)");
+            foreach (var h in hits)
+            {
+                Debug.Log($"[DraggableShape]   hit: {h.name} (layer={LayerMask.LayerToName(h.gameObject.layer)})");
+            }
+
+            // Log all slot bounds for debugging
+            foreach (var s in FindObjectsByType<ShapeDropSlot>(FindObjectsSortMode.None))
+            {
+                var c = s.GetComponent<Collider2D>();
+                if (c != null)
+                {
+                    Debug.Log($"[DraggableShape]   slot {s.name} bounds: center={c.bounds.center} size={c.bounds.size} min={c.bounds.min} max={c.bounds.max} enabled={c.enabled}");
+                }
+            }
+
+            ShapeDropSlot best = null;
+            float bestOverlapArea = 0f;
+
+            foreach (var hit in hits)
+            {
+                var slot = hit.GetComponent<ShapeDropSlot>();
+                if (slot == null) continue;
+
+                // Skip disabled colliders
+                if (!hit.enabled) continue;
+
+                Bounds slotBounds = hit.bounds;
+                Vector3 min = Vector3.Max(pieceBounds.min, slotBounds.min);
+                Vector3 max = Vector3.Min(pieceBounds.max, slotBounds.max);
+                float overlapArea = Mathf.Max(0f, max.x - min.x) * Mathf.Max(0f, max.y - min.y);
+
+                Debug.Log($"[DraggableShape]   overlap with {slot.name}: area={overlapArea}");
+
+                if (overlapArea > bestOverlapArea)
+                {
+                    bestOverlapArea = overlapArea;
+                    best = slot;
+                }
+            }
+
+            Debug.Log($"[DraggableShape] Best slot: {(best != null ? best.name : "null")} (overlap area={bestOverlapArea})");
+            return best;
+        }
+
+        private Vector3 ScreenToWorld(Vector2 screenPos)
+        {
+            float depth = _camera.transform.position.z * -1f;
+            Vector3 screenPoint = new Vector3(screenPos.x, screenPos.y, depth);
+            Vector3 world = _camera.ScreenToWorldPoint(screenPoint);
+            world.z = 0f;
+            return world;
+        }
+
+        private static bool WasPressedThisFrame(out Vector2 screenPos)
+        {
+            if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
+            {
+                screenPos = Touchscreen.current.primaryTouch.position.ReadValue();
+                return true;
+            }
+            if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                screenPos = Mouse.current.position.ReadValue();
+                return true;
+            }
+            screenPos = default;
+            return false;
+        }
+
+        private static bool WasReleasedThisFrame()
+        {
+            if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasReleasedThisFrame) return true;
+            if (Mouse.current != null && Mouse.current.leftButton.wasReleasedThisFrame) return true;
+            return false;
+        }
+
+        private static Vector2 CurrentPointerScreenPos()
+        {
+            if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+                return Touchscreen.current.primaryTouch.position.ReadValue();
+            if (Mouse.current != null)
+                return Mouse.current.position.ReadValue();
+            return Vector2.zero;
         }
 
         /// <summary>Called by a matching ShapeDropSlot on a correct drop.</summary>
-        public void SnapToSlot(RectTransform slot)
+        public void SnapToSlot(Transform slot)
         {
             Debug.Log($"[DraggableShape] Snapped: {name} (shapeId={shapeId}) -> slot {slot.name}");
             _isPlaced = true;
-            transform.SetParent(slot, false);
-            _rectTransform.anchoredPosition = Vector2.zero;
-            _canvasGroup.blocksRaycasts = false; // placed pieces no longer need to be draggable
-            AudioManager.Instance.Connect();
+            transform.SetParent(slot, true);
+            transform.position = slot.position;
+            if (_collider != null) _collider.enabled = false;
+            if (AudioManager.Instance != null) AudioManager.Instance.Connect();
         }
 
         /// <summary>Bounces the piece back to where it started (wrong slot or dropped in empty space).</summary>
         public void ReturnToStart()
         {
             Debug.Log($"[DraggableShape] Wrong drop, returning to start: {name} (shapeId={shapeId})");
-            transform.SetParent(_startParent, false);
-            _rectTransform.anchoredPosition = _startAnchoredPos;
+            transform.SetParent(_startParent, true);
+            transform.position = _startPosition;
             OnReturnedToStart?.Invoke();
         }
     }

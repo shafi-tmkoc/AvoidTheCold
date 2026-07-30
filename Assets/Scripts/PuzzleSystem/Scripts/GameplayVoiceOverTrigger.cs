@@ -82,11 +82,12 @@ namespace AvoidTheCold
             _lastFilledCount = filled;
 
             bool isLast = filled >= progressTracker.TotalCount;
-            bool isFirst = filled == Random.Range(0, progressTracker.TotalCount);
+            bool isFirst = filled ==3;
 
-            Debug.Log("Filled Value: " + filled);
-            if (isLast) voicePlayer.Play(VoiceOverTitles.Encouragement2);
-            else if (isFirst) voicePlayer.Play(VoiceOverTitles.Encouragement1);
+            int index = Random.Range(0, VoiceOverTitles.AllAudioKeys.Length);
+            Debug.Log("Filled Value: " + filled + " ===> "+ index);
+            if (isLast) voicePlayer.Play(VoiceOverTitles.AllAudioKeys[index]);
+            else if (isFirst) voicePlayer.Play(VoiceOverTitles.AllAudioKeys[index]);
         }
 
         private void HandleMeterValue(float value)
@@ -100,7 +101,7 @@ namespace AvoidTheCold
 
         private void HandleWrongPlacement()
         {
-            if (voicePlayer != null) voicePlayer.Play(VoiceOverTitles.WrongPlacement1);
+            if (voicePlayer != null) voicePlayer.Play(VoiceOverTitles.Fail1);
         }
 
         private void HandleSuccess()

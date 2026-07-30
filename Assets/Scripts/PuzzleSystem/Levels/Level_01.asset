@@ -13,25 +13,26 @@ MonoBehaviour:
   m_Name: Level_01
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.LevelData
   levelNumber: 1
-  timeLimitSeconds: 30
+  timeLimitSeconds: 300000
+  defaultSlotSize: {x: 150, y: 150}
   pieces:
   - shapeId: piece_1
     trayPosition: {x: -600, y: -450}
-    slotPosition: {x: -150, y: 250}
+    slotPosition: {x: -271, y: 180}
     placeholderColor: {r: 0.9, g: 0.2, b: 0.2, a: 1}
+    slotSize: {x: 331, y: 337}
   - shapeId: piece_2
     trayPosition: {x: -300, y: -450}
-    slotPosition: {x: 150, y: 250}
+    slotPosition: {x: 168, y: 180}
     placeholderColor: {r: 0.95, g: 0.55, b: 0.15, a: 1}
+    slotSize: {x: 548, y: 337}
   - shapeId: piece_3
-    trayPosition: {x: 0, y: -450}
-    slotPosition: {x: -150, y: 50}
-    placeholderColor: {r: 0.75, g: 0.85, b: 0.2, a: 1}
-  - shapeId: piece_4
     trayPosition: {x: 300, y: -450}
-    slotPosition: {x: 150, y: 50}
+    slotPosition: {x: -168, y: -175.5}
     placeholderColor: {r: 0.2, g: 0.45, b: 0.9, a: 1}
-  - shapeId: piece_5
+    slotSize: {x: 537, y: 374}
+  - shapeId: piece_4
     trayPosition: {x: 600, y: -450}
-    slotPosition: {x: 0, y: -150}
+    slotPosition: {x: 271, y: -175.5}
     placeholderColor: {r: 0.6, g: 0.25, b: 0.85, a: 1}
+    slotSize: {x: 341.5, y: 374}

@@ -5,7 +5,7 @@ namespace AvoidTheCold
     /// "AvoidTheCold"). Plain constants - avoids typos scattered across the
     /// scripts that trigger VoiceOverPlayer.Play(...).
     /// </summary>
-    public static class VoiceOverTitles
+    public class VoiceOverTitles
     {
         public const string Intro = "Intro";
 
@@ -17,6 +17,14 @@ namespace AvoidTheCold
         public const string Tutorial2 = "Tutorial2";
 
         public const string TimerWarning1 = "Fail2";
+
+        public static readonly string[] AllAudioKeys =
+        {
+            Encouragement1,
+            Encouragement2,
+            CorrectPlacement1,
+            CorrectPlacement2
+        };
 
         public const string Encouragement1 = "Encouragement1";
         public const string Encouragement2 = "Encouragement2";

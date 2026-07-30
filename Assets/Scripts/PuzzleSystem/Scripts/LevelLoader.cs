@@ -14,7 +14,7 @@ namespace AvoidTheCold
     {
         [SerializeField] private GameObject piecePrefab;
         [SerializeField] private GameObject slotPrefab;
-        [SerializeField] private RectTransform spawnParent;
+        [SerializeField] private RectTransform spawnParent, pieceSpawnParent;
 
         [SerializeField] private PuzzleProgressTracker progressTracker;
         [SerializeField] private FreezeMeterValue freezeMeterValue;
@@ -45,25 +45,30 @@ namespace AvoidTheCold
             for (int i = 0; i < data.pieces.Length; i++)
             {
                 var def = data.pieces[i];
-
-                var pieceGO = Instantiate(piecePrefab, spawnParent);
-                pieceGO.name = $"Piece_{def.shapeId}";
-                var draggable = pieceGO.GetComponent<DraggableShape>();
-                var pieceRect = (RectTransform)pieceGO.transform;
-                draggable.Initialize(def.shapeId, ClampToVisibleArea(def.trayPosition, pieceRect.sizeDelta));
-                var pieceImage = pieceGO.GetComponent<Image>();
-                if (pieceImage != null) pieceImage.color = def.placeholderColor;
-                _spawned.Add(pieceGO);
-                pieces[i] = draggable;
+                Vector2 slotSize = data.GetSlotSize(i);
 
                 var slotGO = Instantiate(slotPrefab, spawnParent);
                 slotGO.name = $"Slot_{def.shapeId}";
                 var slot = slotGO.GetComponent<ShapeDropSlot>();
                 var slotRect = (RectTransform)slotGO.transform;
-                slot.Initialize(def.shapeId, ClampToVisibleArea(def.slotPosition, slotRect.sizeDelta));
+                slotRect.sizeDelta = slotSize;
+                slot.Initialize(def.shapeId, ClampToVisibleArea(def.slotPosition, slotSize));
                 _spawned.Add(slotGO);
-
                 slots[i] = slot;
+
+                var pieceGO = Instantiate(piecePrefab, pieceSpawnParent);
+                pieceGO.name = $"Piece_{def.shapeId}";
+                var draggable = pieceGO.GetComponent<DraggableShape>();
+                var pieceRect = (RectTransform)pieceGO.transform;
+                Vector2 fittedPieceSize = AspectFitUtility.FitWithinBox(pieceRect.sizeDelta, slotSize);
+                pieceRect.sizeDelta = fittedPieceSize;
+                draggable.Initialize(def.shapeId, ClampToVisibleArea(def.trayPosition, fittedPieceSize));
+                var pieceImage = pieceGO.GetComponent<Image>();
+                if (pieceImage != null) pieceImage.color = def.placeholderColor;
+                _spawned.Add(pieceGO);
+                pieces[i] = draggable;
+
+                Debug.Log($"[LevelLoader] {def.shapeId}: slotSize={slotSize} pieceSize={fittedPieceSize}");
             }
 
             if (resultScreenUI != null) resultScreenUI.HideAll();
@@ -91,6 +96,17 @@ namespace AvoidTheCold
             if (spawnParent == null) return designPosition;
 
             Rect area = spawnParent.rect;
+
+            // Canvas hasn't laid out yet (e.g. LoadLevel fired on frame 1 before the
+            // first layout pass) - area would be zero-size, which would otherwise
+            // clamp every position down to (0,0). Safer to skip clamping this call
+            // than to silently collapse every piece onto the same spot.
+            if (area.width <= 0f || area.height <= 0f)
+            {
+                Debug.Log("[LevelLoader] spawnParent area not ready yet - skipping clamp for this position");
+                return designPosition;
+            }
+
             float halfW = Mathf.Max(0f, area.width / 2f - objectSize.x / 2f);
             float halfH = Mathf.Max(0f, area.height / 2f - objectSize.y / 2f);
 

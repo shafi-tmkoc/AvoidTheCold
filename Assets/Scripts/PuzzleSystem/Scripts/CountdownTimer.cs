@@ -12,7 +12,7 @@ namespace AvoidTheCold
     /// </summary>
     public class CountdownTimer : MonoBehaviour
     {
-        [SerializeField] private float duration = 30f;
+        [SerializeField] private float duration;
         [SerializeField] private bool autoStart = true;
 
         public event Action<float> OnTick;   // remaining seconds

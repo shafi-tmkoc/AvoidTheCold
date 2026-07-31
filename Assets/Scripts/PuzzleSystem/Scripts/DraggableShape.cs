@@ -84,8 +84,11 @@ namespace AvoidTheCold
             if (WasPressedThisFrame(out Vector2 screenPos))
             {
                 Vector3 worldPoint = ScreenToWorld(screenPos);
+                //Debug.Log($"[DraggableShape] {name} press: screenPos={screenPos} Screen={Screen.width}x{Screen.height} cam={_camera.name} camPos={_camera.transform.position} orthoSize={_camera.orthographicSize} -> worldPoint={worldPoint} pieceTransformPos={transform.position}");
                 if (_collider.OverlapPoint(worldPoint))
                     BeginDrag(worldPoint);
+                else
+                    Debug.Log($"[DraggableShape] {name} press missed collider (OverlapPoint false) - collider bounds min={_collider.bounds.min} max={_collider.bounds.max}");
             }
         }
 
@@ -99,10 +102,14 @@ namespace AvoidTheCold
 
         private void ContinueDrag()
         {
-            Vector3 worldPoint = ScreenToWorld(CurrentPointerScreenPos());
+            Vector2 screenPos = CurrentPointerScreenPos();
+            Vector3 worldPoint = ScreenToWorld(screenPos);
             Vector3 newPos = worldPoint + _dragOffset;
             newPos.z = _startPosition.z;
             transform.position = newPos;
+
+            if (WasReleasedThisFrame())
+                Debug.Log($"[DraggableShape] {name} release: screenPos={screenPos} Screen={Screen.width}x{Screen.height} cam={_camera.name} camPos={_camera.transform.position} orthoSize={_camera.orthographicSize} -> worldPoint={worldPoint} dragOffset={_dragOffset} finalPiecePos={newPos}");
         }
 
         private void EndDrag()
@@ -217,7 +224,14 @@ namespace AvoidTheCold
 
         private static Vector2 CurrentPointerScreenPos()
         {
-            if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+            // On the release frame itself, primaryTouch.press.isPressed has
+            // already flipped to false (the touch is lifting), so it must
+            // still be checked here via wasReleasedThisFrame - otherwise this
+            // falls through to Mouse.current, which reports a stale (0,0) on
+            // a touch-only device and teleports the piece right as we're
+            // about to check which slot it's over.
+            if (Touchscreen.current != null &&
+                (Touchscreen.current.primaryTouch.press.isPressed || Touchscreen.current.primaryTouch.press.wasReleasedThisFrame))
                 return Touchscreen.current.primaryTouch.position.ReadValue();
             if (Mouse.current != null)
                 return Mouse.current.position.ReadValue();
@@ -231,6 +245,7 @@ namespace AvoidTheCold
             _isPlaced = true;
             transform.SetParent(slot, true);
             transform.position = slot.position;
+            transform.localScale = Vector3.one;
             if (_collider != null) _collider.enabled = false;
             if (AudioManager.Instance != null) AudioManager.Instance.Connect();
         }

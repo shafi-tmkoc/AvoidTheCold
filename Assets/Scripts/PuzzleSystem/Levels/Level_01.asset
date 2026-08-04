@@ -18,29 +18,29 @@ MonoBehaviour:
   pieces:
   - shapeId: piece_1
     trayPosition: {x: -600, y: -450}
-    position: {x: -3.426, y: 2.157, z: 0}
+    position: {x: -3.4717164, y: 2.187996, z: 0}
     placeholderColor: {r: 1, g: 1, b: 1, a: 1}
-    scale: {x: 1.31, y: 1.51, z: 1}
+    scale: {x: 1.3376318, y: 1.5225224, z: 1}
     sprite: {fileID: 21300000, guid: 44e2c503932e32a4d9e2689e5611bef3, type: 3}
     pieceSprite: {fileID: -855298285791758126, guid: 6233e4cef570a6046b0c08d351c71ce6, type: 3}
   - shapeId: piece_2
     trayPosition: {x: -300, y: -450}
-    position: {x: 2.154, y: 2.157, z: 0}
+    position: {x: 2.225983, y: 2.187996, z: 0}
     placeholderColor: {r: 1, g: 0.18679237, b: 0.36689183, a: 1}
-    scale: {x: 1.31, y: 1.51, z: 1}
+    scale: {x: 1.3376318, y: 1.5225224, z: 1}
     sprite: {fileID: 21300000, guid: 4024ace973b08fe4885cea4bd5890e3c, type: 3}
     pieceSprite: {fileID: 6937817954938267909, guid: b8429bd56ed281f449f80adc7b06e6cc, type: 3}
   - shapeId: piece_3
     trayPosition: {x: 300, y: -450}
-    position: {x: -2.247, y: -2.033, z: 0}
+    position: {x: -2.2668264, y: -2.036752, z: 0}
     placeholderColor: {r: 0.2, g: 0.45, b: 0.9, a: 1}
-    scale: {x: 1.31, y: 1.51, z: 1}
+    scale: {x: 1.3376318, y: 1.5225224, z: 1}
     sprite: {fileID: 21300000, guid: 41331d30074bbb048bb32a48feb40523, type: 3}
     pieceSprite: {fileID: -6470460504253458178, guid: 01541e4dbc2a7944d8f327e9c545a2db, type: 3}
   - shapeId: piece_4
     trayPosition: {x: 600, y: -450}
-    position: {x: 3.333, y: -2.033, z: 0}
+    position: {x: 3.4308724, y: -2.036752, z: 0}
     placeholderColor: {r: 0.6, g: 0.25, b: 0.85, a: 1}
-    scale: {x: 1.31, y: 1.51, z: 1}
+    scale: {x: 1.3376318, y: 1.5225224, z: 1}
     sprite: {fileID: 21300000, guid: d15f1b885f09dee4ca92daaf4c4276f9, type: 3}
     pieceSprite: {fileID: -4178046375966092550, guid: 51c5a90b3106f4845bde0d18a4534df7, type: 3}

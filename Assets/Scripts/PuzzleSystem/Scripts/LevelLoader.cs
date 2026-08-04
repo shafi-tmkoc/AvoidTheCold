@@ -38,10 +38,20 @@ namespace AvoidTheCold
         [SerializeField] private float traySpacing = 0.25f;
         [Tooltip("Upper clamp on the auto-computed piece scale so a single piece can't render huge")]
         [SerializeField] private float maxPieceScale = 1.6f;
+        [Tooltip("Max pieces shown in the tray at once. The rest stay queued and are revealed one at a time, each replacing a piece as soon as it's placed in its correct slot")]
+        [SerializeField] private int trayVisibleCount = 4;
 
         [Header("Sorting")]
         [SerializeField] private string slotSortingLayer = "Slots";
         [SerializeField] private string pieceSortingLayer = "Pieces";
+
+        [Header("Piece Appearance")]
+        [Tooltip("Piece art (Shapes/Level N/X.png) is a flat white silhouette by design - this tints every draggable piece via SpriteRenderer multiply, so no source PNGs need editing to change piece color. Alpha < 1 gives pieces a glass-pane look, matching the window they're filling")]
+        [SerializeField] private Color pieceTintColor = new Color(0.66f, 0.85f, 0.95f, 0.75f);
+
+        [Header("Editor Preview")]
+        [Tooltip("Used only by the 'Visualize' right-click command below - lets tray/cell values be tuned in the Inspector and checked instantly without entering Play Mode")]
+        [SerializeField] private LevelData visualizeLevelData;
 
         [Header("Systems")]
         [SerializeField] private PuzzleProgressTracker progressTracker;
@@ -52,6 +62,8 @@ namespace AvoidTheCold
         [SerializeField] private GameplayVoiceOverTrigger gameplayVoiceOverTrigger;
         [SerializeField] private LevelTutorialSequencer tutorialSequencer;
         [SerializeField] private IdleHandTutorial idleHandTutorial;
+        [SerializeField] private OutsideEnvironmentSeasonSwitcher seasonSwitcher;
+        [SerializeField] private CurtainAnimationToggle curtainAnimationToggle;
 
         private readonly List<GameObject> _spawned = new List<GameObject>();
         private static Sprite _placeholderSprite;
@@ -66,6 +78,62 @@ namespace AvoidTheCold
 
             Debug.Log($"[LevelLoader] Loading level {data.levelNumber} ({data.pieces.Length} pieces, {data.timeLimitSeconds}s)");
 
+            BuildBoard(data, out var slots, out var pieces);
+
+            if (resultScreenUI != null) resultScreenUI.HideAll();
+            if (progressTracker != null) progressTracker.SetSlots(slots);
+            if (freezeMeterValue != null) freezeMeterValue.ResetValue();
+            if (missionResolver != null) missionResolver.ResetForNewAttempt();
+            if (gameplayVoiceOverTrigger != null) gameplayVoiceOverTrigger.ResetForNewAttempt(pieces);
+            if (tutorialSequencer != null) tutorialSequencer.BeginForFirstLevel(data.levelNumber, pieces, slots);
+            if (idleHandTutorial != null) idleHandTutorial.SetPieces(pieces, slots);
+            if (seasonSwitcher != null) seasonSwitcher.ResetForNewAttempt();
+            if (curtainAnimationToggle != null) curtainAnimationToggle.ResetForNewAttempt();
+
+            if (countdownTimer != null)
+            {
+                countdownTimer.SetDuration(data.timeLimitSeconds);
+                countdownTimer.StartTimer();
+            }
+        }
+
+        /// <summary>
+        /// Editor-only preview: rebuilds the tray/slot/piece layout for
+        /// visualizeLevelData using whatever tray values are currently set
+        /// on this component, without touching any runtime systems (timer,
+        /// progress tracker, VO, tutorials). Right-click the component
+        /// header (or the gear icon) and choose "Visualize" to check tray
+        /// sizing/spacing/scale changes instantly, without entering Play Mode.
+        /// </summary>
+        [ContextMenu("Visualize")]
+        private void Visualize()
+        {
+            if (visualizeLevelData == null)
+            {
+                Debug.Log("[LevelLoader] Visualize: assign visualizeLevelData first");
+                return;
+            }
+
+            Debug.Log($"[LevelLoader] Visualize: previewing '{visualizeLevelData.name}' tray/piece layout in the Editor");
+            BuildBoard(visualizeLevelData, out _, out _);
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                UnityEditor.EditorUtility.SetDirty(this);
+                UnityEditor.SceneView.RepaintAll();
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Clears any previously spawned board, then builds the tray
+        /// container plus every slot and piece for the given level data.
+        /// Pure layout/spawn - no runtime system wiring - so both LoadLevel
+        /// (real attempts) and Visualize (Editor preview) can share it.
+        /// </summary>
+        private void BuildBoard(LevelData data, out ShapeDropSlot[] resultSlots, out DraggableShape[] resultPieces)
+        {
             ClearSpawned();
 
             var slots = new ShapeDropSlot[data.pieces.Length];
@@ -113,9 +181,10 @@ namespace AvoidTheCold
 
             Debug.Log($"[LevelLoader] Tray container: screenRect={screenRect} size={containerWidth}x{containerHeight} center={containerCenter}");
 
-            // Every piece's native (unscaled) world size, used to compute one
-            // uniform scale factor that makes the whole row - plus padding -
-            // fit inside the tray container, both horizontally and vertically.
+            // Every piece's native (unscaled) world size. Each tray CELL scales
+            // its own piece independently to fit (see SpawnPieceIntoCell below),
+            // so pieces of very different sizes each look right in their cell
+            // regardless of spawn order.
             var nativeSizes = new Vector2[data.pieces.Length];
             for (int i = 0; i < data.pieces.Length; i++)
             {
@@ -128,26 +197,61 @@ namespace AvoidTheCold
                     : fallbackSize;
             }
 
-            float sumNativeWidths = 0f;
-            float maxNativeHeight = 0f;
-            foreach (var s in nativeSizes)
-            {
-                sumNativeWidths += s.x;
-                if (s.y > maxNativeHeight) maxNativeHeight = s.y;
-            }
-
-            float availableWidth = containerWidth - trayInnerPadding * 2f - traySpacing * Mathf.Max(0, data.pieces.Length - 1);
+            // Only trayVisibleCount pieces ever occupy the tray at once, in
+            // fixed evenly-spaced cells. Remaining pieces (by level-data
+            // order) stay queued and each is revealed into the cell its
+            // predecessor just vacated once that piece is placed correctly.
+            int visibleCount = Mathf.Clamp(trayVisibleCount, 1, data.pieces.Length);
+            float availableWidth = containerWidth - trayInnerPadding * 2f - traySpacing * Mathf.Max(0, visibleCount - 1);
             float availableHeight = containerHeight - trayInnerPadding * 2f;
-
-            float scaleForWidth = sumNativeWidths > 0f ? availableWidth / sumNativeWidths : 1f;
-            float scaleForHeight = maxNativeHeight > 0f ? availableHeight / maxNativeHeight : 1f;
-            float pieceScale = Mathf.Clamp(Mathf.Min(scaleForWidth, scaleForHeight), 0.05f, maxPieceScale);
-
-            Debug.Log($"[LevelLoader] Piece scale: scaleForWidth={scaleForWidth} scaleForHeight={scaleForHeight} -> using {pieceScale}");
-
-            float totalRowWidth = sumNativeWidths * pieceScale + traySpacing * Mathf.Max(0, data.pieces.Length - 1);
-            float cursorX = containerCenter.x - totalRowWidth / 2f;
+            float cellWidth = availableWidth / visibleCount;
+            float cellHeight = availableHeight;
+            float totalCellsWidth = cellWidth * visibleCount + traySpacing * Mathf.Max(0, visibleCount - 1);
+            float cellsStartX = containerCenter.x - totalCellsWidth / 2f;
             float pieceY = containerCenter.y;
+
+            var cellCenterX = new float[visibleCount];
+            for (int c = 0; c < visibleCount; c++)
+                cellCenterX[c] = cellsStartX + cellWidth / 2f + c * (cellWidth + traySpacing);
+
+            Debug.Log($"[LevelLoader] Tray cells: visibleCount={visibleCount}/{data.pieces.Length} cellSize={cellWidth}x{cellHeight}");
+
+            int nextQueuedIndex = visibleCount;
+
+            // Spawns piece `pieceIndex` into tray cell `cellIndex`, scaled to
+            // fit that cell on its own. Wires up a one-shot reveal: once this
+            // piece is placed correctly, the next queued piece (if any) spawns
+            // into the same cell.
+            void SpawnPieceIntoCell(int pieceIndex, int cellIndex)
+            {
+                var def = data.pieces[pieceIndex];
+                Vector2 native = nativeSizes[pieceIndex];
+                float scaleForWidth = native.x > 0f ? cellWidth / native.x : 1f;
+                float scaleForHeight = native.y > 0f ? cellHeight / native.y : 1f;
+                float scale = Mathf.Clamp(Mathf.Min(scaleForWidth, scaleForHeight), 0.05f, maxPieceScale);
+                float pieceWidth = native.x * scale;
+                float pieceHeight = native.y * scale;
+                Vector3 pieceWorldPos = new Vector3(cellCenterX[cellIndex], pieceY, 0f);
+
+                var pieceGO = CreateSpriteObject($"Piece_{def.shapeId}", def.pieceSprite, def.placeholderColor, new Vector2(pieceWidth, pieceHeight), pieceWorldPos, pieceSortingLayer, 0, trayParent);
+                var draggable = pieceGO.AddComponent<DraggableShape>();
+                draggable.Initialize(def.shapeId, pieceWorldPos);
+                _spawned.Add(pieceGO);
+                pieces[pieceIndex] = draggable;
+
+                draggable.OnPlacedSuccessfully += () =>
+                {
+                    Debug.Log($"[LevelLoader] {def.shapeId} placed - freeing tray cell {cellIndex}");
+                    if (nextQueuedIndex < data.pieces.Length)
+                    {
+                        int revealIndex = nextQueuedIndex;
+                        nextQueuedIndex++;
+                        SpawnPieceIntoCell(revealIndex, cellIndex);
+                    }
+                };
+
+                Debug.Log($"[LevelLoader] {def.shapeId}: cell={cellIndex} piecePos={pieceWorldPos} pieceSize={pieceWidth}x{pieceHeight}");
+            }
 
             for (int i = 0; i < data.pieces.Length; i++)
             {
@@ -165,34 +269,16 @@ namespace AvoidTheCold
                 _spawned.Add(slotGO);
                 slots[i] = slot;
 
-                float pieceWidth = nativeSizes[i].x * pieceScale;
-                float pieceHeight = nativeSizes[i].y * pieceScale;
-                float pieceCenterX = cursorX + pieceWidth / 2f;
-                Vector3 pieceWorldPos = new Vector3(pieceCenterX, pieceY, 0f);
-                cursorX += pieceWidth + traySpacing;
-
-                var pieceGO = CreateSpriteObject($"Piece_{def.shapeId}", def.pieceSprite, def.placeholderColor, new Vector2(pieceWidth, pieceHeight), pieceWorldPos, pieceSortingLayer, 0, trayParent);
-                var draggable = pieceGO.AddComponent<DraggableShape>();
-                draggable.Initialize(def.shapeId, pieceWorldPos);
-                _spawned.Add(pieceGO);
-                pieces[i] = draggable;
-
-                Debug.Log($"[LevelLoader] {def.shapeId}: slotLocalPos={def.position} slotLocalScale={data.GetSlotScale(i)} slotWorldPos={slotGO.transform.position} piecePos={pieceWorldPos} pieceSize={pieceWidth}x{pieceHeight}");
+                Debug.Log($"[LevelLoader] {def.shapeId}: slotLocalPos={def.position} slotLocalScale={data.GetSlotScale(i)} slotWorldPos={slotGO.transform.position}");
             }
 
-            if (resultScreenUI != null) resultScreenUI.HideAll();
-            if (progressTracker != null) progressTracker.SetSlots(slots);
-            if (freezeMeterValue != null) freezeMeterValue.ResetValue();
-            if (missionResolver != null) missionResolver.ResetForNewAttempt();
-            if (gameplayVoiceOverTrigger != null) gameplayVoiceOverTrigger.ResetForNewAttempt(pieces);
-            if (tutorialSequencer != null) tutorialSequencer.BeginForFirstLevel(data.levelNumber, pieces, slots);
-            if (idleHandTutorial != null) idleHandTutorial.SetPieces(pieces, slots);
+            // Only the first batch actually spawns into the tray now - the
+            // rest wait in the queue and get revealed one-by-one above.
+            for (int c = 0; c < visibleCount; c++)
+                SpawnPieceIntoCell(c, c);
 
-            if (countdownTimer != null)
-            {
-                countdownTimer.SetDuration(data.timeLimitSeconds);
-                countdownTimer.StartTimer();
-            }
+            resultSlots = slots;
+            resultPieces = pieces;
         }
 
         /// <summary>
@@ -236,7 +322,10 @@ namespace AvoidTheCold
             if (sprite != null)
             {
                 sr.sprite = sprite;
-                sr.color = Color.white;
+                // Piece art (Shapes/Level N/X.png) is a flat white silhouette by
+                // design, so it takes pieceTintColor directly via SpriteRenderer's
+                // multiply-tint - no need to hand-edit every source PNG.
+                sr.color = pieceTintColor;
                 nativeSize = new Vector2(sprite.rect.width, sprite.rect.height) / sprite.pixelsPerUnit;
             }
             else
@@ -319,7 +408,11 @@ namespace AvoidTheCold
         {
             foreach (var go in _spawned)
             {
-                if (go != null) Destroy(go);
+                if (go == null) continue;
+                // Destroy() only works in Play Mode - the Visualize command
+                // (see above) runs in Edit Mode too, where DestroyImmediate is required.
+                if (Application.isPlaying) Destroy(go);
+                else DestroyImmediate(go);
             }
             _spawned.Clear();
         }

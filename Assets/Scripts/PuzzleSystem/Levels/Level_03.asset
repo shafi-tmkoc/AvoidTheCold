@@ -18,36 +18,29 @@ MonoBehaviour:
   pieces:
   - shapeId: piece_1
     trayPosition: {x: -360, y: -450}
-    position: {x: -2.2, y: 3, z: 0}
+    position: {x: -2.9742398, y: 1.9145468, z: 0}
     placeholderColor: {r: 0.9, g: 0.2, b: 0.2, a: 1}
-    scale: {x: 2.2, y: 2.2, z: 1}
-    sprite: {fileID: 0}
-    pieceSprite: {fileID: 0}
+    scale: {x: 1.3417162, y: 1.4912654, z: 1}
+    sprite: {fileID: 21300000, guid: 61d94cd31d7394344b080a1498de0b52, type: 3}
+    pieceSprite: {fileID: -855298285791758126, guid: 16912872d809f8941b1b6959eca70b0b, type: 3}
   - shapeId: piece_2
     trayPosition: {x: -180, y: -450}
-    position: {x: 0, y: 3, z: 0}
+    position: {x: 1.5566, y: 1.8752, z: 0}
     placeholderColor: {r: 0.95, g: 0.55, b: 0.15, a: 1}
-    scale: {x: 2.2, y: 2.2, z: 1}
-    sprite: {fileID: 0}
-    pieceSprite: {fileID: 0}
+    scale: {x: 1.3447117, y: 1.550456, z: 1}
+    sprite: {fileID: 21300000, guid: d1ce168d648bda94894d2ccea4869957, type: 3}
+    pieceSprite: {fileID: 6937817954938267909, guid: 054d3dd775423ec448f3faa255aef2d3, type: 3}
   - shapeId: piece_3
     trayPosition: {x: 0, y: -450}
-    position: {x: 2.2, y: 3, z: 0}
+    position: {x: -2.0253, y: -1.772, z: 0}
     placeholderColor: {r: 0.75, g: 0.85, b: 0.2, a: 1}
-    scale: {x: 2.2, y: 2.2, z: 1}
-    sprite: {fileID: 0}
-    pieceSprite: {fileID: 0}
+    scale: {x: 1.345492, y: 1.581096, z: 1}
+    sprite: {fileID: 21300000, guid: 9097fa3596ecb264c9bd4e5a286d19f0, type: 3}
+    pieceSprite: {fileID: -6470460504253458178, guid: 1e98fd2e260022c4ba6c7c1ce4760b6b, type: 3}
   - shapeId: piece_4
     trayPosition: {x: 180, y: -450}
-    position: {x: -2.2, y: 1.3, z: 0}
+    position: {x: 2.724072, y: -1.2580472, z: 0}
     placeholderColor: {r: 0.2, g: 0.45, b: 0.9, a: 1}
-    scale: {x: 2.2, y: 2.2, z: 1}
-    sprite: {fileID: 0}
-    pieceSprite: {fileID: 0}
-  - shapeId: piece_5
-    trayPosition: {x: 360, y: -450}
-    position: {x: 0, y: 1.3, z: 0}
-    placeholderColor: {r: 0.6, g: 0.25, b: 0.85, a: 1}
-    scale: {x: 2.2, y: 2.2, z: 1}
-    sprite: {fileID: 0}
-    pieceSprite: {fileID: 0}
+    scale: {x: 1.3396741, y: 1.5134479, z: 1}
+    sprite: {fileID: 21300000, guid: 6eab79fda02b9354a84b6eefaead4af1, type: 3}
+    pieceSprite: {fileID: -4178046375966092550, guid: aff02d0fa73a1534caf2f4899b82bdae, type: 3}

@@ -1559,6 +1559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 0
 --- !u!225 &411262526
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1609,6 +1610,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 411262522}
   m_CullTransparentMesh: 1
+--- !u!1 &417624300 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1284970568538890, guid: 341961fb75a51fb4c844909972cb6b1a, type: 3}
+  m_PrefabInstance: {fileID: 1427603683}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &483746994
 GameObject:
   m_ObjectHideFlags: 0
@@ -2049,6 +2055,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3583933959338908252, guid: 7e538561895d8214ba7d2b950cca4b3a, type: 3}
+      propertyPath: m_SortingOrder
+      value: -28
+      objectReference: {fileID: 0}
+    - target: {fileID: 3583933959338908252, guid: 7e538561895d8214ba7d2b950cca4b3a, type: 3}
       propertyPath: m_SortingLayerID
       value: 100002
       objectReference: {fileID: 0}
@@ -2063,7 +2073,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8746010011208923954, guid: 7e538561895d8214ba7d2b950cca4b3a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1772184657}
   m_SourcePrefab: {fileID: 100100000, guid: 7e538561895d8214ba7d2b950cca4b3a, type: 3}
 --- !u!4 &586547416 stripped
 Transform:
@@ -2107,7 +2120,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000a1860100a2860100a3860100a4860100a5860100
+  m_ApplyToSortingLayers: 00000000a1860100a2860100a3860100a4860100a5860100a91d090a
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -2207,6 +2220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 0
 --- !u!225 &660472025
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2567,6 +2581,97 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 6
   m_TargetDisplay: 0
+--- !u!1 &800415602
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 800415603}
+  - component: {fileID: 800415604}
+  m_Layer: 0
+  m_Name: Curtains
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &800415603
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800415602}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.17, y: -0.16, z: 0}
+  m_LocalScale: {x: 0.45524567, y: 0.97080487, z: 0.2}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 958755189}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &800415604
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800415602}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 100002
+  m_SortingLayer: 2
+  m_SortingOrder: -2
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 21300000, guid: 92906a15d4bc42147bb2ccaadf3aa62c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 5.53, y: 4.51}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
 --- !u!1001 &814240561
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2681,7 +2786,7 @@ MonoBehaviour:
   missionResolver: {fileID: 169537783}
   winBanner: {fileID: 2135301524}
   loseBanner: {fileID: 1453290510}
-  showDelaySeconds: 2
+  showDelaySeconds: 7
   holdSeconds: 5
 --- !u!4 &848978374
 Transform:
@@ -2698,6 +2803,98 @@ Transform:
   m_Children: []
   m_Father: {fileID: 712136521}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &859615615
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 859615616}
+  - component: {fileID: 859615617}
+  m_Layer: 0
+  m_Name: OutsideEnvironmentNormal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &859615616
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859615615}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.02, y: -0.02, z: 0}
+  m_LocalScale: {x: 0.978, y: 0.888, z: 0.98}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2049875876}
+  m_Father: {fileID: 1617339108}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &859615617
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859615615}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 100001
+  m_SortingLayer: 1
+  m_SortingOrder: -5
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 21300000, guid: 298ea6d1595fd684196709108416c34f, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 11.41, y: 8.45}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
 --- !u!114 &881204030 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2683178324057342331, guid: 92b2730463b89c54e969d8b6a5967118, type: 3}
@@ -2744,6 +2941,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  onAllShapesPlaced:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &885596454
 Transform:
   m_ObjectHideFlags: 0
@@ -2890,7 +3090,7 @@ GameObject:
   - component: {fileID: 898442124}
   - component: {fileID: 898442125}
   m_Layer: 0
-  m_Name: OutsideEnvironment
+  m_Name: OutsideEnvironmentWinter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2905,8 +3105,8 @@ Transform:
   m_GameObject: {fileID: 898442123}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.9, z: 1}
+  m_LocalPosition: {x: -0.02, y: -0.02, z: 0}
+  m_LocalScale: {x: 0.978, y: 0.888, z: 0.98}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1574647129}
@@ -2957,8 +3157,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 100002
-  m_SortingLayer: 2
+  m_SortingLayerID: 100001
+  m_SortingLayer: 1
   m_SortingOrder: -5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 298ea6d1595fd684196709108416c34f, type: 3}
@@ -3072,11 +3272,12 @@ Transform:
   m_GameObject: {fileID: 958755188}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.24, y: 1.9, z: 0}
-  m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
+  m_LocalPosition: {x: 9.3, y: 1.17, z: 0}
+  m_LocalScale: {x: 1.93452, y: 1.93452, z: 1.93452}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 586547416}
+  - {fileID: 800415603}
   m_Father: {fileID: 1617339108}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &958755190
@@ -3176,7 +3377,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 279.99994, y: -164.99994}
+  m_AnchoredPosition: {x: 280, y: -165}
   m_SizeDelta: {x: 560, y: 640.6}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &986492349
@@ -3192,6 +3393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 0
 --- !u!225 &986492350
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3512,14 +3714,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.75, g: 0.9, b: 1, a: 0.6}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.49622637, g: 0.8032134, b: 1, a: 0.6}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -7098706606129727395, guid: 2023e5db4c88cd04da49d9ca1c383379, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3550,6 +3752,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 1
 --- !u!114 &1118561639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3759,6 +3962,7 @@ RectTransform:
   - {fileID: 774689651}
   - {fileID: 367823538}
   - {fileID: 1640401178}
+  - {fileID: 1837114873}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3953,6 +4157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 0
 --- !u!225 &1142338651
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4502,14 +4707,17 @@ MonoBehaviour:
   boardRoot: {fileID: 377409716}
   slotAnchor: {fileID: 898442124}
   pieceTray: {fileID: 1320780511}
-  trayWidthFraction: 0.7
+  trayWidthFraction: 0.615
   trayHeight: 3.4
   trayScreenMargin: 0.3
   trayInnerPadding: 0.3
   traySpacing: 0.4
   maxPieceScale: 1.6
-  slotSortingLayer: Slots
+  trayVisibleCount: 4
+  slotSortingLayer: Background
   pieceSortingLayer: Pieces
+  pieceTintColor: {r: 0.66, g: 0.85, b: 0.95, a: 0.3137255}
+  visualizeLevelData: {fileID: 11400000, guid: fc935ead499f78f408b226e783e49f75, type: 2}
   progressTracker: {fileID: 885596453}
   freezeMeterValue: {fileID: 210868264}
   countdownTimer: {fileID: 1908355882}
@@ -4518,6 +4726,8 @@ MonoBehaviour:
   gameplayVoiceOverTrigger: {fileID: 1302673364}
   tutorialSequencer: {fileID: 341475060}
   idleHandTutorial: {fileID: 1131441879}
+  seasonSwitcher: {fileID: 1617339110}
+  curtainAnimationToggle: {fileID: 1772184657}
 --- !u!4 &1246234593
 Transform:
   m_ObjectHideFlags: 0
@@ -4632,6 +4842,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 0
 --- !u!225 &1296804696
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4953,7 +5164,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 1, b: 0.8844621, a: 1}
+  m_Color: {r: 0.2603773, g: 0.2603773, b: 0.2603773, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -5535,13 +5746,29 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1284970568538890, guid: 341961fb75a51fb4c844909972cb6b1a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1427603687}
   m_SourcePrefab: {fileID: 100100000, guid: 341961fb75a51fb4c844909972cb6b1a, type: 3}
 --- !u!4 &1427603684 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4237560656749904, guid: 341961fb75a51fb4c844909972cb6b1a, type: 3}
   m_PrefabInstance: {fileID: 1427603683}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1427603687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417624300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 871ca1218c68f554d94491a39d4dc884, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AvoidTheCold.WindlinesStormyHider
+  progressTracker: {fileID: 885596453}
 --- !u!1 &1453290510
 GameObject:
   m_ObjectHideFlags: 0
@@ -5635,6 +5862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 0
 --- !u!225 &1453290515
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5837,11 +6065,11 @@ RectTransform:
   - {fileID: 1717244878}
   m_Father: {fileID: 1131928366}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -40, y: -180}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -40}
   m_SizeDelta: {x: 600, y: 50}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1506372222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6032,7 +6260,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1574647129
 Transform:
   m_ObjectHideFlags: 0
@@ -6042,8 +6270,8 @@ Transform:
   m_GameObject: {fileID: 1574647128}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0263, y: -0.01, z: 0}
-  m_LocalScale: {x: 1.31, y: 1.51, z: 2.3}
+  m_LocalPosition: {x: 0, y: -0.01, z: 0}
+  m_LocalScale: {x: 2.22, y: 2.95, z: 2.22}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 898442124}
@@ -6097,12 +6325,12 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 439a83753ed3b9d48849bf8d5f798fc4, type: 3}
-  m_Color: {r: 0.3283019, g: 0.3283019, b: 0.3283019, a: 0.99607843}
+  m_Sprite: {fileID: -6470460504253458178, guid: 01541e4dbc2a7944d8f327e9c545a2db, type: 3}
+  m_Color: {r: 0.14099675, g: 0.22180839, b: 0.2603773, a: 0.9019608}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 11.41, y: 8.45}
+  m_Size: {x: 5.15, y: 2.87}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -6254,6 +6482,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1617339108}
   - component: {fileID: 1617339109}
+  - component: {fileID: 1617339110}
   m_Layer: 0
   m_Name: WindowFrame
   m_TagString: Untagged
@@ -6274,6 +6503,7 @@ Transform:
   m_LocalScale: {x: 1.72, y: 1.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 859615616}
   - {fileID: 898442124}
   - {fileID: 958755189}
   m_Father: {fileID: 377409716}
@@ -6323,8 +6553,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 100002
-  m_SortingLayer: 2
+  m_SortingLayerID: 100001
+  m_SortingLayer: 1
   m_SortingOrder: -4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 375d8c0ca427e874f81e701ea040ef55, type: 3}
@@ -6337,6 +6567,37 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1617339110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617339107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92c65085e9213524ea7d895630a0a5ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AvoidTheCold.OutsideEnvironmentSeasonSwitcher
+  progressTracker: {fileID: 885596453}
+  winterEnvironment: {fileID: 898442125}
+  normalEnvironment: {fileID: 859615617}
+  OnRevealComplete:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 898442123}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  fadeDuration: 2
 --- !u!1 &1627088034
 GameObject:
   m_ObjectHideFlags: 0
@@ -6838,8 +7099,9 @@ MonoBehaviour:
   meterValue: {fileID: 210868264}
   freezeBarImage: {fileID: 1717244881}
   dangerValueThreshold: 0.3
-  normalColor: {r: 0, g: 0.99215686, b: 0.078431375, a: 1}
-  dangerColor: {r: 0.9, g: 0.2, b: 0.2, a: 1}
+  normalColor: {r: 0.5686275, g: 0.8235295, b: 0.909804, a: 1}
+  dangerColor: {r: 0.36862746, g: 0.5372549, b: 0.9176471, a: 1}
+  fadeDuration: 0.4
 --- !u!114 &1717244880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6867,7 +7129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.9924528, b: 0.07985259, a: 1}
+  m_Color: {r: 0.5686275, g: 0.8235294, b: 0.9098039, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7112,6 +7374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 0
 --- !u!225 &1741483017
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7299,6 +7562,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1751754318}
   m_CullTransparentMesh: 1
+--- !u!1 &1772184653 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8746010011208923954, guid: 7e538561895d8214ba7d2b950cca4b3a, type: 3}
+  m_PrefabInstance: {fileID: 586547415}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1772184654 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 192942737537063510, guid: 7e538561895d8214ba7d2b950cca4b3a, type: 3}
+  m_PrefabInstance: {fileID: 586547415}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1772184657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772184653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d92c1f7fede7554fa9e76588e7b9e6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AvoidTheCold.CurtainAnimationToggle
+  progressTracker: {fileID: 885596453}
+  curtainAnimator: {fileID: 1772184654}
 --- !u!1 &1774646641
 GameObject:
   m_ObjectHideFlags: 0
@@ -7351,6 +7638,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 0
 --- !u!225 &1774646644
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7502,6 +7790,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 0
 --- !u!225 &1822922874
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7629,6 +7918,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 0
 --- !u!225 &1831426457
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7702,6 +7992,95 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 2
   m_TargetDisplay: 0
+--- !u!1 &1837114872
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1837114873}
+  - component: {fileID: 1837114876}
+  - component: {fileID: 1837114875}
+  - component: {fileID: 1837114874}
+  m_Layer: 0
+  m_Name: FrostOverlay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1837114873
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837114872}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.05, y: 1.05, z: 1.05}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 2143097044}
+  m_Father: {fileID: 1126528889}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1837114874
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837114872}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &1837114875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837114872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.12724097, g: 0.19008793, b: 0.2603773, a: 0.5254902}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -7098706606129727395, guid: 2023e5db4c88cd04da49d9ca1c383379, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 0
+  m_FillAmount: 0.098
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1837114876
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837114872}
+  m_CullTransparentMesh: 1
 --- !u!1 &1838968605
 GameObject:
   m_ObjectHideFlags: 0
@@ -7896,6 +8275,97 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &2049875875
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2049875876}
+  - component: {fileID: 2049875877}
+  m_Layer: 0
+  m_Name: Window
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &2049875876
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049875875}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.020449897, y: -0.0198, z: 0}
+  m_LocalScale: {x: 1.3496931, y: 1.5354731, z: 1.0204082}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 859615616}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &2049875877
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049875875}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 100005
+  m_SortingLayer: 5
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: -7823844049236149735, guid: 9f9bd3088e787924aa8c861b6f25a0f3, type: 3}
+  m_Color: {r: 0.2, g: 0.8862745, b: 0.71258044, a: 0.64705884}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 8.52, y: 5.55}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
 --- !u!1 &2056074054
 GameObject:
   m_ObjectHideFlags: 0
@@ -7951,6 +8421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 1
 --- !u!225 &2056074057
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7959,7 +8430,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2056074054}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -8053,6 +8524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 0
 --- !u!225 &2109728907
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8196,6 +8668,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
   fadeSpeed: 1
+  _targetAlpha: 0
 --- !u!225 &2135301529
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8208,6 +8681,94 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &2143097043
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2143097044}
+  - component: {fileID: 2143097047}
+  - component: {fileID: 2143097046}
+  - component: {fileID: 2143097045}
+  m_Layer: 0
+  m_Name: FrostOverlay (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2143097044
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143097043}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1837114873}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &2143097045
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143097043}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &2143097046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143097043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.7830188, g: 1, b: 0.9663531, a: 0.41568628}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 617684f409a55d0499369c044ac38e77, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &2143097047
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143097043}
+  m_CullTransparentMesh: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

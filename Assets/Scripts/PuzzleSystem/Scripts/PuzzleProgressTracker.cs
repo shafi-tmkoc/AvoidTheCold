@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace AvoidTheCold
 {
@@ -10,6 +11,9 @@ namespace AvoidTheCold
     public class PuzzleProgressTracker : MonoBehaviour
     {
         [SerializeField] private ShapeDropSlot[] slots;
+
+        [Tooltip("Fires once every slot has been filled - wire Inspector-only responses here (no code needed). Same moment as OnAllSlotsFilled below.")]
+        [SerializeField] private UnityEvent onAllShapesPlaced;
 
         public event Action<float> OnProgressChanged; // 0..1
         public event Action OnAllSlotsFilled;
@@ -73,6 +77,7 @@ namespace AvoidTheCold
             {
                 Debug.Log("[PuzzleProgressTracker] All slots filled");
                 OnAllSlotsFilled?.Invoke();
+                onAllShapesPlaced?.Invoke();
             }
         }
     }

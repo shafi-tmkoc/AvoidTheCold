@@ -37,6 +37,9 @@ namespace AvoidTheCold
         /// <summary>Raised whenever this piece bounces back to its start (wrong slot or empty space).</summary>
         public event Action OnReturnedToStart;
 
+        /// <summary>Raised once this piece snaps into its correct slot.</summary>
+        public event Action OnPlacedSuccessfully;
+
         private void Awake()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -125,10 +128,16 @@ namespace AvoidTheCold
         }
 
         /// <summary>
-        /// Finds the slot whose area overlaps this piece's area the most -
-        /// a bounds overlap check rather than requiring the piece's exact
-        /// center point to land inside the slot, which is far more forgiving
-        /// for small children's imprecise dragging.
+        /// Finds the slot whose CENTER is closest to this piece's center,
+        /// among slots the piece's bounds are currently touching. Picking by
+        /// nearest-center rather than largest box-overlap area matters
+        /// because many pieces are triangular/non-rectangular but still use
+        /// rectangular BoxCollider2D bounds - two triangles sharing a
+        /// diagonal edge have bounding boxes that overlap each other
+        /// heavily, so "largest rectangular overlap" can pick the wrong
+        /// neighboring slot even when the piece is visually on the correct
+        /// one. Center-distance is forgiving for small children's imprecise
+        /// dragging without depending on collider shape precision.
         /// </summary>
         private ShapeDropSlot FindOverlappingSlot()
         {
@@ -136,33 +145,15 @@ namespace AvoidTheCold
             Physics2D.SyncTransforms();
 
             Bounds pieceBounds = _collider.bounds;
-
-            // FIXED: Use pieceBounds.center instead of transform.position
-            // transform.position is at the pivot point, which may be offset
-            // from the actual collider center if the sprite's pivot isn't centered
             Vector2 queryCenter = pieceBounds.center;
             Vector2 querySize = pieceBounds.size;
 
             var hits = Physics2D.OverlapBoxAll(queryCenter, querySize, 0f);
 
             Debug.Log($"[DraggableShape] {name} queryCenter={queryCenter} querySize={querySize} -> {hits.Length} hit(s)");
-            foreach (var h in hits)
-            {
-                Debug.Log($"[DraggableShape]   hit: {h.name} (layer={LayerMask.LayerToName(h.gameObject.layer)})");
-            }
-
-            // Log all slot bounds for debugging
-            foreach (var s in FindObjectsByType<ShapeDropSlot>(FindObjectsSortMode.None))
-            {
-                var c = s.GetComponent<Collider2D>();
-                if (c != null)
-                {
-                    Debug.Log($"[DraggableShape]   slot {s.name} bounds: center={c.bounds.center} size={c.bounds.size} min={c.bounds.min} max={c.bounds.max} enabled={c.enabled}");
-                }
-            }
 
             ShapeDropSlot best = null;
-            float bestOverlapArea = 0f;
+            float bestDistanceSqr = float.MaxValue;
 
             foreach (var hit in hits)
             {
@@ -172,21 +163,17 @@ namespace AvoidTheCold
                 // Skip disabled colliders
                 if (!hit.enabled) continue;
 
-                Bounds slotBounds = hit.bounds;
-                Vector3 min = Vector3.Max(pieceBounds.min, slotBounds.min);
-                Vector3 max = Vector3.Min(pieceBounds.max, slotBounds.max);
-                float overlapArea = Mathf.Max(0f, max.x - min.x) * Mathf.Max(0f, max.y - min.y);
+                float distSqr = ((Vector2)hit.bounds.center - queryCenter).sqrMagnitude;
+                Debug.Log($"[DraggableShape]   candidate {slot.name}: centerDist={Mathf.Sqrt(distSqr)}");
 
-                Debug.Log($"[DraggableShape]   overlap with {slot.name}: area={overlapArea}");
-
-                if (overlapArea > bestOverlapArea)
+                if (distSqr < bestDistanceSqr)
                 {
-                    bestOverlapArea = overlapArea;
+                    bestDistanceSqr = distSqr;
                     best = slot;
                 }
             }
 
-            Debug.Log($"[DraggableShape] Best slot: {(best != null ? best.name : "null")} (overlap area={bestOverlapArea})");
+            Debug.Log($"[DraggableShape] Best slot: {(best != null ? best.name : "null")} (centerDist={(best != null ? Mathf.Sqrt(bestDistanceSqr) : 0f)})");
             return best;
         }
 
@@ -248,6 +235,7 @@ namespace AvoidTheCold
             transform.localScale = Vector3.one;
             if (_collider != null) _collider.enabled = false;
             if (AudioManager.Instance != null) AudioManager.Instance.Connect();
+            OnPlacedSuccessfully?.Invoke();
         }
 
         /// <summary>Bounces the piece back to where it started (wrong slot or dropped in empty space).</summary>

@@ -13,7 +13,7 @@ namespace AvoidTheCold
         [SerializeField] private float fadeSpeed = 1f;
 
         private CanvasGroup _canvasGroup;
-        private float _targetAlpha;
+        [SerializeField] private float _targetAlpha = 1;
 
         private void Awake()
         {

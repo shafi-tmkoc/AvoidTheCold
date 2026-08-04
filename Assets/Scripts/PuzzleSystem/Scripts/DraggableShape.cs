@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,6 +20,9 @@ namespace AvoidTheCold
     {
         [Tooltip("Must match the ShapeDropSlot this piece belongs to")]
         [SerializeField] private string shapeId;
+
+        [Tooltip("Seconds for the piece to tween into the slot's exact position/scale on a correct drop, instead of snapping instantly")]
+        [SerializeField] private float snapTweenDuration = 0.35f;
 
         private SpriteRenderer _spriteRenderer;
         private Collider2D _collider;
@@ -230,11 +234,20 @@ namespace AvoidTheCold
         {
             Debug.Log($"[DraggableShape] Snapped: {name} (shapeId={shapeId}) -> slot {slot.name}");
             _isPlaced = true;
+
+            // Reparent with worldPositionStays=true so the piece keeps its
+            // current visual position/scale at the moment of reparenting -
+            // the tweens below then animate it from there into the slot's
+            // exact local position (0,0,0) and scale (1,1,1), instead of
+            // snapping instantly.
             transform.SetParent(slot, true);
-            transform.position = slot.position;
-            transform.localScale = Vector3.one;
             if (_collider != null) _collider.enabled = false;
             if (AudioManager.Instance != null) AudioManager.Instance.Connect();
+
+            transform.DOKill();
+            transform.DOLocalMove(Vector3.zero, snapTweenDuration).SetEase(Ease.OutBack);
+            transform.DOScale(Vector3.one, snapTweenDuration).SetEase(Ease.OutBack);
+
             OnPlacedSuccessfully?.Invoke();
         }
 

@@ -77,25 +77,29 @@ namespace AvoidTheCold
         {
             Debug.Log($"[ResultScreenUI] Win - showing in {showDelaySeconds}s, holding {holdSeconds}s");
             FadeOut(_loseFader, _loseGroup);
-            RunResultCycle(winBanner, _winFader, _winGroup);
+            RunResultCycle(winBanner, _winFader, _winGroup, showDelaySeconds);
         }
 
         private void HandleFailed()
         {
-            Debug.Log($"[ResultScreenUI] Lose - showing in {showDelaySeconds}s, holding {holdSeconds}s");
+            // Lose banner shows in half the time the win banner takes, so a
+            // failed attempt doesn't leave the player waiting as long before
+            // they can see what happened and retry.
+            float loseDelaySeconds = showDelaySeconds / 2f;
+            Debug.Log($"[ResultScreenUI] Lose - showing in {loseDelaySeconds}s, holding {holdSeconds}s");
             FadeOut(_winFader, _winGroup);
-            RunResultCycle(loseBanner, _loseFader, _loseGroup);
+            RunResultCycle(loseBanner, _loseFader, _loseGroup, loseDelaySeconds);
         }
 
-        private void RunResultCycle(GameObject banner, CanvasGroupFader fader, CanvasGroup group)
+        private void RunResultCycle(GameObject banner, CanvasGroupFader fader, CanvasGroup group, float delaySeconds)
         {
             CancelPendingCycle();
-            _pendingCycleRoutine = StartCoroutine(ResultCycleRoutine(banner, fader, group));
+            _pendingCycleRoutine = StartCoroutine(ResultCycleRoutine(banner, fader, group, delaySeconds));
         }
 
-        private IEnumerator ResultCycleRoutine(GameObject banner, CanvasGroupFader fader, CanvasGroup group)
+        private IEnumerator ResultCycleRoutine(GameObject banner, CanvasGroupFader fader, CanvasGroup group, float delaySeconds)
         {
-            yield return new WaitForSeconds(showDelaySeconds);
+            yield return new WaitForSeconds(delaySeconds);
             FadeIn(banner, fader, group);
 
             yield return new WaitForSeconds(holdSeconds);

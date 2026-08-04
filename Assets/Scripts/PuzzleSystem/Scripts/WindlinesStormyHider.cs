@@ -26,5 +26,12 @@ namespace AvoidTheCold
             Debug.Log($"[WindlinesStormyHider] All slots filled - disabling {name}");
             gameObject.SetActive(false);
         }
+
+        /// <summary>Call when a fresh level attempt starts (next level or restart) to re-enable the wind lines effect.</summary>
+        public void ResetForNewAttempt()
+        {
+            Debug.Log($"[WindlinesStormyHider] New attempt - re-enabling {name}");
+            gameObject.SetActive(true);
+        }
     }
 }

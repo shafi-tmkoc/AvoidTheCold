@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level_05
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.LevelData
   levelNumber: 5
-  timeLimitSeconds: 2800000
+  timeLimitSeconds: 28
   defaultScale: {x: 2.2, y: 2.2, z: 1}
   pieces:
   - shapeId: piece_1

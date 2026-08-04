@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,8 +16,12 @@ namespace AvoidTheCold
         [SerializeField] private Button replayButton;
         [SerializeField] private Button homeButton;
 
+        [Tooltip("Seconds to wait after the last level is won before the Game Complete banner fades in")]
+        [SerializeField] private float showDelaySeconds = 4f;
+
         private CanvasGroupFader _fader;
         private CanvasGroup _group;
+        private Coroutine _pendingShowRoutine;
 
         private void Awake()
         {
@@ -38,21 +43,38 @@ namespace AvoidTheCold
         private void OnDisable()
         {
             if (levelFlow != null) levelFlow.OnGameCompleted -= HandleGameCompleted;
+
+            if (_pendingShowRoutine != null)
+            {
+                StopCoroutine(_pendingShowRoutine);
+                _pendingShowRoutine = null;
+            }
         }
 
         private void HandleGameCompleted()
         {
-            Debug.Log("[GameCompleteUI] Showing Game Complete banner");
+            Debug.Log($"[GameCompleteUI] Game completed - showing banner in {showDelaySeconds}s");
 
-            if (banner == null) return;
+            if (_pendingShowRoutine != null) StopCoroutine(_pendingShowRoutine);
+            _pendingShowRoutine = StartCoroutine(ShowBannerAfterDelay());
+        }
 
-            banner.SetActive(true);
-            if (_group != null)
+        private IEnumerator ShowBannerAfterDelay()
+        {
+            yield return new WaitForSeconds(showDelaySeconds);
+
+            if (banner != null)
             {
-                _group.alpha = 0f;
-                _group.blocksRaycasts = true;
+                banner.SetActive(true);
+                if (_group != null)
+                {
+                    _group.alpha = 0f;
+                    _group.blocksRaycasts = true;
+                }
+                if (_fader != null) _fader.SetTarget(1f);
             }
-            if (_fader != null) _fader.SetTarget(1f);
+
+            _pendingShowRoutine = null;
         }
 
         private void HandleReplayClicked()

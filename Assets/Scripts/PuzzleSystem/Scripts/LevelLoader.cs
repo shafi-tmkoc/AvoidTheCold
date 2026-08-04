@@ -63,7 +63,9 @@ namespace AvoidTheCold
         [SerializeField] private LevelTutorialSequencer tutorialSequencer;
         [SerializeField] private IdleHandTutorial idleHandTutorial;
         [SerializeField] private OutsideEnvironmentSeasonSwitcher seasonSwitcher;
-        [SerializeField] private CurtainAnimationToggle curtainAnimationToggle;
+        [Tooltip("Curtain/character Animators that switch state on puzzle-complete and back on a fresh attempt (e.g. Curtain, DayaShivering, TappuShivering)")]
+        [SerializeField] private AnimatorStateOnPuzzleComplete[] puzzleCompleteAnimators;
+        [SerializeField] private WindlinesStormyHider windlinesStormyHider;
 
         private readonly List<GameObject> _spawned = new List<GameObject>();
         private static Sprite _placeholderSprite;
@@ -88,7 +90,14 @@ namespace AvoidTheCold
             if (tutorialSequencer != null) tutorialSequencer.BeginForFirstLevel(data.levelNumber, pieces, slots);
             if (idleHandTutorial != null) idleHandTutorial.SetPieces(pieces, slots);
             if (seasonSwitcher != null) seasonSwitcher.ResetForNewAttempt();
-            if (curtainAnimationToggle != null) curtainAnimationToggle.ResetForNewAttempt();
+            if (puzzleCompleteAnimators != null)
+            {
+                foreach (var a in puzzleCompleteAnimators)
+                {
+                    if (a != null) a.ResetForNewAttempt();
+                }
+            }
+            if (windlinesStormyHider != null) windlinesStormyHider.ResetForNewAttempt();
 
             if (countdownTimer != null)
             {

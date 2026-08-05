@@ -23,6 +23,7 @@ MonoBehaviour:
     scale: {x: 1.3423582, y: 1.5318232, z: 1}
     sprite: {fileID: 21300000, guid: 2ff23ad49973a2f41bfba68dba6a1adb, type: 3}
     pieceSprite: {fileID: -855298285791758126, guid: 0cb0bba6b8c9eee4eb63a338fdb49e1e, type: 3}
+    outlineSprite: {fileID: -855298285791758126, guid: 111dbcae506882e4589e6f94c2cf6f6c, type: 3}
   - shapeId: piece_2
     trayPosition: {x: -180, y: -450}
     position: {x: 0, y: 2.1020894, z: 0}
@@ -30,6 +31,7 @@ MonoBehaviour:
     scale: {x: 1.350906, y: 1.5326054, z: 1}
     sprite: {fileID: 21300000, guid: c27bb9ddf06153943ae1c1ef2fa97db9, type: 3}
     pieceSprite: {fileID: 6937817954938267909, guid: 2f170a837f5c8e045a5535630dbb2edf, type: 3}
+    outlineSprite: {fileID: 6937817954938267909, guid: 3968fb71b92359249a5950ae5fd3ced5, type: 3}
   - shapeId: piece_3
     trayPosition: {x: 0, y: -450}
     position: {x: 2.4958577, y: 0, z: 0}
@@ -37,3 +39,4 @@ MonoBehaviour:
     scale: {x: 1.3396741, y: 1.5225224, z: 1}
     sprite: {fileID: 21300000, guid: 093a5861af951c34eb85e7623bae7e1e, type: 3}
     pieceSprite: {fileID: -6470460504253458178, guid: 772c3460933f80d49a2eea5e61208e15, type: 3}
+    outlineSprite: {fileID: -6470460504253458178, guid: e7f2d654e32732442932ffcf973b8a54, type: 3}

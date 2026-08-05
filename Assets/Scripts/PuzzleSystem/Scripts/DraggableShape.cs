@@ -24,6 +24,8 @@ namespace AvoidTheCold
         [Tooltip("Seconds for the piece to tween into the slot's exact position/scale on a correct drop, instead of snapping instantly")]
         [SerializeField] private float snapTweenDuration = 0.35f;
 
+        [Tooltip("Child SpriteRenderer named \"Outline\" that shows the level's outline/stroke art on top of this piece. Auto-found by child name if left empty.")]
+        public SpriteRenderer outlineRenderer;
         private SpriteRenderer _spriteRenderer;
         private Collider2D _collider;
         private Camera _camera;
@@ -68,6 +70,11 @@ namespace AvoidTheCold
                 if (_camera == null)
                     Debug.Log("[DraggableShape] No main camera found - dragging will not work until one is tagged MainCamera");
             }
+            if (outlineRenderer == null)
+            {
+                var outlineChild = transform.Find("Outline");
+                if (outlineChild != null) outlineRenderer = outlineChild.GetComponent<SpriteRenderer>();
+            }
         }
 
         private void CacheStartTransform()
@@ -79,9 +86,10 @@ namespace AvoidTheCold
 
         /// <summary>
         /// Configures a freshly spawned piece: sets its shape id and start
-        /// (tray) world position, then re-caches that as its "start".
+        /// (tray) world position, applies the level's outline/stroke art (if
+        /// any) to the "Outline" child, then re-caches that as its "start".
         /// </summary>
-        public void Initialize(string id, Vector3 trayPosition)
+        public void Initialize(string id, Vector3 trayPosition, Sprite outlineSprite = null)
         {
             EnsureCached();
             shapeId = id;
@@ -89,7 +97,21 @@ namespace AvoidTheCold
             _isDragging = false;
             if (_collider != null) _collider.enabled = true;
             transform.position = trayPosition;
+            ApplyOutlineSprite(outlineSprite);
             CacheStartTransform();
+        }
+
+        /// <summary>
+        /// Assigns the given sprite to the "Outline" child's SpriteRenderer
+        /// and keeps it layered directly above this piece's own sprite.
+        /// </summary>
+        private void ApplyOutlineSprite(Sprite outlineSprite)
+        {
+            if (outlineRenderer == null) return;
+            outlineRenderer.sprite = outlineSprite;
+            outlineRenderer.sortingLayerID = _spriteRenderer.sortingLayerID;
+            outlineRenderer.sortingOrder = _spriteRenderer.sortingOrder + 1;
+            Debug.Log($"[DraggableShape] {name} outline sprite set to {(outlineSprite != null ? outlineSprite.name : "none")}");
         }
 
         private void Update()

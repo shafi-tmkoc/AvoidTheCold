@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level_04
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.LevelData
   levelNumber: 4
-  timeLimitSeconds: 26
+  timeLimitSeconds: 24
   defaultScale: {x: 2.2, y: 2.2, z: 1}
   pieces:
   - shapeId: piece_1
@@ -23,6 +23,7 @@ MonoBehaviour:
     scale: {x: 1.3465769, y: 1.5292386, z: 1}
     sprite: {fileID: 21300000, guid: a8d685447c6cf6244a8a7a94dc705bc8, type: 3}
     pieceSprite: {fileID: -855298285791758126, guid: b2e0ea39fe5a47e45952b0780af47609, type: 3}
+    outlineSprite: {fileID: -855298285791758126, guid: 5844c0db2c93c264db0c985fa8b277f2, type: 3}
   - shapeId: piece_2
     trayPosition: {x: -270, y: -450}
     position: {x: 2.0820086, y: 2.5753818, z: 0}
@@ -30,6 +31,7 @@ MonoBehaviour:
     scale: {x: 1.3345686, y: 1.520405, z: 1}
     sprite: {fileID: 21300000, guid: 41dabbf83d2bdcd4c913e7ef055679db, type: 3}
     pieceSprite: {fileID: 6937817954938267909, guid: 905cab5b80b03404dbe520e5a8f15040, type: 3}
+    outlineSprite: {fileID: 6937817954938267909, guid: ad5cadf577d5fbb40871c1ae1eff24e1, type: 3}
   - shapeId: piece_3
     trayPosition: {x: -90, y: -450}
     position: {x: -3.61254, y: -0.5656523, z: 0}
@@ -37,6 +39,7 @@ MonoBehaviour:
     scale: {x: 1.3466994, y: 1.5247407, z: 1}
     sprite: {fileID: 21300000, guid: 56772870bcd3cbb44abfa4b3920d1c8f, type: 3}
     pieceSprite: {fileID: -6470460504253458178, guid: 56023cff9b200e8468d0e7cdf18343ef, type: 3}
+    outlineSprite: {fileID: -6470460504253458178, guid: b66019b9b94770240b67321c0a12bb72, type: 3}
   - shapeId: piece_4
     trayPosition: {x: 90, y: -450}
     position: {x: 0.5952972, y: -1.6131679, z: 0}
@@ -44,6 +47,7 @@ MonoBehaviour:
     scale: {x: 1.3477407, y: 1.539361, z: 1}
     sprite: {fileID: 21300000, guid: 5537b2d7376a62e4daa857195efeeda3, type: 3}
     pieceSprite: {fileID: -4178046375966092550, guid: ac4cedde6f4ebcc42b8144fd21cd3edd, type: 3}
+    outlineSprite: {fileID: -4178046375966092550, guid: 93464493a9f085241a261d31fa36fd5b, type: 3}
   - shapeId: piece_5
     trayPosition: {x: 270, y: -450}
     position: {x: 2.0598, y: -1.632, z: 0}
@@ -51,3 +55,4 @@ MonoBehaviour:
     scale: {x: 1.3474853, y: 1.5278033, z: 1}
     sprite: {fileID: 21300000, guid: 7e8a0e05c95b01c45a097481ea0b4af1, type: 3}
     pieceSprite: {fileID: 4130640169021434097, guid: f4ee92a1f93b403458a51c236457151b, type: 3}
+    outlineSprite: {fileID: 4130640169021434097, guid: a2146c45bf03205469460a1f67c54b94, type: 3}

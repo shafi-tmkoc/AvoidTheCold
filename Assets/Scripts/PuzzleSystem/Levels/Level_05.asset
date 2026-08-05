@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level_05
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.LevelData
   levelNumber: 5
-  timeLimitSeconds: 28
+  timeLimitSeconds: 26
   defaultScale: {x: 2.2, y: 2.2, z: 1}
   pieces:
   - shapeId: piece_1
@@ -23,6 +23,7 @@ MonoBehaviour:
     scale: {x: 1.3482448, y: 1.530978, z: 1}
     sprite: {fileID: 21300000, guid: 0948caf7706819d4ca25fb3b1763dbc8, type: 3}
     pieceSprite: {fileID: -855298285791758126, guid: 42f774f185ca6af4c847998b0dff869d, type: 3}
+    outlineSprite: {fileID: -855298285791758126, guid: 4eb1b793b4a9c7b449be2c4d91ab8e27, type: 3}
   - shapeId: piece_2
     trayPosition: {x: -270, y: -450}
     position: {x: 1.8285733, y: 2.3657, z: 0}
@@ -30,6 +31,7 @@ MonoBehaviour:
     scale: {x: 1.3365086, y: 1.549471, z: 1}
     sprite: {fileID: 21300000, guid: b337694bfafe6574a9962a39a72a3dc2, type: 3}
     pieceSprite: {fileID: 6937817954938267909, guid: bb6d5079df902e546ade2d40e76777ef, type: 3}
+    outlineSprite: {fileID: 6937817954938267909, guid: 1e17fcf3de8e6cf44b7d43704adc103c, type: 3}
   - shapeId: piece_3
     trayPosition: {x: -90, y: -450}
     position: {x: 4.0245, y: 2.3814, z: 0}
@@ -37,6 +39,7 @@ MonoBehaviour:
     scale: {x: 1.394667, y: 1.546795, z: 1}
     sprite: {fileID: 21300000, guid: eb7918735b55f564bb3744f7b98388e6, type: 3}
     pieceSprite: {fileID: -6470460504253458178, guid: 2bfdcb6442ce7d3438ee9845caa578ce, type: 3}
+    outlineSprite: {fileID: -6470460504253458178, guid: 252effbf01049f4419dcf3a37cb23c11, type: 3}
   - shapeId: piece_4
     trayPosition: {x: 90, y: -450}
     position: {x: -3.8311, y: 2.339, z: 0}
@@ -44,6 +47,7 @@ MonoBehaviour:
     scale: {x: 1.357888, y: 1.5495028, z: 1}
     sprite: {fileID: 21300000, guid: 135e0910e080b6d45a669e3741220553, type: 3}
     pieceSprite: {fileID: -4178046375966092550, guid: 16c3a6db4eb757441bb037ab0539f7e5, type: 3}
+    outlineSprite: {fileID: -4178046375966092550, guid: 0429af6ea3e76424a8e6b03aee9b1df4, type: 3}
   - shapeId: piece_5
     trayPosition: {x: 270, y: -450}
     position: {x: -3.8422, y: -0.7762999, z: 0}
@@ -51,6 +55,7 @@ MonoBehaviour:
     scale: {x: 1.344989, y: 1.614331, z: 1}
     sprite: {fileID: 21300000, guid: 17dca00b98305c747b18ec23151c008f, type: 3}
     pieceSprite: {fileID: 4130640169021434097, guid: 86bae100b180cab43b1eb7cd08aaa835, type: 3}
+    outlineSprite: {fileID: 4130640169021434097, guid: 018f044711c899047a28d617022d06c1, type: 3}
   - shapeId: piece_6
     trayPosition: {x: 450, y: -450}
     position: {x: -0.588558, y: -1.7759, z: 0}
@@ -58,6 +63,7 @@ MonoBehaviour:
     scale: {x: 1.3374276, y: 1.554849, z: 1}
     sprite: {fileID: 21300000, guid: a585d5d3309a01e41b9c98a340c83ee1, type: 3}
     pieceSprite: {fileID: 3465286685962602723, guid: 86e2e590f26039b47a0513dee4ffb5f6, type: 3}
+    outlineSprite: {fileID: 3465286685962602723, guid: 57d0b3af589466844b52a876a10d98d5, type: 3}
   - shapeId: piece_7
     trayPosition: {x: 450, y: -450}
     position: {x: 1.8392948, y: -1.8184, z: 0}
@@ -65,6 +71,7 @@ MonoBehaviour:
     scale: {x: 1.3422267, y: 1.527295, z: 1}
     sprite: {fileID: 21300000, guid: 730170a4807bbbf409c39273c2550e42, type: 3}
     pieceSprite: {fileID: 7028616704906629411, guid: 8feefbe92dbe3e149bf704758bb4a291, type: 3}
+    outlineSprite: {fileID: 7028616704906629411, guid: 9cd845089faafc346b2fe11228a91718, type: 3}
   - shapeId: piece_8
     trayPosition: {x: 450, y: -450}
     position: {x: 5.1911, y: -1.8063, z: 0}
@@ -72,3 +79,4 @@ MonoBehaviour:
     scale: {x: 1.5571585, y: 1.5356162, z: 1}
     sprite: {fileID: 21300000, guid: 16a3ea99ab0f45746b5c49c6fb3a28f6, type: 3}
     pieceSprite: {fileID: 8288426215254106694, guid: 5f790147333d5844a8fec5320f113fea, type: 3}
+    outlineSprite: {fileID: 8288426215254106694, guid: 01d48e067c70ccf4fbb211515c30552a, type: 3}

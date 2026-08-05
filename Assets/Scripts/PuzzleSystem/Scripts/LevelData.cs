@@ -31,6 +31,8 @@ namespace AvoidTheCold
 
             [Tooltip("Artwork shown on the draggable piece. Leave empty to fall back to the placeholder color square")]
             public Sprite pieceSprite;
+
+            public Sprite outlineSprite;
         }
 
         [Min(1)] public int levelNumber = 1;

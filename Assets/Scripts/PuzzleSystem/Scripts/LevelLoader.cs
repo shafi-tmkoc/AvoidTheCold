@@ -260,10 +260,10 @@ namespace AvoidTheCold
                 float pieceHeight = native.y * scale;
                 Vector3 pieceWorldPos = new Vector3(cellCenterX[cellIndex], pieceY, 0f);
 
-                var pieceGO = CreateSpriteObject($"Piece_{def.shapeId}", def.pieceSprite, def.placeholderColor, new Vector2(pieceWidth, pieceHeight), pieceWorldPos, pieceSortingLayer, 0, trayParent);
+                var pieceGO = CreateSpriteObject($"Piece_{def.shapeId}", def.pieceSprite, def.placeholderColor, new Vector2(pieceWidth, pieceHeight), pieceWorldPos, pieceSortingLayer, 2, trayParent);
                 var draggable = pieceGO.GetComponent<DraggableShape>();
                 if (draggable == null) draggable = pieceGO.AddComponent<DraggableShape>();
-                draggable.Initialize(def.shapeId, pieceWorldPos);
+                draggable.Initialize(def.shapeId, pieceWorldPos, def.outlineSprite);
                 _spawned.Add(pieceGO);
                 pieces[pieceIndex] = draggable;
 

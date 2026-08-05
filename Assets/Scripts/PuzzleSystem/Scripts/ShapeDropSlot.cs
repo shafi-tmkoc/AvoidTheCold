@@ -44,6 +44,7 @@ namespace AvoidTheCold
 
             Debug.Log($"[ShapeDropSlot] Accepted drop on {name} (shapeId={shapeId})");
             shape.SnapToSlot(transform);
+            shape.outlineRenderer.enabled = false;
             _isFilled = true;
             OnFilled?.Invoke(this);
             return true;

@@ -26,6 +26,7 @@ namespace AvoidTheCold
 
         [Tooltip("Child SpriteRenderer named \"Outline\" that shows the level's outline/stroke art on top of this piece. Auto-found by child name if left empty.")]
         public SpriteRenderer outlineRenderer;
+        public GameObject particle;
         private SpriteRenderer _spriteRenderer;
         private Collider2D _collider;
         private Camera _camera;
@@ -285,6 +286,7 @@ namespace AvoidTheCold
             transform.DOLocalMove(Vector3.zero, snapTweenDuration).SetEase(Ease.OutBack);
             transform.DOScale(Vector3.one, snapTweenDuration).SetEase(Ease.OutBack);
 
+            particle.SetActive(true);
             OnPlacedSuccessfully?.Invoke();
         }
 

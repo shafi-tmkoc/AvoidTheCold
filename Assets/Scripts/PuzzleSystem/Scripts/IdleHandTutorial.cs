@@ -43,6 +43,18 @@ namespace AvoidTheCold
             }
 
             _idleTimer = 0f;
+            _isShowingHint = false;
+
+            // LevelLoader calls tutorialSequencer.BeginForFirstLevel() right
+            // before this, which may have just shown the one-time hint for
+            // level 1's first piece - don't immediately hide it out from
+            // under that sequencer.
+            if (tutorialSequencer != null && tutorialSequencer.IsActive)
+            {
+                Debug.Log("[IdleHandTutorial] Sequencer is showing the first-run hint - leaving it visible");
+                return;
+            }
+
             HideHint();
         }
 

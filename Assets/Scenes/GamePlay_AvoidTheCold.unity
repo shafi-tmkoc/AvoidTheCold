@@ -1290,7 +1290,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 310640270}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2056074054}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &310640270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1756,6 +1768,7 @@ GameObject:
   - component: {fileID: 411262527}
   - component: {fileID: 411262526}
   - component: {fileID: 411262525}
+  - component: {fileID: 411262529}
   m_Layer: 0
   m_Name: Tappu
   m_TagString: Untagged
@@ -1847,6 +1860,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 411262522}
   m_CullTransparentMesh: 1
+--- !u!223 &411262529
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 411262522}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 10
+  m_TargetDisplay: 0
 --- !u!1 &417624300 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1284970568538890, guid: 341961fb75a51fb4c844909972cb6b1a, type: 3}
@@ -3009,7 +3045,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 6
@@ -3899,7 +3935,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!1 &1101640122
 GameObject:
@@ -5248,6 +5284,7 @@ GameObject:
   - component: {fileID: 1296804697}
   - component: {fileID: 1296804696}
   - component: {fileID: 1296804695}
+  - component: {fileID: 1296804699}
   m_Layer: 0
   m_Name: Daya
   m_TagString: Untagged
@@ -5339,6 +5376,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1296804692}
   m_CullTransparentMesh: 1
+--- !u!223 &1296804699
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296804692}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 10
+  m_TargetDisplay: 0
 --- !u!1 &1302673362
 GameObject:
   m_ObjectHideFlags: 0
@@ -6071,7 +6131,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1376339574
@@ -6388,6 +6448,7 @@ GameObject:
   - component: {fileID: 1453290512}
   - component: {fileID: 1453290515}
   - component: {fileID: 1453290514}
+  - component: {fileID: 1453290516}
   m_Layer: 0
   m_Name: LoseBanner
   m_TagString: Untagged
@@ -6467,7 +6528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8649937ff0533642ac401c12d457546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
-  fadeSpeed: 1
+  fadeSpeed: 5
   _targetAlpha: 0
 --- !u!225 &1453290515
 CanvasGroup:
@@ -6481,6 +6542,25 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1453290516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453290510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24cdee17a56b7d943b438b9f74991829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AvoidTheCold.ResultBannerIntroAnimation
+  panel: {fileID: 1774646642}
+  tappu: {fileID: 411262523}
+  daya: {fileID: 1296804693}
+  panelDuration: 0.45
+  sideDuration: 0.4
+  panelEase: 9
+  sideEase: 27
 --- !u!1 &1455753059
 GameObject:
   m_ObjectHideFlags: 0
@@ -6850,7 +6930,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1541949820}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2056074054}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1553470365
 GameObject:
   m_ObjectHideFlags: 0
@@ -8903,7 +8995,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!1 &1838968605
 GameObject:
@@ -9210,7 +9302,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2056074055
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9413,6 +9505,7 @@ GameObject:
   - component: {fileID: 2135301526}
   - component: {fileID: 2135301529}
   - component: {fileID: 2135301528}
+  - component: {fileID: 2135301530}
   m_Layer: 0
   m_Name: WinBanner
   m_TagString: Untagged
@@ -9492,7 +9585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8649937ff0533642ac401c12d457546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle.CanvasGroupFader
-  fadeSpeed: 1
+  fadeSpeed: 5
   _targetAlpha: 0
 --- !u!225 &2135301529
 CanvasGroup:
@@ -9506,6 +9599,25 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &2135301530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135301524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24cdee17a56b7d943b438b9f74991829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AvoidTheCold.ResultBannerIntroAnimation
+  panel: {fileID: 2109728905}
+  tappu: {fileID: 986492348}
+  daya: {fileID: 1831426455}
+  panelDuration: 0.45
+  sideDuration: 0.4
+  panelEase: 9
+  sideEase: 27
 --- !u!1 &2143097043
 GameObject:
   m_ObjectHideFlags: 0

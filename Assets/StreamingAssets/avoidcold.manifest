@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.6f1
-CRC: 150338787
+CRC: 2286547889
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3b8192025acee9a28eb8185a9f1d850e
+    Hash: 38df4ea11a3755e8487a43601c1f8790
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 3b00f2a32e7d4719d68602f2706a358d
+    Hash: 3989a63310d97a76455a90edc788935d
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 0ffce09c51af911ee8a7d7d131751a7f
+    Hash: 210ff142cd017d602c9f5d486d6fc49e
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -25,24 +25,32 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
 - Class: 81
   Script: {instanceID: 0}
 - Class: 82
   Script: {instanceID: 0}
 - Class: 83
   Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
 - Class: 104
   Script: {instanceID: 0}
 - Class: 114
+  Script: {fileID: 11500000, guid: 792717275c6791848aa60888c95048d3, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 04fa796c1f027514590ef34e372497c2, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4f59ede916fb86247be3a8f4e20a1426, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: f8649937ff0533642ac401c12d457546, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: c7f4895bd1cb0b94db45635317309770, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 56c6b124133d5224991a24095dab1a7d, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 36ac97b07575cea4a870d39e347596a1, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 2e46d3df93459b4409131504e1c923a1, type: 3}
 - Class: 114
@@ -70,17 +78,19 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 2d1b307686e31474185e937a17ca3109, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 92c65085e9213524ea7d895630a0a5ab, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 81491dde5fc26514088b5935f95e60e9, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 2c484c1aba7a19049a64ecdb8fb1fb27, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: f8f40ec5b10f64241a340cd6208f125a, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 1ad3c7b7c609a3d46ab2a6af11045eec, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 5295c87d44555d1408d4d0c2a51942b8, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 0205228290d080a488b6d00089c1de27, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 871ca1218c68f554d94491a39d4dc884, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: fc466f932e1365446b2a41087e8c80c9, type: 3}
 - Class: 114
@@ -106,6 +116,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -118,6 +130,10 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
@@ -129,6 +145,12 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 196
   Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
 - Class: 222
@@ -139,7 +161,10 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 225
   Script: {instanceID: 0}
+- Class: 258
+  Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/Scenes/GamePlay_AvoidTheCold_UIBackup.unity
 - Assets/Scenes/GamePlay_AvoidTheCold.unity
 Dependencies: []

@@ -18,7 +18,7 @@ namespace AvoidTheCold
         public event Action<float> OnProgressChanged; // 0..1
         public event Action OnAllSlotsFilled;
 
-        private int _filledCount;
+        [SerializeField] private int _filledCount;
 
         public int FilledCount => _filledCount;
         public int TotalCount => slots != null ? slots.Length : 0;

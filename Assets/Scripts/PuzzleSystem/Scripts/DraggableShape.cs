@@ -46,14 +46,28 @@ namespace AvoidTheCold
 
         private void Awake()
         {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
-            _collider = GetComponent<Collider2D>();
-            _camera = Camera.main;
-
-            if (_camera == null)
-                Debug.Log("[DraggableShape] No main camera found - dragging will not work until one is tagged MainCamera");
-
+            EnsureCached();
             CacheStartTransform();
+        }
+
+        /// <summary>
+        /// Caches SpriteRenderer/Collider2D/Camera if not already cached.
+        /// Normally Awake() handles this, but when spawned via
+        /// Instantiate(piecePrefab) in Edit Mode (e.g. LevelLoader's
+        /// Visualize preview), Awake() isn't guaranteed to have run
+        /// synchronously by the time Initialize() is called right after -
+        /// so Initialize() also calls this defensively.
+        /// </summary>
+        private void EnsureCached()
+        {
+            if (_spriteRenderer == null) _spriteRenderer = GetComponent<SpriteRenderer>();
+            if (_collider == null) _collider = GetComponent<Collider2D>();
+            if (_camera == null)
+            {
+                _camera = Camera.main;
+                if (_camera == null)
+                    Debug.Log("[DraggableShape] No main camera found - dragging will not work until one is tagged MainCamera");
+            }
         }
 
         private void CacheStartTransform()
@@ -69,6 +83,7 @@ namespace AvoidTheCold
         /// </summary>
         public void Initialize(string id, Vector3 trayPosition)
         {
+            EnsureCached();
             shapeId = id;
             _isPlaced = false;
             _isDragging = false;

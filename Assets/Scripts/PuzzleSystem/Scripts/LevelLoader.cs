@@ -26,6 +26,8 @@ namespace AvoidTheCold
         [Header("Bottom-left piece tray")]
         [Tooltip("Editor-authored Sprite2D backdrop (e.g. Board2D/PieceTray) - repositioned/rescaled at load time to fit the current screen, but its sprite/color stay exactly as set up in the Editor")]
         [SerializeField] private Transform pieceTray;
+        [Tooltip("Prefab (SpriteRenderer + BoxCollider2D + DraggableShape) instantiated for every tray piece - Prefabs/Piece")]
+        [SerializeField] private DraggableShape piecePrefab;
         [Tooltip("Fraction of the camera's actual visible width the tray container occupies")]
         [SerializeField] private float trayWidthFraction = 0.7f;
         [Tooltip("Tray container height, in world units")]
@@ -65,7 +67,10 @@ namespace AvoidTheCold
         [SerializeField] private OutsideEnvironmentSeasonSwitcher seasonSwitcher;
         [Tooltip("Curtain/character Animators that switch state on puzzle-complete and back on a fresh attempt (e.g. Curtain, DayaShivering, TappuShivering)")]
         [SerializeField] private AnimatorStateOnPuzzleComplete[] puzzleCompleteAnimators;
-        [SerializeField] private WindlinesStormyHider windlinesStormyHider;
+        [Tooltip("Objects that disable themselves on puzzle-complete and re-enable on a fresh attempt (e.g. WindlinesStormy, the piece tray)")]
+        [SerializeField] private HideOnPuzzleComplete[] hideOnPuzzleComplete;
+        [Tooltip("Objects that enable themselves on puzzle-complete and disable again on a fresh attempt (e.g. ConfettiFullscreen)")]
+        [SerializeField] private ShowOnPuzzleComplete[] showOnPuzzleComplete;
 
         private readonly List<GameObject> _spawned = new List<GameObject>();
         private static Sprite _placeholderSprite;
@@ -97,7 +102,20 @@ namespace AvoidTheCold
                     if (a != null) a.ResetForNewAttempt();
                 }
             }
-            if (windlinesStormyHider != null) windlinesStormyHider.ResetForNewAttempt();
+            if (hideOnPuzzleComplete != null)
+            {
+                foreach (var h in hideOnPuzzleComplete)
+                {
+                    if (h != null) h.ResetForNewAttempt();
+                }
+            }
+            if (showOnPuzzleComplete != null)
+            {
+                foreach (var s in showOnPuzzleComplete)
+                {
+                    if (s != null) s.ResetForNewAttempt();
+                }
+            }
 
             if (countdownTimer != null)
             {
@@ -243,7 +261,8 @@ namespace AvoidTheCold
                 Vector3 pieceWorldPos = new Vector3(cellCenterX[cellIndex], pieceY, 0f);
 
                 var pieceGO = CreateSpriteObject($"Piece_{def.shapeId}", def.pieceSprite, def.placeholderColor, new Vector2(pieceWidth, pieceHeight), pieceWorldPos, pieceSortingLayer, 0, trayParent);
-                var draggable = pieceGO.AddComponent<DraggableShape>();
+                var draggable = pieceGO.GetComponent<DraggableShape>();
+                if (draggable == null) draggable = pieceGO.AddComponent<DraggableShape>();
                 draggable.Initialize(def.shapeId, pieceWorldPos);
                 _spawned.Add(pieceGO);
                 pieces[pieceIndex] = draggable;
@@ -313,17 +332,33 @@ namespace AvoidTheCold
         }
 
         /// <summary>
-        /// Builds a plain SpriteRenderer + BoxCollider2D GameObject under the
-        /// given parent, sized in world units. Falls back to a solid-color
-        /// placeholder square when no sprite is assigned yet.
+        /// Builds a piece GameObject (SpriteRenderer + BoxCollider2D +
+        /// DraggableShape) under the given parent, sized in world units, by
+        /// instantiating piecePrefab (Prefabs/Piece) - never builds it from
+        /// scratch in code when the prefab is assigned. Falls back to
+        /// building a plain GameObject only if piecePrefab is left
+        /// unassigned, so a missing reference doesn't silently break
+        /// spawning. Falls back to a solid-color placeholder square when no
+        /// sprite is assigned yet.
         /// </summary>
         private GameObject CreateSpriteObject(string name, Sprite sprite, Color placeholderColor, Vector2 size, Vector3 position, string sortingLayer, int order, Transform parent)
         {
-            var go = new GameObject(name);
-            go.transform.SetParent(parent, false);
-            go.transform.position = position;
+            GameObject go;
+            if (piecePrefab != null)
+            {
+                go = Instantiate(piecePrefab.gameObject, position, Quaternion.identity, parent);
+                go.name = name;
+            }
+            else
+            {
+                Debug.Log("[LevelLoader] piecePrefab not assigned - building piece GameObject from scratch instead");
+                go = new GameObject(name);
+                go.transform.SetParent(parent, false);
+                go.transform.position = position;
+            }
 
-            var sr = go.AddComponent<SpriteRenderer>();
+            var sr = go.GetComponent<SpriteRenderer>();
+            if (sr == null) sr = go.AddComponent<SpriteRenderer>();
             sr.sortingLayerName = sortingLayer;
             sr.sortingOrder = order;
 
@@ -360,7 +395,8 @@ namespace AvoidTheCold
                 (size.y / safeH) / safeParentY,
                 1f);
 
-            var collider = go.AddComponent<BoxCollider2D>();
+            var collider = go.GetComponent<BoxCollider2D>();
+            if (collider == null) collider = go.AddComponent<BoxCollider2D>();
             collider.size = nativeSize;
 
             return go;

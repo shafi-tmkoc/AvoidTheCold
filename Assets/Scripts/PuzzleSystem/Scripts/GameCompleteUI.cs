@@ -62,10 +62,12 @@ namespace AvoidTheCold
         private IEnumerator ShowBannerAfterDelay()
         {
             yield return new WaitForSeconds(showDelaySeconds);
-/*#if PLAYSCHOOL_MAIN
+
+#if PLAYSCHOOL_MAIN
                     EffectParticleControll.Instance.SpawnGameEndPanel();
-                    GameOverEndPanel.Instance.AddTheListnerRetryGame(() => LevelManager.Instance.RestartGame());
+                    GameOverEndPanel.Instance.AddTheListnerRetryGame(() => HandleReplayClicked());
 #else
+            //Your testing End panel
             if (banner != null)
             {
                 banner.SetActive(true);
@@ -77,7 +79,7 @@ namespace AvoidTheCold
                 if (_fader != null) _fader.SetTarget(1f);
             }
 #endif
-            _pendingShowRoutine = null;*/
+            _pendingShowRoutine = null;
         }
 
         private void HandleReplayClicked()
@@ -97,7 +99,7 @@ namespace AvoidTheCold
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-            Application.Quit();
+            //Application.Quit();
 #endif
         }
     }

@@ -1,12 +1,9 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.6f1
-CRC: 448872198
+CRC: 1228688933
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: unifiedraytracing
-      Dependencies: {}
-    Info_1:
       Name: avoidcold
       Dependencies: {}

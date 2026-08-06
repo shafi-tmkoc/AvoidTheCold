@@ -1,6 +1,4 @@
 using UnityEngine;
-using StorySystem.Story;
-
 namespace AvoidTheCold
 {
     /// <summary>

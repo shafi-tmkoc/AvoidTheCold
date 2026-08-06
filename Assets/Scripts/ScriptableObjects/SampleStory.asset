@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc466f932e1365446b2a41087e8c80c9, type: 3}
+  m_Name: SampleStory
+  m_EditorClassIdentifier: Assembly-CSharp::AvoidTheCold.StoryData
+  slides:
+  - backgroundSprite: {fileID: 21300000, guid: a749fca9805740343b1f4a7d27a940fd, type: 3}
+    foregroundSprite: {fileID: 21300000, guid: d6483cccaeb52724aac0b07b674fbaff, type: 3}
+    vo_title: Storyboard1
+    captionText: Brrr! It's very cold outside today. The window is broken, and cold
+      air is blowing into the room.
+    displayDuration: 9
+    transitionIn: 0
+    transitionOut: 1
+    narrationClip: {fileID: 0}
+    slideEnterSFX: {fileID: 8300000, guid: 56b45b7cd22ec104dbee97f464c995d4, type: 3}
+  - backgroundSprite: {fileID: 21300000, guid: a749fca9805740343b1f4a7d27a940fd, type: 3}
+    foregroundSprite: {fileID: 21300000, guid: 1093a56e915346443961c8eb471808d3, type: 3}
+    vo_title: Storyboard2
+    captionText: Daya and Tapu are shivering from the cold.
+    displayDuration: 4
+    transitionIn: 2
+    transitionOut: 1
+    narrationClip: {fileID: 0}
+    slideEnterSFX: {fileID: 8300000, guid: 56b45b7cd22ec104dbee97f464c995d4, type: 3}
+  - backgroundSprite: {fileID: 21300000, guid: a749fca9805740343b1f4a7d27a940fd, type: 3}
+    foregroundSprite: {fileID: 21300000, guid: 75338e7ec91466c4195491239d32df09, type: 3}
+    vo_title: Storyboard3
+    captionText: I will fix the broken window and help them feel warm and avoid catching
+      a cold!
+    displayDuration: 6
+    transitionIn: 0
+    transitionOut: 1
+    narrationClip: {fileID: 0}
+    slideEnterSFX: {fileID: 8300000, guid: 56b45b7cd22ec104dbee97f464c995d4, type: 3}
+  isSkippable: 1
+  storyBGM: {fileID: 0}
+  bgmVolume: 0.7

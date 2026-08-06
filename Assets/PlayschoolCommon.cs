@@ -20,9 +20,6 @@ public class PlayschoolCommon : MonoBehaviour
     {
 
         Instantiate(playschoolWinLosePanel);
-
     }
-
-
 }
 

@@ -41,23 +41,5 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Background
-    uniqueID: 100001
-    locked: 0
-  - name: Board
-    uniqueID: 100002
-    locked: 0
-  - name: Slots
-    uniqueID: 100003
-    locked: 0
-  - name: Pieces
-    uniqueID: 100004
-    locked: 0
-  - name: Effects
-    uniqueID: 100005
-    locked: 0
-  - name: Curtains
-    uniqueID: 168369577
-    locked: 0
   m_RenderingLayers:
   - Default

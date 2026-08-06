@@ -77,8 +77,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 100004
-  m_SortingLayer: 4
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -855298285791758126, guid: 42f774f185ca6af4c847998b0dff869d, type: 3}
@@ -172,9 +172,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 100004
-  m_SortingLayer: 4
-  m_SortingOrder: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: -855298285791758126, guid: 42f774f185ca6af4c847998b0dff869d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -322,7 +322,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 19915990, guid: 82bf03917e16d3d4cad30518cca28308, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19915990, guid: 82bf03917e16d3d4cad30518cca28308, type: 3}
       propertyPath: m_SortingOrder
@@ -330,7 +330,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 19915990, guid: 82bf03917e16d3d4cad30518cca28308, type: 3}
       propertyPath: m_SortingLayerID
-      value: 100004
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19915990, guid: 82bf03917e16d3d4cad30518cca28308, type: 3}
       propertyPath: m_Materials.Array.size
@@ -338,7 +338,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 19968250, guid: 82bf03917e16d3d4cad30518cca28308, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19968250, guid: 82bf03917e16d3d4cad30518cca28308, type: 3}
       propertyPath: m_SortingOrder
@@ -346,7 +346,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 19968250, guid: 82bf03917e16d3d4cad30518cca28308, type: 3}
       propertyPath: m_SortingLayerID
-      value: 100004
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19968250, guid: 82bf03917e16d3d4cad30518cca28308, type: 3}
       propertyPath: m_Materials.Array.size

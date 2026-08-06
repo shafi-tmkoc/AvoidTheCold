@@ -32,8 +32,8 @@ namespace AvoidTheCold
         [SerializeField] private float trayWidthFraction = 0.7f;
         [Tooltip("Tray container height, in world units")]
         [SerializeField] private float trayHeight = 3.4f;
-        [Tooltip("Margin from the screen's left/bottom edges to the tray container")]
-        [SerializeField] private float trayScreenMargin = 0.3f;
+        [Tooltip("Margin from the screen's left/bottom edges to the tray container - X is the left margin, Y is the bottom margin")]
+        [SerializeField] private Vector2 trayScreenMargin = new Vector2(0.3f, 0.3f);
         [Tooltip("Padding inside the tray container around the piece row")]
         [SerializeField] private float trayInnerPadding = 0.3f;
         [Tooltip("Gap between adjacent pieces inside the tray")]
@@ -74,6 +74,10 @@ namespace AvoidTheCold
 
         private readonly List<GameObject> _spawned = new List<GameObject>();
         private static Sprite _placeholderSprite;
+        private LevelData _currentLevelData;
+
+        /// <summary>The LevelData most recently passed to LoadLevel - lets other systems (e.g. a win banner's Retry button) reload the exact same attempt without depending on LevelProgressStore's progress counter.</summary>
+        public LevelData CurrentLevelData => _currentLevelData;
 
         public void LoadLevel(LevelData data)
         {
@@ -83,6 +87,7 @@ namespace AvoidTheCold
                 return;
             }
 
+            _currentLevelData = data;
             Debug.Log($"[LevelLoader] Loading level {data.levelNumber} ({data.pieces.Length} pieces, {data.timeLimitSeconds}s)");
 
             BuildBoard(data, out var slots, out var pieces);
@@ -172,7 +177,7 @@ namespace AvoidTheCold
             Rect screenRect = GetCameraVisibleWorldRect();
             float containerWidth = screenRect.width * trayWidthFraction;
             float containerHeight = trayHeight;
-            Vector3 containerBottomLeft = new Vector3(screenRect.xMin + trayScreenMargin, screenRect.yMin + trayScreenMargin, 0f);
+            Vector3 containerBottomLeft = new Vector3(screenRect.xMin + trayScreenMargin.x, screenRect.yMin + trayScreenMargin.y, 0f);
             Vector3 containerCenter = containerBottomLeft + new Vector3(containerWidth / 2f, containerHeight / 2f, 0f);
 
             Transform trayParent = boardRoot;

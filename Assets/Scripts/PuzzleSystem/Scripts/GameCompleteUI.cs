@@ -62,7 +62,10 @@ namespace AvoidTheCold
         private IEnumerator ShowBannerAfterDelay()
         {
             yield return new WaitForSeconds(showDelaySeconds);
-
+/*#if PLAYSCHOOL_MAIN
+                    EffectParticleControll.Instance.SpawnGameEndPanel();
+                    GameOverEndPanel.Instance.AddTheListnerRetryGame(() => LevelManager.Instance.RestartGame());
+#else
             if (banner != null)
             {
                 banner.SetActive(true);
@@ -73,8 +76,8 @@ namespace AvoidTheCold
                 }
                 if (_fader != null) _fader.SetTarget(1f);
             }
-
-            _pendingShowRoutine = null;
+#endif
+            _pendingShowRoutine = null;*/
         }
 
         private void HandleReplayClicked()

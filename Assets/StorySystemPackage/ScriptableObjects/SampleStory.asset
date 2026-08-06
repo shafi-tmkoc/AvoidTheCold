@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: SampleStory
   m_EditorClassIdentifier: Assembly-CSharp::StorySystem.Data.StoryData
   slides:
-  - backgroundSprite: {fileID: 21300000, guid: d6483cccaeb52724aac0b07b674fbaff, type: 3}
-    foregroundSprite: {fileID: 0}
+  - backgroundSprite: {fileID: 21300000, guid: a749fca9805740343b1f4a7d27a940fd, type: 3}
+    foregroundSprite: {fileID: 21300000, guid: d6483cccaeb52724aac0b07b674fbaff, type: 3}
     vo_title: Storyboard1
     captionText: Brrr! It's very cold outside today. The window is broken, and cold
       air is blowing into the room.
@@ -23,8 +23,8 @@ MonoBehaviour:
     transitionOut: 1
     narrationClip: {fileID: 0}
     slideEnterSFX: {fileID: 8300000, guid: 56b45b7cd22ec104dbee97f464c995d4, type: 3}
-  - backgroundSprite: {fileID: 21300000, guid: 1093a56e915346443961c8eb471808d3, type: 3}
-    foregroundSprite: {fileID: 0}
+  - backgroundSprite: {fileID: 21300000, guid: a749fca9805740343b1f4a7d27a940fd, type: 3}
+    foregroundSprite: {fileID: 21300000, guid: 1093a56e915346443961c8eb471808d3, type: 3}
     vo_title: Storyboard2
     captionText: Daya and Tapu are shivering from the cold.
     displayDuration: 4
@@ -32,8 +32,8 @@ MonoBehaviour:
     transitionOut: 1
     narrationClip: {fileID: 0}
     slideEnterSFX: {fileID: 8300000, guid: 56b45b7cd22ec104dbee97f464c995d4, type: 3}
-  - backgroundSprite: {fileID: 21300000, guid: 75338e7ec91466c4195491239d32df09, type: 3}
-    foregroundSprite: {fileID: 0}
+  - backgroundSprite: {fileID: 21300000, guid: a749fca9805740343b1f4a7d27a940fd, type: 3}
+    foregroundSprite: {fileID: 21300000, guid: 75338e7ec91466c4195491239d32df09, type: 3}
     vo_title: Storyboard3
     captionText: I will fix the broken window and help them feel warm and avoid catching
       a cold!

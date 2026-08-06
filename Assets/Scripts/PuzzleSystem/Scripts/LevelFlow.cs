@@ -1,7 +1,8 @@
+using StorySystem.Story;
 using System;
 using System.Collections;
-using StorySystem.Story;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace AvoidTheCold
 {
@@ -157,6 +158,42 @@ namespace AvoidTheCold
             LoadCurrentLevel();
         }
 
+        /// <summary>
+        /// Called by the win banner's Retry button - replays the level that
+        /// was just won, instead of the level HandleSuccess already advanced
+        /// progress to. Rolls LevelProgressStore.CurrentLevel back to match,
+        /// so the next real win doesn't skip a level.
+        /// </summary>
+        public void RetryCurrentLevel()
+        {
+            if (levelLoader == null || levelLoader.CurrentLevelData == null)
+            {
+                Debug.Log("[LevelFlow] RetryCurrentLevel called but there's no current level data yet - ignoring");
+                return;
+            }
+
+            var data = levelLoader.CurrentLevelData;
+            Debug.Log($"[LevelFlow] Retry pressed - reloading level {data.levelNumber}");
+
+            LevelProgressStore.CurrentLevel = data.levelNumber;
+            LevelProgressStore.Save();
+            levelLoader.LoadLevel(data);
+        }
+
+        /// <summary>Called by the win banner's Next button - advances immediately instead of waiting for the banner's auto-hide timer.</summary>
+        public void GoToNextLevelNow()
+        {
+            if (_suppressNextResultCycle)
+            {
+                _suppressNextResultCycle = false;
+                Debug.Log("[LevelFlow] Next pressed on the final level's win banner - Game Complete screen already handles this");
+                return;
+            }
+
+            Debug.Log("[LevelFlow] Next pressed - loading next level now");
+            LoadCurrentLevel();
+        }
+
         private void HandleFailed()
         {
             Debug.Log("[LevelFlow] Lose - retrying same level once the lose banner finishes");
@@ -172,6 +209,11 @@ namespace AvoidTheCold
             }
 
             LoadCurrentLevel();
+        }
+
+        public virtual void GoBackToPlayschool()
+        {
+            SceneManager.LoadScene(TMKOCPlaySchoolConstants.TMKOCPlayMainMenu);
         }
     }
 }

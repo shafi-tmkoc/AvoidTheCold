@@ -19,7 +19,7 @@ MonoBehaviour:
   - shapeId: piece_1
     trayPosition: {x: -600, y: -450}
     position: {x: -3.4717164, y: 2.187996, z: 0}
-    placeholderColor: {r: 1, g: 1, b: 1, a: 1}
+    placeholderColor: {r: 0, g: 0, b: 0, a: 1}
     scale: {x: 1.3376318, y: 1.5225224, z: 1}
     sprite: {fileID: 21300000, guid: 44e2c503932e32a4d9e2689e5611bef3, type: 3}
     pieceSprite: {fileID: -855298285791758126, guid: 6233e4cef570a6046b0c08d351c71ce6, type: 3}
@@ -27,7 +27,7 @@ MonoBehaviour:
   - shapeId: piece_2
     trayPosition: {x: -300, y: -450}
     position: {x: 2.225983, y: 2.187996, z: 0}
-    placeholderColor: {r: 1, g: 0.18679237, b: 0.36689183, a: 1}
+    placeholderColor: {r: 0, g: 0, b: 0, a: 1}
     scale: {x: 1.3376318, y: 1.5225224, z: 1}
     sprite: {fileID: 21300000, guid: 4024ace973b08fe4885cea4bd5890e3c, type: 3}
     pieceSprite: {fileID: 6937817954938267909, guid: b8429bd56ed281f449f80adc7b06e6cc, type: 3}

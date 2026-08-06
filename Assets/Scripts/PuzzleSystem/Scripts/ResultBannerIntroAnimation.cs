@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AvoidTheCold
 {
@@ -17,6 +18,8 @@ namespace AvoidTheCold
         [SerializeField] private RectTransform tappu;
         [SerializeField] private RectTransform daya;
 
+        [SerializeField] Button retry, next;
+
         [SerializeField] private float panelDuration = 0.45f;
         [SerializeField] private float sideDuration = 0.4f;
         [SerializeField] private Ease panelEase = Ease.OutCubic;
@@ -27,6 +30,11 @@ namespace AvoidTheCold
         private Sequence _sequence;
 
         private void Awake()
+        {
+            CacheInitialTransforms();
+        }
+
+        private void CacheInitialTransforms()
         {
             if (panel != null)
             {
@@ -72,9 +80,23 @@ namespace AvoidTheCold
                 if (sideStepStarted) _sequence.Join(dayaTween);
                 else _sequence.Append(dayaTween);
             }
+
+            _sequence.OnComplete(()=>{
+                if (next != null) next.gameObject.SetActive(true);
+                if(retry != null) retry.gameObject.SetActive(true); 
+            });
         }
 
         private void OnDisable()
+        {
+            ResetPositions();
+        }
+
+        /// <summary>
+        /// Call this manually from an external script (like CanvasGroupFader) 
+        /// right *before* disabling the GameObject to guarantee a clean reset.
+        /// </summary>
+        public void ResetPositions()
         {
             _sequence?.Kill();
             _sequence = null;
@@ -85,6 +107,10 @@ namespace AvoidTheCold
             if (panel != null) panel.anchoredPosition = _panelRestPos;
             if (tappu != null) tappu.anchoredPosition = _tappuRestPos;
             if (daya != null) daya.anchoredPosition = _dayaRestPos;
+
+            if (next != null) next.gameObject.SetActive(false);
+            if (retry != null) retry.gameObject.SetActive(false);
+           
         }
     }
 }

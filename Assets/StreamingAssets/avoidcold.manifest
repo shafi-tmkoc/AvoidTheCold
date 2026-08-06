@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.6f1
-CRC: 1508541091
+CRC: 4139408402
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 72c60644efa903f7d125c8ec3afe5015
+    Hash: fb04afcd0f2bb085db3dbd3ca5c50a22
   TypeTreeHash:
     serializedVersion: 2
-    Hash: def6478cfecdbccb99af0c1761298433
+    Hash: 9ae0fae6933073b64a88b7e8f336e1f9
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 0b85bc76c69e3699fab5fd168315fa47
+    Hash: f75059bb397c4b31946917aaa0b9e29c
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -94,7 +94,11 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 81491dde5fc26514088b5935f95e60e9, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 24cdee17a56b7d943b438b9f74991829, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 2c484c1aba7a19049a64ecdb8fb1fb27, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: dac6ccca8980b104e8667318879d3ead, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: e13cfdc6f245248448070c04e304ec80, type: 3}
 - Class: 114
@@ -175,6 +179,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Scenes/GamePlay_AvoidTheCold_UIBackup.unity
 - Assets/Scenes/GamePlay_AvoidTheCold.unity
 Dependencies: []

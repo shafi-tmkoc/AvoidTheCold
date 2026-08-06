@@ -27,7 +27,7 @@ namespace AvoidTheCold
         public void Show(Vector2 fromPos, Vector2 toPos)
         {
             Debug.Log("[HandTutorialUI] Showing hint");
-            transform.SetAsLastSibling(); // stay above pieces/slots spawned after this
+            //transform.SetAsLastSibling(); // stay above pieces/slots spawned after this
             gameObject.SetActive(true);
 
             if (_loopRoutine != null) StopCoroutine(_loopRoutine);

@@ -26,6 +26,11 @@ namespace AvoidTheCold
         /// <summary>Raised once the banner has finished its show/hold/fade-out cycle.</summary>
         public event Action OnResultCycleComplete;
 
+        /// <summary>True while either the win or lose banner is actually showing/interactive (used to keep other systems, e.g. the idle hand hint, out of the way).</summary>
+        public bool IsAnyBannerShowing =>
+            (winBanner != null && winBanner.activeInHierarchy && _winGroup != null && _winGroup.blocksRaycasts) ||
+            (loseBanner != null && loseBanner.activeInHierarchy && _loseGroup != null && _loseGroup.blocksRaycasts);
+
         private CanvasGroupFader _winFader;
         private CanvasGroupFader _loseFader;
         private CanvasGroup _winGroup;

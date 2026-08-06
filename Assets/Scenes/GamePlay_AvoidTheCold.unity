@@ -1027,7 +1027,7 @@ Transform:
   m_GameObject: {fileID: 268782585}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -17.373333, y: -11.01, z: 0}
+  m_LocalPosition: {x: -17.345127, y: -11.01, z: 0}
   m_LocalScale: {x: 2.2703998, y: 2.3179502, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1938,11 +1938,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2559037201267623759, guid: 88a59c8e316774bf68b9a81e990ede96, type: 3}
       propertyPath: _bursts.Array.data[0].used
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2559037201541945336, guid: 88a59c8e316774bf68b9a81e990ede96, type: 3}
       propertyPath: _bursts.Array.data[0].used
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2559037202506892816, guid: 88a59c8e316774bf68b9a81e990ede96, type: 3}
       propertyPath: m_Name
@@ -2034,7 +2034,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2559037202506892822, guid: 88a59c8e316774bf68b9a81e990ede96, type: 3}
       propertyPath: _length
-      value: 2135.8652
+      value: 2118.368
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5127,10 +5127,10 @@ RectTransform:
   - {fileID: 1455753060}
   - {fileID: 30170310}
   - {fileID: 1131928366}
+  - {fileID: 1640401178}
   - {fileID: 774689651}
   - {fileID: 367823538}
   - {fileID: 356825443}
-  - {fileID: 1640401178}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5184,6 +5184,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AvoidTheCold.IdleHandTutorial
   handTutorialUI: {fileID: 1640401175}
   tutorialSequencer: {fileID: 341475060}
+  resultScreenUI: {fileID: 848978373}
+  gameCompleteUI: {fileID: 1812774026}
   idleThreshold: 7
   canvasRect: {fileID: 1126528889}
   worldCamera: {fileID: 519420031}
@@ -6521,7 +6523,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.71, y: -1.07, z: 0}
-  m_LocalScale: {x: 2.5086808, y: 2.5086808, z: 0.89393}
+  m_LocalScale: {x: 2.5057425, y: 2.5057425, z: 0.89393}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 377409716}
@@ -7053,6 +7055,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 199048037402791730, guid: 341961fb75a51fb4c844909972cb6b1a, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 199048037402791730, guid: 341961fb75a51fb4c844909972cb6b1a, type: 3}
       propertyPath: m_SortingLayerID
       value: 0
       objectReference: {fileID: 0}
@@ -7065,12 +7071,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 199519788172116490, guid: 341961fb75a51fb4c844909972cb6b1a, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 199519788172116490, guid: 341961fb75a51fb4c844909972cb6b1a, type: 3}
       propertyPath: m_SortingLayerID
-      value: 100005
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 199983689729217926, guid: 341961fb75a51fb4c844909972cb6b1a, type: 3}
       propertyPath: m_SortingLayer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 199983689729217926, guid: 341961fb75a51fb4c844909972cb6b1a, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 199983689729217926, guid: 341961fb75a51fb4c844909972cb6b1a, type: 3}
       propertyPath: m_SortingLayerID
@@ -7797,7 +7811,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -2
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -6470460504253458178, guid: 01541e4dbc2a7944d8f327e9c545a2db, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 0.4392157}
@@ -9917,7 +9931,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -2
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -7823844049236149735, guid: 9f9bd3088e787924aa8c861b6f25a0f3, type: 3}
   m_Color: {r: 0.6924528, g: 0.99569905, b: 1, a: 0.5019608}

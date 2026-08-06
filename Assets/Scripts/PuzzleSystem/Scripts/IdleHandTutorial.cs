@@ -16,6 +16,12 @@ namespace AvoidTheCold
     {
         [SerializeField] private HandTutorialUI handTutorialUI;
         [SerializeField] private LevelTutorialSequencer tutorialSequencer;
+
+        [Tooltip("Suppress the hint while a win/lose banner (with its Retry/Next buttons) is showing")]
+        [SerializeField] private ResultScreenUI resultScreenUI;
+        [Tooltip("Suppress the hint while the Game Complete banner is showing")]
+        [SerializeField] private GameCompleteUI gameCompleteUI;
+
         [SerializeField] private float idleThreshold = 7f;
 
         [Tooltip("Canvas that handTutorialUI lives under - used to convert pieces/slots' world positions (Board2D) into the hint's anchored-position space")]
@@ -72,14 +78,29 @@ namespace AvoidTheCold
                 return;
             }
 
+            if (IsAnyResultScreenActive())
+            {
+                _idleTimer = 0f;
+                if (_isShowingHint) HideHint();
+                return; // a win/lose/game-complete banner is up - don't nudge toward pieces the player can't reach
+            }
+
             if (_isShowingHint) return; // already showing - wait for a touch or the piece being placed
             if (tutorialSequencer != null && tutorialSequencer.IsActive) return; // let the first-run tutorial finish first
 
             _idleTimer += Time.deltaTime;
-            if (_idleTimer >= idleThreshold)
+            Debug.Log(resultScreenUI.IsAnyBannerShowing);
+            if (_idleTimer >= idleThreshold && !resultScreenUI.IsAnyBannerShowing)
             {
                 ShowHintForNextUnplacedPiece();
             }
+        }
+
+        private bool IsAnyResultScreenActive()
+        {
+            if (resultScreenUI != null && resultScreenUI.IsAnyBannerShowing) return true;
+            if (gameCompleteUI != null && gameCompleteUI.IsShowing) return true;
+            return false;
         }
 
         private bool AnyTouchThisFrame()

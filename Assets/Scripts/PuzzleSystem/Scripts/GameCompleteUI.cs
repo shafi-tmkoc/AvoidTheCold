@@ -23,6 +23,9 @@ namespace AvoidTheCold
         private CanvasGroup _group;
         private Coroutine _pendingShowRoutine;
 
+        /// <summary>True while the Game Complete banner is actually showing/interactive (used to keep other systems, e.g. the idle hand hint, out of the way).</summary>
+        public bool IsShowing => banner != null && banner.activeInHierarchy && _group != null && _group.blocksRaycasts;
+
         private void Awake()
         {
             if (banner != null)

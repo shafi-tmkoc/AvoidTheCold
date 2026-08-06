@@ -34,7 +34,7 @@ MonoBehaviour:
     slideEnterSFX: {fileID: 8300000, guid: 56b45b7cd22ec104dbee97f464c995d4, type: 3}
   - backgroundSprite: {fileID: 21300000, guid: a749fca9805740343b1f4a7d27a940fd, type: 3}
     foregroundSprite: {fileID: 21300000, guid: 75338e7ec91466c4195491239d32df09, type: 3}
-    vo_title: Storyboard3
+    vo_title: Storyboard4
     captionText: I will fix the broken window and help them feel warm and avoid catching
       a cold!
     displayDuration: 6

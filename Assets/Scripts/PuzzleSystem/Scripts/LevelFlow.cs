@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = System.Random;
 
 namespace AvoidTheCold
 {
@@ -41,7 +42,7 @@ namespace AvoidTheCold
                 missionResolver.OnMissionFailed += HandleFailed;
             }
 
-            if (resultScreenUI != null) resultScreenUI.OnResultCycleComplete += HandleResultCycleComplete;
+            //if (resultScreenUI != null) resultScreenUI.OnResultCycleComplete += HandleResultCycleComplete;
         }
 
         private void OnDisable()
@@ -52,7 +53,7 @@ namespace AvoidTheCold
                 missionResolver.OnMissionFailed -= HandleFailed;
             }
 
-            if (resultScreenUI != null) resultScreenUI.OnResultCycleComplete -= HandleResultCycleComplete;
+            //if (resultScreenUI != null) resultScreenUI.OnResultCycleComplete -= HandleResultCycleComplete;
         }
 
         private void Start()
@@ -107,14 +108,14 @@ namespace AvoidTheCold
         {
             if (voicePlayer == null) return;
 
-            voicePlayer.Play(VoiceOverTitles.Tutorial1);
+            voicePlayer.Play(VoiceOverTitles.Tutorial[0]);
             StartCoroutine(PlayTutorial2AfterDelay());
         }
 
         private IEnumerator PlayTutorial2AfterDelay()
         {
             yield return new WaitForSeconds(tutorialVoiceOverGap);
-            voicePlayer.Play(VoiceOverTitles.Tutorial2);
+            //voicePlayer.Play(VoiceOverTitles.Tutorial2);
         }
 
         private void LoadCurrentLevel()
@@ -124,30 +125,23 @@ namespace AvoidTheCold
                 Debug.Log("[LevelFlow] No levels assigned - nothing to load");
                 return;
             }
-
+            int num = UnityEngine.Random.Range(0, VoiceOverTitles.Tutorial.Length);
+            voicePlayer.Play(VoiceOverTitles.Tutorial[num]);
             int index = Mathf.Clamp(LevelProgressStore.CurrentLevel - 1, 0, levels.Length - 1);
             Debug.Log($"[LevelFlow] Loading level {index + 1}");
             levelLoader.LoadLevel(levels[index]);
         }
 
+        /// <summary>
+        /// Mission succeeded - just feedback (SFX) here. Progress is deliberately
+        /// NOT advanced yet: the win banner's Retry/Next buttons decide what
+        /// happens next (RetryCurrentLevel/GoToNextLevelNow), so the player
+        /// always has to act before the level actually changes.
+        /// </summary>
         private void HandleSuccess()
         {
-            int next = LevelProgressStore.CurrentLevel + 1;
-            bool wasLastLevel = levels != null && next > levels.Length;
             AudioManager.Instance.Win();
-            if (wasLastLevel)
-            {
-                _suppressNextResultCycle = true;
-                LevelProgressStore.CurrentLevel = 1;
-                LevelProgressStore.Save();
-                Debug.Log("[LevelFlow] Final level complete - showing Game Complete screen");
-                OnGameCompleted?.Invoke();
-                return;
-            }
-
-            LevelProgressStore.CurrentLevel = next;
-            LevelProgressStore.Save();
-            Debug.Log($"[LevelFlow] Win - advancing to level {next} once the win banner finishes");
+            Debug.Log("[LevelFlow] Win - waiting for Retry/Next before changing level");
         }
 
         /// <summary>Called by the Game Complete screen's Replay button - starts a fresh run from level 1.</summary>
@@ -158,10 +152,9 @@ namespace AvoidTheCold
         }
 
         /// <summary>
-        /// Called by the win banner's Retry button - replays the level that
-        /// was just won, instead of the level HandleSuccess already advanced
-        /// progress to. Rolls LevelProgressStore.CurrentLevel back to match,
-        /// so the next real win doesn't skip a level.
+        /// Called by the win/lose banner's Retry button - replays the level
+        /// that's currently loaded. Progress is never advanced until Next is
+        /// pressed, so there's nothing to roll back here.
         /// </summary>
         public void RetryCurrentLevel()
         {
@@ -173,23 +166,36 @@ namespace AvoidTheCold
 
             var data = levelLoader.CurrentLevelData;
             Debug.Log($"[LevelFlow] Retry pressed - reloading level {data.levelNumber}");
-
-            LevelProgressStore.CurrentLevel = data.levelNumber;
-            LevelProgressStore.Save();
             levelLoader.LoadLevel(data);
         }
 
-        /// <summary>Called by the win banner's Next button - advances immediately instead of waiting for the banner's auto-hide timer.</summary>
+        /// <summary>
+        /// Called by the win banner's Next button - this is where progress
+        /// actually advances (moved here from HandleSuccess so nothing
+        /// changes until the player explicitly presses Next), including
+        /// detecting the final level and handing off to the Game Complete
+        /// screen instead of loading a non-existent next level.
+        /// </summary>
         public void GoToNextLevelNow()
         {
-            if (_suppressNextResultCycle)
+            var completedData = levelLoader != null ? levelLoader.CurrentLevelData : null;
+            int completedLevelNumber = completedData != null ? completedData.levelNumber : LevelProgressStore.CurrentLevel;
+            int next = completedLevelNumber + 1;
+            bool wasLastLevel = levels != null && next > levels.Length;
+
+            if (wasLastLevel)
             {
-                _suppressNextResultCycle = false;
-                Debug.Log("[LevelFlow] Next pressed on the final level's win banner - Game Complete screen already handles this");
+                _suppressNextResultCycle = true;
+                LevelProgressStore.CurrentLevel = 1;
+                LevelProgressStore.Save();
+                Debug.Log("[LevelFlow] Next pressed on the final level - showing Game Complete screen");
+                OnGameCompleted?.Invoke();
                 return;
             }
 
-            Debug.Log("[LevelFlow] Next pressed - loading next level now");
+            LevelProgressStore.CurrentLevel = next;
+            LevelProgressStore.Save();
+            Debug.Log($"[LevelFlow] Next pressed - advancing to level {next}");
             LoadCurrentLevel();
         }
 

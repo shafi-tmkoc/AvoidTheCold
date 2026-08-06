@@ -91,7 +91,6 @@ namespace AvoidTheCold
 
             if (_group != null) _group.blocksRaycasts = false;
             if (_fader != null) _fader.SetTarget(0f);
-
             if (levelFlow != null) levelFlow.ReplayFromStart();
         }
 

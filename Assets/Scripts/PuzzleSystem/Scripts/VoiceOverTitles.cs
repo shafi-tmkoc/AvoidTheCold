@@ -13,8 +13,9 @@ namespace AvoidTheCold
         public const string Storyboard2 = "Storyboard2";
         public const string Storyboard3 = "Storyboard3";
 
-        public const string Tutorial1 = "Tutorial1";
-        public const string Tutorial2 = "Tutorial2";
+        public static readonly string[] Tutorial = { "Tutorial1", "Tutorial2", "Tutorial3", "Tutorial4" };
+        //public const string Tutorial2 = "Tutorial2";
+
 
         public const string TimerWarning1 = "Fail2";
 

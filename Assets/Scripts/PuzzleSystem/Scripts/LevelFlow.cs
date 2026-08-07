@@ -25,6 +25,7 @@ namespace AvoidTheCold
 
         [Tooltip("Delay between Tutorial1 and Tutorial2 VO lines, played once on the very first gameplay start")]
         [SerializeField] private float tutorialVoiceOverGap = 3f;
+        private int previousNum = -1;
 
         /// <summary>Raised when the last level is won, instead of auto-looping to level 1.</summary>
         public event Action OnGameCompleted;
@@ -117,7 +118,6 @@ namespace AvoidTheCold
             yield return new WaitForSeconds(tutorialVoiceOverGap);
             //voicePlayer.Play(VoiceOverTitles.Tutorial2);
         }
-
         private void LoadCurrentLevel()
         {
             if (levels == null || levels.Length == 0)
@@ -125,7 +125,17 @@ namespace AvoidTheCold
                 Debug.Log("[LevelFlow] No levels assigned - nothing to load");
                 return;
             }
+
             int num = UnityEngine.Random.Range(0, VoiceOverTitles.Tutorial.Length);
+
+            // Make sure the same voice-over is not selected twice in a row
+            while (num == previousNum && VoiceOverTitles.Tutorial.Length > 1)
+            {
+                num = UnityEngine.Random.Range(0, VoiceOverTitles.Tutorial.Length);
+            }
+
+            previousNum = num;
+
             voicePlayer.Play(VoiceOverTitles.Tutorial[num]);
             int index = Mathf.Clamp(LevelProgressStore.CurrentLevel - 1, 0, levels.Length - 1);
             Debug.Log($"[LevelFlow] Loading level {index + 1}");

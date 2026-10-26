@@ -19,6 +19,7 @@ namespace AvoidTheCold
         [SerializeField] private LevelData[] levels;
         [SerializeField] private MissionResolver missionResolver;
         [SerializeField] private ResultScreenUI resultScreenUI;
+        [SerializeField] private StarDisplayUI starDisplayUI;
         [SerializeField] private StoryController introStory;
         [SerializeField] private IntroPanel introPanel;
         [SerializeField] private VoiceOverPlayer voicePlayer;

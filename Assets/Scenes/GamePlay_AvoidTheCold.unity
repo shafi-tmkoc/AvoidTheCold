@@ -1027,7 +1027,7 @@ Transform:
   m_GameObject: {fileID: 268782585}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -17.345127, y: -11.01, z: 0}
+  m_LocalPosition: {x: -13.105332, y: -11.01, z: 0}
   m_LocalScale: {x: 2.2703998, y: 2.3179502, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6547,7 +6547,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.71, y: -1.07, z: 0}
-  m_LocalScale: {x: 2.5057425, y: 2.5057425, z: 0.89393}
+  m_LocalScale: {x: 2.0833335, y: 2.0833335, z: 0.89393}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 377409716}
@@ -9743,6 +9743,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 36365fbb0a4e0f84daebda2492b1409f, type: 2}
   missionResolver: {fileID: 169537783}
   resultScreenUI: {fileID: 848978373}
+  starDisplayUI: {fileID: 2135301531}
   introStory: {fileID: 881204030}
   introPanel: {fileID: 0}
   voicePlayer: {fileID: 1717942201}
@@ -10212,6 +10213,7 @@ GameObject:
   - component: {fileID: 2135301527}
   - component: {fileID: 2135301526}
   - component: {fileID: 2135301530}
+  - component: {fileID: 2135301531}
   m_Layer: 0
   m_Name: WinBanner
   m_TagString: Untagged
@@ -10302,6 +10304,21 @@ MonoBehaviour:
   sideDuration: 0.4
   panelEase: 9
   sideEase: 27
+--- !u!114 &2135301531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135301524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5f9469e06e3dc144996974c4044f685, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AvoidTheCold.StarDisplayUI
+  starImages: []
+  starFilled: {fileID: 0}
+  starEmpty: {fileID: 0}
 --- !u!1 &2143097043
 GameObject:
   m_ObjectHideFlags: 0

@@ -89,7 +89,7 @@ namespace AvoidTheCold
             if (tutorialSequencer != null && tutorialSequencer.IsActive) return; // let the first-run tutorial finish first
 
             _idleTimer += Time.deltaTime;
-            Debug.Log(resultScreenUI.IsAnyBannerShowing);
+            //Debug.Log(resultScreenUI.IsAnyBannerShowing);
             if (_idleTimer >= idleThreshold && !resultScreenUI.IsAnyBannerShowing)
             {
                 ShowHintForNextUnplacedPiece();

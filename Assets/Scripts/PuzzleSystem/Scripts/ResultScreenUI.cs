@@ -70,6 +70,12 @@ namespace AvoidTheCold
             }
         }
 
+        /// <summary>Called by LevelFlow in the #else path to trigger the win banner directly.</summary>
+        public void HandleSuccessExternal() => HandleSuccess();
+
+        /// <summary>Called by LevelFlow in the #else path to trigger the lose banner directly.</summary>
+        public void HandleFailedExternal() => HandleFailed();
+
         /// <summary>Fades both banners out and cancels any pending cycle - call before starting a new level attempt.</summary>
         public void HideAll()
         {

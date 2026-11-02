@@ -58,6 +58,13 @@ namespace AvoidTheCold
             //if (resultScreenUI != null) resultScreenUI.OnResultCycleComplete -= HandleResultCycleComplete;
         }
 
+        private void Awake()
+        {
+#if PLAYSCHOOL_MAIN
+            PlayschoolCommon.Instance.SpawnplayschoolWinLosePanel();
+#endif
+        }
+
         private void Start()
         {
             if (introPanel != null)
@@ -152,7 +159,18 @@ namespace AvoidTheCold
         private void HandleSuccess()
         {
             AudioManager.Instance.Win();
-            Debug.Log("[LevelFlow] Win - waiting for Retry/Next before changing level");
+            Debug.Log("[LevelFlow] Win - showing win panel");
+            StartCoroutine(EnableWinPanelAfterDelay());
+        }
+
+        private System.Collections.IEnumerator EnableWinPanelAfterDelay()
+        {
+            yield return new WaitForSeconds(0.25f);
+#if PLAYSCHOOL_MAIN
+            WinLosePanelScript.Instance.ShowNextLevelPopUp(GoToNextLevelNow);
+#else
+            if (resultScreenUI != null) resultScreenUI.HandleSuccessExternal();
+#endif
         }
 
         /// <summary>Called by the Game Complete screen's Replay button - starts a fresh run from level 1.</summary>
@@ -212,7 +230,18 @@ namespace AvoidTheCold
 
         private void HandleFailed()
         {
-            Debug.Log("[LevelFlow] Lose - retrying same level once the lose banner finishes");
+            Debug.Log("[LevelFlow] Lose - showing retry panel");
+            StartCoroutine(EnableLosePanelAfterDelay());
+        }
+
+        private System.Collections.IEnumerator EnableLosePanelAfterDelay()
+        {
+            yield return new WaitForSeconds(0.25f);
+#if PLAYSCHOOL_MAIN
+            WinLosePanelScript.Instance.ShowRetryPopUp(RetryCurrentLevel);
+#else
+            if (resultScreenUI != null) resultScreenUI.HandleFailedExternal();
+#endif
         }
 
         /// <summary>Fired by ResultScreenUI once the win/lose banner has shown, held, and faded out.</summary>

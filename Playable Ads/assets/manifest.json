@@ -1,0 +1,786 @@
+{
+ "wall": {
+  "file": "img/wall.webp",
+  "w": 720,
+  "h": 604,
+  "bytes": 4706,
+  "note": "Room_2 wallpaper (BG)"
+ },
+ "frame": {
+  "file": "img/frame.webp",
+  "w": 984,
+  "h": 558,
+  "bytes": 13844,
+  "note": "WindowFrame, 9-slice L190 T75 R195 B75 (x0.62)"
+ },
+ "outside": {
+  "file": "img/outside.webp",
+  "w": 822,
+  "h": 608,
+  "bytes": 9770,
+  "note": "OutsideEnvironment Winter/Normal"
+ },
+ "shades": {
+  "file": "img/shades.webp",
+  "w": 853,
+  "h": 555,
+  "bytes": 1920,
+  "note": "OutsideEnvironmentNormal/Window glass shading"
+ },
+ "sofa": {
+  "file": "img/sofa.webp",
+  "w": 913,
+  "h": 415,
+  "bytes": 15856,
+  "note": "Sofa"
+ },
+ "mat": {
+  "file": "img/mat.webp",
+  "w": 466,
+  "h": 262,
+  "bytes": 7452,
+  "note": "Sofa/Curtains (mat)"
+ },
+ "pot": {
+  "file": "img/pot.webp",
+  "w": 220,
+  "h": 488,
+  "bytes": 9306,
+  "note": "Cupboard (flipX in scene)"
+ },
+ "curtain": {
+  "file": "img/curtain.webp",
+  "w": 425,
+  "h": 346,
+  "bytes": 10638,
+  "note": "Curtain prefab (bone-animated in Unity)"
+ },
+ "tray": {
+  "file": "img/tray.webp",
+  "w": 1353,
+  "h": 225,
+  "bytes": 1256,
+  "note": "PieceTray, 9-slice 60px"
+ },
+ "daya_s": {
+  "file": "img/daya_s.webp",
+  "w": 256,
+  "h": 714,
+  "bytes": 30416,
+  "note": "DayaShivering"
+ },
+ "daya_i": {
+  "file": "img/daya_i.webp",
+  "w": 281,
+  "h": 702,
+  "bytes": 29244,
+  "note": "DayaSittingIdle"
+ },
+ "tappu_s": {
+  "file": "img/tappu_s.webp",
+  "w": 255,
+  "h": 668,
+  "bytes": 31514,
+  "note": "TappuShivering"
+ },
+ "tappu_i": {
+  "file": "img/tappu_i.webp",
+  "w": 280,
+  "h": 662,
+  "bytes": 27194,
+  "note": "TappuSittingIdle"
+ },
+ "frost": {
+  "file": "img/frost.webp",
+  "w": 480,
+  "h": 270,
+  "bytes": 9556,
+  "note": "FrostOverlay (tinted 0.396,0.842,1)"
+ },
+ "flakes": {
+  "file": "img/flakes.webp",
+  "w": 512,
+  "h": 768,
+  "bytes": 49874,
+  "note": "ColdFlakes (rotated for portrait)"
+ },
+ "hand": {
+  "file": "img/hand.webp",
+  "w": 256,
+  "h": 256,
+  "bytes": 5948,
+  "note": "HandTutorialHint"
+ },
+ "snow": {
+  "file": "img/snow.webp",
+  "w": 102,
+  "h": 102,
+  "bytes": 2356,
+  "note": "Freeze meter icon"
+ },
+ "border": {
+  "file": "img/border.webp",
+  "w": 190,
+  "h": 190,
+  "bytes": 540,
+  "note": "FreezeBG 9-slice"
+ },
+ "bar": {
+  "file": "img/bar.webp",
+  "w": 512,
+  "h": 67,
+  "bytes": 418,
+  "note": "FreezeMeterBar"
+ },
+ "btn_retry": {
+  "file": "img/btn_retry.webp",
+  "w": 164,
+  "h": 164,
+  "bytes": 4112,
+  "note": "Retry button"
+ },
+ "btn_next": {
+  "file": "img/btn_next.webp",
+  "w": 164,
+  "h": 164,
+  "bytes": 3256,
+  "note": "Next button"
+ },
+ "win_bg": {
+  "file": "img/win_bg.webp",
+  "w": 608,
+  "h": 753,
+  "bytes": 20712,
+  "note": "Sprites/Grid Screen/WinImage.png centre crop 760px"
+ },
+ "lose_bg": {
+  "file": "img/lose_bg.webp",
+  "w": 608,
+  "h": 753,
+  "bytes": 22910,
+  "note": "Sprites/Grid Screen/tryAgain.png centre crop 760px"
+ },
+ "win_daya": {
+  "file": "img/win_daya.webp",
+  "w": 310,
+  "h": 516,
+  "bytes": 21308,
+  "note": "WinBanner/Daya"
+ },
+ "win_tappu": {
+  "file": "img/win_tappu.webp",
+  "w": 346,
+  "h": 462,
+  "bytes": 21514,
+  "note": "WinBanner/Tappu"
+ },
+ "lose_daya": {
+  "file": "img/lose_daya.webp",
+  "w": 310,
+  "h": 516,
+  "bytes": 18592,
+  "note": "LoseBanner/Daya"
+ },
+ "lose_tappu": {
+  "file": "img/lose_tappu.webp",
+  "w": 346,
+  "h": 462,
+  "bytes": 20932,
+  "note": "LoseBanner/Tappu"
+ },
+ "story_bg": {
+  "file": "img/story_bg.webp",
+  "w": 528,
+  "h": 594,
+  "bytes": 4768,
+  "note": "Story slide backgroundSprite (Room_1)"
+ },
+ "story1": {
+  "file": "img/story1.webp",
+  "w": 970,
+  "h": 552,
+  "bytes": 15366,
+  "note": "Storyboard_1"
+ },
+ "story2": {
+  "file": "img/story2.webp",
+  "w": 970,
+  "h": 552,
+  "bytes": 28334,
+  "note": "Storyboard_2"
+ },
+ "story3": {
+  "file": "img/story3.webp",
+  "w": 970,
+  "h": 552,
+  "bytes": 20234,
+  "note": "Storyboard_3"
+ },
+ "L1_1_slot": {
+  "file": "img/L1_1_slot.webp",
+  "w": 335,
+  "h": 269,
+  "bytes": 190,
+  "note": "Sprites/NewArt/outline/Level 1/1.png"
+ },
+ "L1_1_piece": {
+  "file": "img/L1_1_piece.webp",
+  "w": 335,
+  "h": 269,
+  "bytes": 72,
+  "note": "Sprites/NewArt/Shapes/Level 1/1.png"
+ },
+ "L1_1_stroke": {
+  "file": "img/L1_1_stroke.webp",
+  "w": 335,
+  "h": 269,
+  "bytes": 100,
+  "note": "Sprites/NewArt/Strokes/Level 1/1.png"
+ },
+ "L1_2_slot": {
+  "file": "img/L1_2_slot.webp",
+  "w": 518,
+  "h": 269,
+  "bytes": 214,
+  "note": "Sprites/NewArt/outline/Level 1/2.png"
+ },
+ "L1_2_piece": {
+  "file": "img/L1_2_piece.webp",
+  "w": 518,
+  "h": 269,
+  "bytes": 78,
+  "note": "Sprites/NewArt/Shapes/Level 1/2.png"
+ },
+ "L1_2_stroke": {
+  "file": "img/L1_2_stroke.webp",
+  "w": 518,
+  "h": 269,
+  "bytes": 114,
+  "note": "Sprites/NewArt/Strokes/Level 1/2.png"
+ },
+ "L1_3_slot": {
+  "file": "img/L1_3_slot.webp",
+  "w": 515,
+  "h": 287,
+  "bytes": 184,
+  "note": "Sprites/NewArt/outline/Level 1/3.png"
+ },
+ "L1_3_piece": {
+  "file": "img/L1_3_piece.webp",
+  "w": 515,
+  "h": 287,
+  "bytes": 74,
+  "note": "Sprites/NewArt/Shapes/Level 1/3.png"
+ },
+ "L1_3_stroke": {
+  "file": "img/L1_3_stroke.webp",
+  "w": 515,
+  "h": 287,
+  "bytes": 94,
+  "note": "Sprites/NewArt/Strokes/Level 1/3.png"
+ },
+ "L1_4_slot": {
+  "file": "img/L1_4_slot.webp",
+  "w": 338,
+  "h": 287,
+  "bytes": 172,
+  "note": "Sprites/NewArt/outline/Level 1/4.png"
+ },
+ "L1_4_piece": {
+  "file": "img/L1_4_piece.webp",
+  "w": 338,
+  "h": 287,
+  "bytes": 58,
+  "note": "Sprites/NewArt/Shapes/Level 1/4.png"
+ },
+ "L1_4_stroke": {
+  "file": "img/L1_4_stroke.webp",
+  "w": 338,
+  "h": 287,
+  "bytes": 90,
+  "note": "Sprites/NewArt/Strokes/Level 1/4.png"
+ },
+ "L2_1_slot": {
+  "file": "img/L2_1_slot.webp",
+  "w": 743,
+  "h": 555,
+  "bytes": 2152,
+  "note": "Sprites/NewArt/outline/Level 2/1.png"
+ },
+ "L2_1_piece": {
+  "file": "img/L2_1_piece.webp",
+  "w": 743,
+  "h": 555,
+  "bytes": 628,
+  "note": "Sprites/NewArt/Shapes/Level 2/1.png"
+ },
+ "L2_1_stroke": {
+  "file": "img/L2_1_stroke.webp",
+  "w": 743,
+  "h": 555,
+  "bytes": 932,
+  "note": "Sprites/NewArt/Strokes/Level 2/1.png"
+ },
+ "L2_2_slot": {
+  "file": "img/L2_2_slot.webp",
+  "w": 844,
+  "h": 277,
+  "bytes": 2044,
+  "note": "Sprites/NewArt/outline/Level 2/2.png"
+ },
+ "L2_2_piece": {
+  "file": "img/L2_2_piece.webp",
+  "w": 844,
+  "h": 280,
+  "bytes": 1458,
+  "note": "Sprites/NewArt/Shapes/Level 2/2.png"
+ },
+ "L2_2_stroke": {
+  "file": "img/L2_2_stroke.webp",
+  "w": 844,
+  "h": 280,
+  "bytes": 1792,
+  "note": "Sprites/NewArt/Strokes/Level 2/2.png"
+ },
+ "L2_3_slot": {
+  "file": "img/L2_3_slot.webp",
+  "w": 479,
+  "h": 555,
+  "bytes": 2398,
+  "note": "Sprites/NewArt/outline/Level 2/3.png"
+ },
+ "L2_3_piece": {
+  "file": "img/L2_3_piece.webp",
+  "w": 479,
+  "h": 555,
+  "bytes": 750,
+  "note": "Sprites/NewArt/Shapes/Level 2/3.png"
+ },
+ "L2_3_stroke": {
+  "file": "img/L2_3_stroke.webp",
+  "w": 479,
+  "h": 555,
+  "bytes": 978,
+  "note": "Sprites/NewArt/Strokes/Level 2/3.png"
+ },
+ "L3_1_slot": {
+  "file": "img/L3_1_slot.webp",
+  "w": 406,
+  "h": 310,
+  "bytes": 1548,
+  "note": "Sprites/NewArt/outline/Level 3/1.png"
+ },
+ "L3_1_piece": {
+  "file": "img/L3_1_piece.webp",
+  "w": 410,
+  "h": 312,
+  "bytes": 756,
+  "note": "Sprites/NewArt/Shapes/Level 3/1.png"
+ },
+ "L3_1_stroke": {
+  "file": "img/L3_1_stroke.webp",
+  "w": 410,
+  "h": 312,
+  "bytes": 1220,
+  "note": "Sprites/NewArt/Strokes/Level 3/1.png"
+ },
+ "L3_2_slot": {
+  "file": "img/L3_2_slot.webp",
+  "w": 616,
+  "h": 303,
+  "bytes": 1780,
+  "note": "Sprites/NewArt/outline/Level 3/2.png"
+ },
+ "L3_2_piece": {
+  "file": "img/L3_2_piece.webp",
+  "w": 621,
+  "h": 303,
+  "bytes": 1032,
+  "note": "Sprites/NewArt/Shapes/Level 3/2.png"
+ },
+ "L3_2_stroke": {
+  "file": "img/L3_2_stroke.webp",
+  "w": 621,
+  "h": 303,
+  "bytes": 1418,
+  "note": "Sprites/NewArt/Strokes/Level 3/2.png"
+ },
+ "L3_3_slot": {
+  "file": "img/L3_3_slot.webp",
+  "w": 546,
+  "h": 310,
+  "bytes": 1370,
+  "note": "Sprites/NewArt/outline/Level 3/3.png"
+ },
+ "L3_3_piece": {
+  "file": "img/L3_3_piece.webp",
+  "w": 550,
+  "h": 310,
+  "bytes": 398,
+  "note": "Sprites/NewArt/Shapes/Level 3/3.png"
+ },
+ "L3_3_stroke": {
+  "file": "img/L3_3_stroke.webp",
+  "w": 550,
+  "h": 310,
+  "bytes": 876,
+  "note": "Sprites/NewArt/Strokes/Level 3/3.png"
+ },
+ "L3_4_slot": {
+  "file": "img/L3_4_slot.webp",
+  "w": 444,
+  "h": 392,
+  "bytes": 1734,
+  "note": "Sprites/NewArt/outline/Level 3/4.png"
+ },
+ "L3_4_piece": {
+  "file": "img/L3_4_piece.webp",
+  "w": 447,
+  "h": 392,
+  "bytes": 488,
+  "note": "Sprites/NewArt/Shapes/Level 3/4.png"
+ },
+ "L3_4_stroke": {
+  "file": "img/L3_4_stroke.webp",
+  "w": 447,
+  "h": 392,
+  "bytes": 732,
+  "note": "Sprites/NewArt/Strokes/Level 3/4.png"
+ },
+ "L4_1_slot": {
+  "file": "img/L4_1_slot.webp",
+  "w": 312,
+  "h": 387,
+  "bytes": 774,
+  "note": "Sprites/NewArt/outline/Level 4/1.png"
+ },
+ "L4_1_piece": {
+  "file": "img/L4_1_piece.webp",
+  "w": 312,
+  "h": 387,
+  "bytes": 172,
+  "note": "Sprites/NewArt/Shapes/Level 4/1.png"
+ },
+ "L4_1_stroke": {
+  "file": "img/L4_1_stroke.webp",
+  "w": 312,
+  "h": 387,
+  "bytes": 246,
+  "note": "Sprites/NewArt/Strokes/Level 4/1.png"
+ },
+ "L4_2_slot": {
+  "file": "img/L4_2_slot.webp",
+  "w": 541,
+  "h": 217,
+  "bytes": 202,
+  "note": "Sprites/NewArt/outline/Level 4/2.png"
+ },
+ "L4_2_piece": {
+  "file": "img/L4_2_piece.webp",
+  "w": 541,
+  "h": 217,
+  "bytes": 76,
+  "note": "Sprites/NewArt/Shapes/Level 4/2.png"
+ },
+ "L4_2_stroke": {
+  "file": "img/L4_2_stroke.webp",
+  "w": 541,
+  "h": 217,
+  "bytes": 106,
+  "note": "Sprites/NewArt/Strokes/Level 4/2.png"
+ },
+ "L4_3_slot": {
+  "file": "img/L4_3_slot.webp",
+  "w": 312,
+  "h": 480,
+  "bytes": 910,
+  "note": "Sprites/NewArt/outline/Level 4/3.png"
+ },
+ "L4_3_piece": {
+  "file": "img/L4_3_piece.webp",
+  "w": 312,
+  "h": 480,
+  "bytes": 196,
+  "note": "Sprites/NewArt/Shapes/Level 4/3.png"
+ },
+ "L4_3_stroke": {
+  "file": "img/L4_3_stroke.webp",
+  "w": 312,
+  "h": 480,
+  "bytes": 270,
+  "note": "Sprites/NewArt/Strokes/Level 4/3.png"
+ },
+ "L4_4_slot": {
+  "file": "img/L4_4_slot.webp",
+  "w": 316,
+  "h": 334,
+  "bytes": 1084,
+  "note": "Sprites/NewArt/outline/Level 4/4.png"
+ },
+ "L4_4_piece": {
+  "file": "img/L4_4_piece.webp",
+  "w": 316,
+  "h": 339,
+  "bytes": 374,
+  "note": "Sprites/NewArt/Shapes/Level 4/4.png"
+ },
+ "L4_4_stroke": {
+  "file": "img/L4_4_stroke.webp",
+  "w": 316,
+  "h": 339,
+  "bytes": 512,
+  "note": "Sprites/NewArt/Strokes/Level 4/4.png"
+ },
+ "L4_5_slot": {
+  "file": "img/L4_5_slot.webp",
+  "w": 538,
+  "h": 339,
+  "bytes": 1230,
+  "note": "Sprites/NewArt/outline/Level 4/5.png"
+ },
+ "L4_5_piece": {
+  "file": "img/L4_5_piece.webp",
+  "w": 541,
+  "h": 339,
+  "bytes": 384,
+  "note": "Sprites/NewArt/Shapes/Level 4/5.png"
+ },
+ "L4_5_stroke": {
+  "file": "img/L4_5_stroke.webp",
+  "w": 541,
+  "h": 339,
+  "bytes": 564,
+  "note": "Sprites/NewArt/Strokes/Level 4/5.png"
+ },
+ "L5_1_slot": {
+  "file": "img/L5_1_slot.webp",
+  "w": 276,
+  "h": 153,
+  "bytes": 668,
+  "note": "Sprites/NewArt/outline/Level 5/1.png"
+ },
+ "L5_1_piece": {
+  "file": "img/L5_1_piece.webp",
+  "w": 276,
+  "h": 153,
+  "bytes": 218,
+  "note": "Sprites/NewArt/Shapes/Level 5/1.png"
+ },
+ "L5_1_stroke": {
+  "file": "img/L5_1_stroke.webp",
+  "w": 276,
+  "h": 153,
+  "bytes": 298,
+  "note": "Sprites/NewArt/Strokes/Level 5/1.png"
+ },
+ "L5_2_slot": {
+  "file": "img/L5_2_slot.webp",
+  "w": 576,
+  "h": 240,
+  "bytes": 688,
+  "note": "Sprites/NewArt/outline/Level 5/2.png"
+ },
+ "L5_2_piece": {
+  "file": "img/L5_2_piece.webp",
+  "w": 576,
+  "h": 240,
+  "bytes": 116,
+  "note": "Sprites/NewArt/Shapes/Level 5/2.png"
+ },
+ "L5_2_stroke": {
+  "file": "img/L5_2_stroke.webp",
+  "w": 576,
+  "h": 240,
+  "bytes": 178,
+  "note": "Sprites/NewArt/Strokes/Level 5/2.png"
+ },
+ "L5_3_slot": {
+  "file": "img/L5_3_slot.webp",
+  "w": 241,
+  "h": 240,
+  "bytes": 624,
+  "note": "Sprites/NewArt/outline/Level 5/3.png"
+ },
+ "L5_3_piece": {
+  "file": "img/L5_3_piece.webp",
+  "w": 241,
+  "h": 240,
+  "bytes": 112,
+  "note": "Sprites/NewArt/Shapes/Level 5/3.png"
+ },
+ "L5_3_stroke": {
+  "file": "img/L5_3_stroke.webp",
+  "w": 241,
+  "h": 240,
+  "bytes": 142,
+  "note": "Sprites/NewArt/Strokes/Level 5/3.png"
+ },
+ "L5_4_slot": {
+  "file": "img/L5_4_slot.webp",
+  "w": 276,
+  "h": 217,
+  "bytes": 1202,
+  "note": "Sprites/NewArt/outline/Level 5/4.png"
+ },
+ "L5_4_piece": {
+  "file": "img/L5_4_piece.webp",
+  "w": 276,
+  "h": 220,
+  "bytes": 260,
+  "note": "Sprites/NewArt/Shapes/Level 5/4.png"
+ },
+ "L5_4_stroke": {
+  "file": "img/L5_4_stroke.webp",
+  "w": 276,
+  "h": 220,
+  "bytes": 460,
+  "note": "Sprites/NewArt/Strokes/Level 5/4.png"
+ },
+ "L5_5_slot": {
+  "file": "img/L5_5_slot.webp",
+  "w": 277,
+  "h": 345,
+  "bytes": 1394,
+  "note": "Sprites/NewArt/outline/Level 5/5.png"
+ },
+ "L5_5_piece": {
+  "file": "img/L5_5_piece.webp",
+  "w": 277,
+  "h": 350,
+  "bytes": 364,
+  "note": "Sprites/NewArt/Shapes/Level 5/5.png"
+ },
+ "L5_5_stroke": {
+  "file": "img/L5_5_stroke.webp",
+  "w": 277,
+  "h": 350,
+  "bytes": 518,
+  "note": "Sprites/NewArt/Strokes/Level 5/5.png"
+ },
+ "L5_6_slot": {
+  "file": "img/L5_6_slot.webp",
+  "w": 762,
+  "h": 316,
+  "bytes": 1846,
+  "note": "Sprites/NewArt/outline/Level 5/6.png"
+ },
+ "L5_6_piece": {
+  "file": "img/L5_6_piece.webp",
+  "w": 765,
+  "h": 316,
+  "bytes": 952,
+  "note": "Sprites/NewArt/Shapes/Level 5/6.png"
+ },
+ "L5_6_stroke": {
+  "file": "img/L5_6_stroke.webp",
+  "w": 765,
+  "h": 316,
+  "bytes": 1660,
+  "note": "Sprites/NewArt/Strokes/Level 5/6.png"
+ },
+ "L5_7_slot": {
+  "file": "img/L5_7_slot.webp",
+  "w": 576,
+  "h": 316,
+  "bytes": 1858,
+  "note": "Sprites/NewArt/outline/Level 5/7.png"
+ },
+ "L5_7_piece": {
+  "file": "img/L5_7_piece.webp",
+  "w": 576,
+  "h": 316,
+  "bytes": 1570,
+  "note": "Sprites/NewArt/Shapes/Level 5/7.png"
+ },
+ "L5_7_stroke": {
+  "file": "img/L5_7_stroke.webp",
+  "w": 576,
+  "h": 316,
+  "bytes": 1946,
+  "note": "Sprites/NewArt/Strokes/Level 5/7.png"
+ },
+ "L5_8_slot": {
+  "file": "img/L5_8_slot.webp",
+  "w": 66,
+  "h": 316,
+  "bytes": 738,
+  "note": "Sprites/NewArt/outline/Level 5/8.png"
+ },
+ "L5_8_piece": {
+  "file": "img/L5_8_piece.webp",
+  "w": 68,
+  "h": 316,
+  "bytes": 206,
+  "note": "Sprites/NewArt/Shapes/Level 5/8.png"
+ },
+ "L5_8_stroke": {
+  "file": "img/L5_8_stroke.webp",
+  "w": 68,
+  "h": 316,
+  "bytes": 286,
+  "note": "Sprites/NewArt/Strokes/Level 5/8.png"
+ },
+ "endbg": {
+  "file": "img/endbg.webp",
+  "w": 1080,
+  "h": 1920,
+  "bytes": 14010,
+  "note": "Playschool kit (reference playable)"
+ },
+ "endicon": {
+  "file": "img/endicon.webp",
+  "w": 560,
+  "h": 560,
+  "bytes": 55516,
+  "note": "Playschool kit (reference playable)"
+ },
+ "endtext": {
+  "file": "img/endtext.webp",
+  "w": 840,
+  "h": 776,
+  "bytes": 16522,
+  "note": "Playschool kit (reference playable)"
+ },
+ "endbtn": {
+  "file": "img/endbtn.webp",
+  "w": 691,
+  "h": 233,
+  "bytes": 15682,
+  "note": "Playschool kit (reference playable)"
+ },
+ "dlbtn": {
+  "file": "img/dlbtn.webp",
+  "w": 398,
+  "h": 160,
+  "bytes": 15114,
+  "note": "Playschool kit (reference playable)"
+ },
+ "shine": {
+  "file": "img/shine.webp",
+  "w": 420,
+  "h": 420,
+  "bytes": 23240,
+  "note": "Playschool kit (reference playable)"
+ },
+ "sparkle": {
+  "file": "img/sparkle.webp",
+  "w": 64,
+  "h": 64,
+  "bytes": 1138,
+  "note": "Playschool kit (reference playable)"
+ },
+ "star": {
+  "file": "img/star.webp",
+  "w": 96,
+  "h": 93,
+  "bytes": 2694,
+  "note": "Playschool kit (reference playable)"
+ },
+ "glow": {
+  "file": "img/glow.webp",
+  "w": 128,
+  "h": 128,
+  "bytes": 2886,
+  "note": "Playschool kit (reference playable)"
+ }
+}

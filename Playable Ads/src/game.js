@@ -5,19 +5,20 @@
  *   MissionResolver, OutsideEnvironmentSeasonSwitcher, AnimatorStateOnPuzzleComplete (Curtain/Daya/Tappu),
  *   HideOnPuzzleComplete (PieceTray, WindlinesStormy), ShowOnPuzzleComplete (ConfettiFullscreen),
  *   ResultScreenUI, ResultBannerIntroAnimation, LevelTutorialSequencer, IdleHandTutorial, HandTutorialUI,
- *   StoryController / StoryAnimator / SampleStory.asset, AudioManager.
- * Ad-only changes are marked AD: (portrait layout, shorter story + result delays, 2 levels, install end card,
- * DOWNLOAD button, auto-advance, fallback timer). Voice-over is streamed from a server in the Unity build
- * (RuntimeAudioLoader) so it is not available offline; story captions carry the narration instead.
+ *   AudioManager.
+ * Ad-only changes are marked AD: (portrait layout, no intro story — opens on the core gameplay, shorter result
+ * delays, 2 levels, fail -> retry, install end card after the win, DOWNLOAD button, auto-advance). Voice-over is
+ * streamed from a server in the Unity build (RuntimeAudioLoader) so it is not available offline.
  */
 (() => {
 'use strict';
 
 // ───────────────────────── config (scene / prefab / asset values) ─────────────────────────
 const CFG = {
-  adLevels: [0, 1],               // AD: Level_01 then Level_02 (LevelFlow has 5; all 5 are bundled — add indices to play more)
+  adLevels: [0, 3],               // AD: Level_01 then Level_04 (LevelFlow has 5; all 5 are bundled — change/add indices to play others)
+  levelTime: [14, 13],            // AD: freeze-meter time per ad level, 10-15 s (Unity: Level_01 30 s, Level_04 24 s)
   trayVisible: 3,                 // LevelLoader.trayVisibleCount
-  trayMaxScale: 0.58,             // LevelLoader.maxPieceScale 0.8 (world) expressed relative to the window's px scale
+  trayMaxScale: 0.56,             // LevelLoader.maxPieceScale 0.8 (world) -> design px per source px in the tray
   pieceTint: [168, 217, 242, 0.3137], // LevelLoader.pieceTintColor (0.66,0.85,0.95,0.314)
   loosePieceAlpha: 0.62,          // AD: tray/drag pieces only
   strokeTint: [0, 138, 180],      // Piece.prefab/Outline colour (0,0.542,0.706), scale 1.05 x 1.07
@@ -31,16 +32,8 @@ const CFG = {
   winDelay: 2.4,                  // AD: ResultScreenUI.showDelaySeconds is 5 (lose = 5/2); shortened for the ad
   loseDelay: 1.4,
   panelT: 0.45, sideT: 0.4,       // ResultBannerIntroAnimation
-  bannerHold: 3,                  // ResultScreenUI.holdSeconds
-  toEnd: 2.4,                     // AD: banner -> install screen
-  storyT: 0.4,                    // StoryAnimator.transitionDuration
-  // SampleStory.asset (displayDuration 9 / 4 / 6 — AD: shortened, tap advances, SKIP button kept)
-  story: [
-    { img: 'story1', cap: "Brrr! It's very cold outside today. The window is broken, and cold air is blowing into the room.", dur: 4.2, tin: 'fade' },
-    { img: 'story2', cap: 'Daya and Tapu are shivering from the cold.', dur: 2.8, tin: 'right' },
-    { img: 'story3', cap: 'The broken window should be fixed to keep everyone warm.', dur: 3.4, tin: 'fade' },
-  ],
-  fallbackSeconds: 100,           // AD: install screen if the session runs this long after the first tap
+  bannerHold: 2.6,                // AD: banner stays this long after its intro animation, then the game moves on by itself
+                                  //     (win -> next level / install screen, lose -> same level again). No buttons.
 };
 const INSTALL_LINK = 'https://playschool.page.link/X2cE';
 const FONT = "'Fredoka','Arial Rounded MT Bold','Trebuchet MS','Segoe UI',Verdana,sans-serif";
@@ -108,20 +101,32 @@ function unlockAudio() {
   if (!audio.ctx || audio.unlocked) return;
   audio.unlocked = true; if (audio.ctx.resume) audio.ctx.resume();
   loop('wind', 0.29);                                   // BG_Wind AudioSource: playOnAwake, loop, volume 0.29
-  if (G.phase !== 'story') loop('bgm', 0.45);           // LevelFlow stops BG during the intro story
+  loop('bgm', 0.45);                                    // AudioManager.PlayBG()
 }
 document.addEventListener('visibilitychange', () => {
   if (!audio.ctx) return;
   if (document.hidden) audio.ctx.suspend && audio.ctx.suspend(); else if (audio.unlocked) audio.ctx.resume && audio.ctx.resume();
 });
 
+// image (or 9-slice panel) + drop shadow rendered once into an offscreen canvas at its on-screen size
+const SHADOW = {};
+function shadowed(key, w, h, pad, col, blur, ox, oy, draw) {
+  const id = key + '|' + Math.round(w) + 'x' + Math.round(h);
+  if (SHADOW[id]) return SHADOW[id];
+  const c = document.createElement('canvas'), k = Math.min(window.devicePixelRatio || 1, 2) * SCALE;
+  c.width = Math.ceil((w + pad * 2) * k); c.height = Math.ceil((h + pad * 2) * k);
+  const x = c.getContext('2d'); x.scale(k, k); x.shadowColor = col; x.shadowBlur = blur * k; x.shadowOffsetX = ox * k; x.shadowOffsetY = oy * k;
+  if (draw) draw(x, pad, pad, w, h); else if (IMG[key]) x.drawImage(IMG[key], pad, pad, w, h);
+  const out = { c, w: w + pad * 2, h: h + pad * 2 };
+  return (SHADOW[id] = out);
+}
 // average colour of an image's top / bottom rows (used to extend the landscape banner art in portrait)
 const EDGE = {};
 function sampleEdges(key) {
   const im = IMG[key]; if (!im) return;
   try {
     const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.drawImage(im, 0, 0);
-    const avg = y => { const d = x.getImageData(0, y, im.width, 2).data; let r = 0, g = 0, b = 0, n = 0; for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; n++; } return `rgb(${r / n | 0},${g / n | 0},${b / n | 0})`; };
+    const avg = y => { const d = x.getImageData(0, y, im.width, 2).data; let r = 0, g = 0, b = 0, n = 0; for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; n++; } return `${r / n | 0},${g / n | 0},${b / n | 0}`; };
     EDGE[key] = [avg(0), avg(im.height - 2)];
   } catch (e) {}
 }
@@ -143,19 +148,22 @@ function tinted(key, r, g, b) {
 const cv = document.getElementById('c'), ctx = cv.getContext('2d');
 let W = 1080, H = 1920, SCALE = 1, DPR = 1;
 const L = {};
-const FRAME_B = { l: 190 * 0.62, r: 195 * 0.62, t: 75 * 0.62, b: 75 * 0.62 }; // Window_3 spriteBorder at the shipped x0.62
+const FRAME_BS = 0.8; // 9-slice border draw scale
+const FRAME_B = { l: 190 * 0.62 * FRAME_BS, r: 195 * 0.62 * FRAME_BS, t: 75 * 0.62 * FRAME_BS, b: 75 * 0.62 * FRAME_BS }; // Window_3 spriteBorder (shipped x0.62)
 function layout() {
   const sw = window.innerWidth || 360, sh = window.innerHeight || 640;
   DPR = Math.min(window.devicePixelRatio || 1, 2);
   if (sh / sw >= 1920 / 1080) { W = 1080; H = 1080 * sh / sw; } else { H = 1920; W = 1920 * sw / sh; }
   SCALE = sw / W; cv.width = Math.round(sw * DPR); cv.height = Math.round(sh * DPR);
+  for (const k in SHADOW) delete SHADOW[k];
   cv.style.width = sw + 'px'; cv.style.height = sh + 'px';
   const ox = (W - 1080) / 2, ex = H - 1920;
   L.ox = ox; L.cx = W / 2;
   L.hud = { y: 34 + Math.min(ex * 0.15, 40) };
-  // WindowFrame (sliced 15x9 units) — AD: portrait keeps it full-width and a little taller than 15:9
-  const fw = Math.min(1064, W - 16), fh = 700;
-  L.frame = { x: L.cx - fw / 2, y: 196 + ex * 0.22 + Math.min(ex * 0.15, 40), w: fw, h: fh };
+  // WindowFrame (sliced) — AD: portrait: window on the left of the wall (opening ~1.42:1, close to the scene's 1.49:1),
+  // curtain hanging off its right corner
+  const fw = 910, fh = 580;
+  L.frame = { x: ox + 16, y: 210 + ex * 0.22 + Math.min(ex * 0.15, 40), w: fw, h: fh };
   L.in = { x: L.frame.x + FRAME_B.l, y: L.frame.y + FRAME_B.t, w: fw - FRAME_B.l - FRAME_B.r, h: fh - FRAME_B.t - FRAME_B.b };
   // floor + furniture (Board2D/BG, Cupboard, Sofa, Mom, Kid)
   L.floorY = H - 600;
@@ -172,8 +180,9 @@ function layout() {
   L.cells = []; for (let c = 0; c < n; c++) L.cells.push({ x: L.tray.x + pad + L.cellW / 2 + c * (L.cellW + sp), y: L.tray.y + L.tray.h / 2 });
   // window px per source px (852 composite -> interior width)
   L.pxs = L.in.w / 852;
-  // curtain hangs off the rod at the top-right of the window
-  L.curtain = { x: L.in.x + L.in.w * 0.70, y: L.frame.y + 16, w: 400, h: 400 * 346 / 425 };
+  // curtain: attached on the rod at the window's top-right corner, natural Curtain.png proportions (425x346);
+  // it may fly a little past the right edge of the screen
+  L.curtain = { x: L.in.x + L.in.w - 24, y: L.frame.y + 12, w: 410, h: 410 * 346 / 425 };
 }
 
 // ───────────────────────── game state ─────────────────────────
@@ -190,7 +199,7 @@ function slotRect(s) {
   return { x: L.in.x + (d.cx - d.w / 2) * L.in.w, y: L.in.y + (d.cy - d.h / 2) * L.in.h, w: d.w * L.in.w, h: d.h * L.in.h };
 }
 function trayRect(p) { // per-cell fit, clamped (LevelLoader.SpawnPieceIntoCell)
-  const c = L.cells[p.cell], s = Math.min(L.cellW / p.d.pw, L.cellH / p.d.ph, CFG.trayMaxScale * L.pxs);
+  const c = L.cells[p.cell], s = Math.min(L.cellW / p.d.pw, L.cellH / p.d.ph, CFG.trayMaxScale);
   const w = p.d.pw * s, h = p.d.ph * s;
   return { x: c.x - w / 2, y: c.y - h / 2, w, h };
 }
@@ -211,7 +220,7 @@ function loadLevel(pos) {
   const vis = Math.min(CFG.trayVisible, data.pieces.length);
   for (let c = 0; c < vis; c++) spawnIntoCell(c, c, false);
   G.queue = vis; G.filled = 0;
-  G.duration = data.time; G.remaining = data.time; G.meter = 1; G.meterActive = true; G.resolved = false;
+  G.duration = CFG.levelTime[pos] || data.time; G.remaining = G.duration; G.meter = 1; G.meterActive = true; G.resolved = false;
   G.barDanger = 0; G.frostTarget = 0;
   G.winterA = 1; G.curtainCalm = 0; G.calm = 0; G.trayA = 1; G.windA = 1;
   Banner.hide(); confetti.length = 0;
@@ -270,31 +279,28 @@ function idleHint() { // FindNextUnplacedIndex — AD: only pieces currently in 
 }
 
 // ───────────────────────── result banners (ResultScreenUI + ResultBannerIntroAnimation) ─────────────────────────
+// AD: no Retry / Next buttons — the banner pops up, holds, and the game continues by itself
 const Banner = {
-  kind: null, a: 0, panel: 0, side: 0, btn: 0, t: 0, auto: null, btns: [],
+  kind: null, a: 0, panel: 0, side: 0, t: 0, auto: null,
   show(kind) {
-    this.kind = kind; this.a = 0; this.panel = 0; this.side = 0; this.btn = 0; this.t = 0; this.btns = [];
+    this.kind = kind; this.a = 0; this.panel = 0; this.side = 0; this.t = 0;
     G.phase = 'banner'; sfx('whoosh', { vol: 0.8 });
     tween(1 / CFG.fader, t => this.a = t);                                            // CanvasGroupFader 0 -> 1
     tween(CFG.panelT, t => this.panel = t, { ease: E.outCubic });                     // panel from below
     tween(CFG.sideT, t => this.side = t, { ease: E.outBack, delay: CFG.panelT });     // Tappu from left, Daya from right
-    tween(0.3, t => this.btn = t, { ease: E.outBack, delay: CFG.panelT + CFG.sideT });// Retry / Next appear
-    const last = G.levelPos + 1 >= CFG.adLevels.length;
+    const hold = CFG.panelT + CFG.sideT + CFG.bannerHold;
     if (kind === 'win') {
       confettiRain(90);
-      this.auto = after(CFG.panelT + CFG.sideT + (last ? CFG.toEnd : CFG.bannerHold + 1), () => last ? EndCard.show('win') : nextLevel()); // AD: auto-advance
+      const last = G.levelPos + 1 >= CFG.adLevels.length;
+      this.auto = after(hold, () => last ? EndCard.show('win') : (fadeCut(), nextLevel()));   // win -> next level / install screen
     } else {
-      this.auto = after(CFG.panelT + CFG.sideT + CFG.toEnd, () => EndCard.show('lose'));
+      this.auto = after(hold, () => { fadeCut(); loadLevel(G.levelPos); loopVol('wind', 0.29, 0.5); }); // lose -> same level again
     }
   },
-  hide() { this.kind = null; kill(this.auto); this.auto = null; this.btns = []; },
-  press(id) {
-    sfx('pop'); kill(this.auto);
-    if (this.kind === 'lose') { EndCard.show('lose'); return; }              // AD: fail -> install screen
-    if (id === 'retry') { this.hide(); loadLevel(G.levelPos); loopVol('wind', 0.29, 0.5); }
-    else nextLevel();
-  },
+  hide() { this.kind = null; kill(this.auto); this.auto = null; },
 };
+// banner -> gameplay: fade out of the banner blue instead of a hard cut
+function fadeCut() { G.cut = 1; tween(0.45, t => G.cut = 1 - t); }
 
 // ───────────────────────── install end card + CTA ─────────────────────────
 const EndCard = {
@@ -316,32 +322,6 @@ function cta() {
   } catch (e) {}
 }
 
-// ───────────────────────── intro story (StoryController) ─────────────────────────
-const Story = {
-  i: -1, t: 0, a: 0, x: 0, out: false, done: false,
-  start() { G.phase = 'story'; this.i = -1; this.next(); },
-  next() {
-    if (this.done) return;
-    const go = () => {
-      this.i++; this.out = false;
-      if (this.i >= CFG.story.length) return this.finish();
-      const s = CFG.story[this.i]; this.t = 0; sfx('whoosh', { vol: 0.7 }); // slideEnterSFX = whooh.mp3
-      if (s.tin === 'right') { this.a = 1; this.x = 1; tween(CFG.storyT, t => this.x = 1 - E.smooth(t)); }
-      else { this.x = 0; this.a = 0; tween(CFG.storyT, t => this.a = E.smooth(t)); }
-    };
-    if (this.i < 0) return go();
-    if (this.out) return; this.out = true;          // transitionOut = FadeOut
-    tween(CFG.storyT * 0.75, t => this.a = 1 - E.smooth(t), { done: go });
-  },
-  finish() {
-    if (this.done) return; this.done = true;
-    G.storyFade = 1; tween(0.45, t => G.storyFade = 1 - t);
-    loop('bgm', 0.45);                              // HandleStoryFinished: AudioManager.PlayBG()
-    loadLevel(0);
-  },
-  update(dt) { if (G.phase !== 'story' || this.out) return; this.t += dt; if (this.t >= CFG.story[this.i].dur) this.next(); },
-};
-
 // AD: short on-screen line (stands in for the server-streamed tutorial VO)
 const Caption = {
   str: '', a: 0, timer: null,
@@ -360,7 +340,7 @@ function starBurst(x, y) {
 function confettiRain(n) { for (let i = 0; i < n; i++) confetti.push({ x: rand(0, W), y: rand(-H * 0.6, -20), vx: rand(-60, 60), vy: rand(260, 520), rot: rand(0, 6), vr: rand(-8, 8), s: rand(16, 30), c: pick(CONF_COL), life: 5, age: 0 }); }
 function confettiBurst(x, y, n) { for (let i = 0; i < n; i++) { const a = rand(-Math.PI, 0), v = rand(500, 1300); confetti.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, rot: rand(0, 6), vr: rand(-10, 10), s: rand(16, 30), c: pick(CONF_COL), life: 4, age: 0 }); } }
 function spawnWind() { // streaks blow in through the broken window across the room
-  const r = L.in; winds.push({ x: r.x + rand(-60, r.w * 0.55), y: r.y + rand(r.h * 0.12, r.h * 1.15), len: rand(150, 300), v: rand(650, 1050), age: 0, life: rand(0.9, 1.5), amp: rand(10, 26), ph: rand(0, 6), w: rand(4, 8) });
+  const r = L.in; winds.push({ x: r.x + rand(-60, r.w * 0.55), y: r.y + rand(r.h * 0.12, r.h * 1.15), len: rand(150, 300), v: rand(650, 1050), age: 0, life: rand(0.9, 1.4), amp: rand(8, 18), ph: rand(0, 6), w: rand(3, 5) });
 }
 
 // ───────────────────────── input (DraggableShape) ─────────────────────────
@@ -371,8 +351,7 @@ cv.addEventListener('pointerdown', e => {
   const pp = toL(e);
   if (EndCard.on) { if (EndCard.t > 0.4) cta(); return; }
   if (L.dl && inR(pp, L.dl, 6)) { cta(); return; }   // DOWNLOAD NOW
-  if (G.phase === 'story') { if (L.skip && inR(pp, L.skip, 8)) { sfx('pop'); Story.finish(); } else Story.next(); return; }
-  if (G.phase === 'banner') { for (const b of Banner.btns) if (inR(pp, b, 10)) { Banner.press(b.id); return; } return; }
+  if (G.phase === 'banner') return;                  // AD: banners take no input
   if (G.phase !== 'play') return;
   G.idle = 0; if (hand.on && !G.tut) hideHint();     // IdleHandTutorial: any touch hides the idle hint
   // topmost tray piece under the finger (BoxCollider2D.OverlapPoint) — AD: +18px touch slop for small fingers on phones
@@ -414,10 +393,9 @@ function update(dt) {
   G.T += dt;
   for (const t of tweens.slice()) { t.t += dt; if (t.t < 0) continue; const k = clamp(t.t / t.dur, 0, 1); t.fn(t.ease(k)); if (k >= 1) { tweens.splice(tweens.indexOf(t), 1); t.done && t.done(); } }
   for (const t of timers.slice()) { t.t -= dt; if (t.t <= 0) { timers.splice(timers.indexOf(t), 1); t.fn(); } }
-  Story.update(dt);
   if (EndCard.on) EndCard.t += dt; if (Banner.kind) Banner.t += dt;
   // CountdownTimer + FreezeMeterValue (meter -= dt / duration); MissionResolver fails on whichever hits 0 first
-  if (G.phase === 'play' && G.meterActive) {
+  if (G.phase === 'play' && G.meterActive && G.firstTouch >= 0) { // AD: the freeze timer starts on the viewer's first touch
     G.remaining = Math.max(0, G.remaining - dt); G.meter = clamp(G.meter - dt / G.duration, 0, 1);
     G.frostTarget = clamp((CFG.frostStart - G.meter) / CFG.frostStart, 0, 1);  // InverseLerp(0.5, 0, v)
     if (G.meter <= 0 || G.remaining <= 0) failed();
@@ -442,22 +420,20 @@ function update(dt) {
   // fx
   for (let i = parts.length - 1; i >= 0; i--) { const p = parts[i]; p.age += dt; if (p.age >= p.life) { parts.splice(i, 1); continue; } p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.92; p.vy *= 0.92; p.rot += (p.vr || 0) * dt; }
   for (let i = confetti.length - 1; i >= 0; i--) { const c = confetti[i]; c.age += dt; if (c.age >= c.life || c.y > H + 60) { confetti.splice(i, 1); continue; } c.vy = Math.min(c.vy + 900 * dt, 560); c.vx *= 0.985; c.x += c.vx * dt + Math.sin(c.age * 4 + c.rot) * 40 * dt; c.y += c.vy * dt; c.rot += c.vr * dt; }
-  if ((G.phase === 'play' || G.phase === 'story' && false) && G.windA > 0 && Math.random() < dt * 9) spawnWind();
+  if (G.phase === 'play' && G.windA > 0 && Math.random() < dt * 3.5) spawnWind(); // AD: lighter than the scene's stormy windlines
   for (let i = winds.length - 1; i >= 0; i--) { const w = winds[i]; w.age += dt; if (w.age >= w.life) { winds.splice(i, 1); continue; } w.x += w.v * dt; }
-  // AD: fallback — never leave a viewer without the install screen
-  if (G.firstTouch >= 0 && G.T - G.firstTouch > CFG.fallbackSeconds && !EndCard.on && G.phase !== 'play') EndCard.show('time');
 }
 
 // ───────────────────────── drawing helpers ─────────────────────────
 function img(k, x, y, w, h, a = 1) { const im = typeof k === 'string' ? IMG[k] : k; if (!im || a <= 0) return; if (a < 1) { ctx.globalAlpha *= a; ctx.drawImage(im, x, y, w, h); ctx.globalAlpha /= a; } else ctx.drawImage(im, x, y, w, h); }
 function cover(k, x, y, w, h, ax = 0.5, ay = 0.5) { const im = IMG[k]; if (!im) return; const s = Math.max(w / im.width, h / im.height), dw = im.width * s, dh = im.height * s; ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); ctx.drawImage(im, x + (w - dw) * ax, y + (h - dh) * ay, dw, dh); ctx.restore(); }
-function slice9(k, x, y, w, h, b, bs = 1) { // Image.Type.Sliced
+function slice9(k, x, y, w, h, b, bs = 1, cx = ctx) { // Image.Type.Sliced
   const im = typeof k === 'string' ? IMG[k] : k; if (!im) return;
   const [l, t, r, bo] = b, sw = im.width, sh = im.height, L2 = l * bs, T2 = t * bs, R2 = r * bs, B2 = bo * bs;
   const xs = [0, l, sw - r, sw], ys = [0, t, sh - bo, sh], dx = [x, x + L2, x + w - R2, x + w], dy = [y, y + T2, y + h - B2, y + h];
   for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
     const sW = xs[i + 1] - xs[i], sH = ys[j + 1] - ys[j], dW = dx[i + 1] - dx[i], dH = dy[j + 1] - dy[j];
-    if (sW > 0 && sH > 0 && dW > 0 && dH > 0) ctx.drawImage(im, xs[i], ys[j], sW, sH, dx[i], dy[j], dW + (i < 2 ? 0.5 : 0), dH + (j < 2 ? 0.5 : 0));
+    if (sW > 0 && sH > 0 && dW > 0 && dH > 0) cx.drawImage(im, xs[i], ys[j], sW, sH, dx[i], dy[j], dW + (i < 2 ? 0.5 : 0), dH + (j < 2 ? 0.5 : 0));
   }
 }
 function rr(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
@@ -481,7 +457,7 @@ function drawRoom() {
 }
 function drawWindow(T) {
   const f = L.frame, r = L.in;
-  slice9('frame', f.x, f.y, f.w, f.h, [190 * 0.62, 75 * 0.62, 195 * 0.62, 75 * 0.62]);
+  slice9('frame', f.x, f.y, f.w, f.h, [190 * 0.62, 75 * 0.62, 195 * 0.62, 75 * 0.62], FRAME_BS);
   // OutsideEnvironmentWinter (Donkey_BG + 44% black layer) crossfading to OutsideEnvironmentNormal (+ glass shades)
   ctx.save(); ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.clip();
   img('outside', r.x - 1, r.y - 1, r.w + 2, r.h + 2);
@@ -492,13 +468,12 @@ function drawWindow(T) {
   if (G.winterA < 1) img(tinted('shades', 177, 254, 255), r.x, r.y, r.w, r.h, 0.5 * (1 - G.winterA));
   ctx.restore();
   // slots (dashed outline sprites)
-  if (G.phase !== 'story') for (const s of G.slots) { const sr = slotRect(s); img(s.d.key ? s.d.key + '_slot' : null, sr.x, sr.y, sr.w, sr.h, 0.95); }
+  for (const s of G.slots) { const sr = slotRect(s); img(s.d.key ? s.d.key + '_slot' : null, sr.x, sr.y, sr.w, sr.h, 0.95); }
 }
 function drawPiece(p, r, stroke) {
   const [cr, cg, cb, ca] = CFG.pieceTint;
   // AD: loose pieces (tray / drag) use a stronger glass tint so they read on small portrait screens; placed panes keep 0.314
   img(tinted(p.key + '_piece', cr, cg, cb), r.x, r.y, r.w, r.h, stroke ? CFG.loosePieceAlpha : ca);
-  if (stroke && IMG.shades) { ctx.save(); ctx.globalAlpha *= 0.55; img(IMG.shades, r.x, r.y, r.w, r.h); ctx.restore(); }
   if (stroke) { const [sr, sg, sb] = CFG.strokeTint, ew = r.w * 0.05, eh = r.h * 0.07; img(tinted(p.key + '_stroke', sr, sg, sb), r.x - ew / 2, r.y - eh / 2, r.w + ew, r.h + eh); }
 }
 function drawPlacedPieces() { for (const p of G.pieces) if (p.state === 'placed' || p.state === 'snap') drawPiece(p, pieceRect(p), false); }
@@ -506,14 +481,14 @@ function drawCurtain(T) { // Curtain prefab: 4-bone chain, CurtainSway (1.67s lo
   const im = IMG.curtain; if (!im) return;
   const c = L.curtain, calm = G.curtainCalm, amp = lerp(1, 0.18, calm);
   const sway = (Math.sin(T * 0.6 * 6.283) * 4 + Math.sin(T * 1.7 * 6.283) * 1.5) * amp; // CurtainWaveEffect values
-  const N = 22, sw = im.width / N, dw = c.w / N;
-  ctx.save(); ctx.translate(c.x, c.y); ctx.rotate((sway + calm * 6) * Math.PI / 180);
-  const billow = 1 + Math.sin(T * 0.8 * 6.283) * 0.02 * amp;
-  ctx.scale(billow, 1);
+  // the cloth hangs from its top-left (rod) and ripples more towards the hem
+  const N = 26, sh = im.height / N, dh = c.h / N;
+  ctx.save(); ctx.translate(c.x, c.y); ctx.rotate((sway * 0.6 - calm * 3) * Math.PI / 180);
+  const billow = 1 + Math.sin(T * 0.8 * 6.283) * 0.03 * amp;
   for (let i = 0; i < N; i++) {
-    const u = i / N, k = Math.pow(u, 1.35);
-    const dy = Math.sin(T * 6.283 / 1.667 - u * 3.2) * 18 * k * amp + Math.sin(T * 9 - u * 6) * 4 * k * amp;
-    ctx.drawImage(im, i * sw, 0, sw + 1, im.height, i * dw, dy, dw + 1.2, c.h);
+    const v = i / N, k = Math.pow(v, 1.3);
+    const dx = (Math.sin(T * 6.283 / 1.667 - v * 3.4) * 16 + Math.sin(T * 9 - v * 7) * 3) * k * amp;
+    ctx.drawImage(im, 0, i * sh, im.width, sh + 1, dx, i * dh, c.w * (1 + (billow - 1) * k), dh + 1.2);
   }
   ctx.restore();
 }
@@ -521,7 +496,7 @@ function drawWinds() {
   if (G.windA <= 0) return;
   ctx.save(); ctx.lineCap = 'round';
   for (const w of winds) {
-    const k = w.age / w.life, a = Math.sin(k * Math.PI) * 0.55 * G.windA;
+    const k = w.age / w.life, a = Math.sin(k * Math.PI) * 0.34 * G.windA;
     ctx.strokeStyle = `rgba(255,255,255,${a})`; ctx.lineWidth = w.w * (1 - k * 0.5);
     ctx.beginPath();
     for (let s = 0; s <= 10; s++) { const xx = w.x - w.len * (1 - s / 10), yy = w.y + Math.sin(xx * 0.012 + w.ph) * w.amp; if (s === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy); }
@@ -532,16 +507,23 @@ function drawWinds() {
 function drawChar(base, sx, x, y, h, T, period, phase) {
   const s = IMG[base + (G.calm ? '_i' : '_s')]; if (!s) return;
   const w = h * s.width / s.height;
+  // contact shadow on the floor under the feet
+  ctx.save(); ctx.translate(x, y - 6); ctx.scale(1, 0.22);
+  const g = ctx.createRadialGradient(0, 0, 0, 0, 0, w * 0.5);
+  g.addColorStop(0, 'rgba(40,20,60,0.38)'); g.addColorStop(0.7, 'rgba(40,20,60,0.16)'); g.addColorStop(1, 'rgba(40,20,60,0)');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, w * 0.5, 0, 6.283); ctx.fill(); ctx.restore();
   ctx.save(); ctx.translate(x, y);
-  if (!G.calm) { // DayaShivering (0.75s) / TappuShivering (1s) bone loops -> shiver jitter + chills
+  if (!G.calm) { // DayaShivering (0.75s) / TappuShivering (1s) bone loops -> gentle shiver (chills are in the sprite)
     const t = T + phase;
-    ctx.translate(Math.sin(t * 6.283 * 11) * 3 + Math.sin(t * 6.283 / period) * 2, 0);
-    ctx.rotate((Math.sin(t * 6.283 * 8.5) * 0.7 + Math.sin(t * 6.283 / period) * 0.8) * Math.PI / 180);
-    ctx.scale(1 + Math.sin(t * 6.283 * 2 / period) * 0.006, 1 - Math.abs(Math.sin(t * 6.283 / period)) * 0.012);
+    ctx.translate(Math.sin(t * 6.283 * 9) * 1.1 + Math.sin(t * 6.283 / period) * 0.8, 0);
+    ctx.rotate((Math.sin(t * 6.283 * 7) * 0.25 + Math.sin(t * 6.283 / period) * 0.3) * Math.PI / 180);
+    ctx.scale(1, 1 - Math.abs(Math.sin(t * 6.283 / period)) * 0.005);
   } else { // SittingIdle (1.25s)
     ctx.scale(1, 1 + Math.sin(T * 6.283 / 1.25 + phase) * 0.008);
   }
-  ctx.drawImage(s, -w / 2, -h, w, h);
+  // soft drop shadow against the sofa (pre-rendered once — a live canvas blur every frame is slow on phones)
+  const pad = 48, c = shadowed(base + (G.calm ? '_i' : '_s'), w, h, pad, 'rgba(30,20,70,0.28)', 22, 10, 8);
+  ctx.drawImage(c.c, -w / 2 - pad, -h - pad, c.w, c.h);
   ctx.restore();
 }
 function drawFurniture(T) {
@@ -554,8 +536,8 @@ function drawFurniture(T) {
 function drawTray() {
   if (G.trayA <= 0) return;
   const t = L.tray; ctx.save(); ctx.globalAlpha = G.trayA;
-  ctx.shadowColor = 'rgba(40,20,80,0.25)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 8;
-  slice9('tray', t.x, t.y, t.w, t.h, [60, 60, 60, 60]);
+  const tc = shadowed('tray', t.w, t.h, 40, 'rgba(40,20,80,0.25)', 24, 0, 8, (x, px, py, w, h) => slice9('tray', px, py, w, h, [60, 60, 60, 60], 1, x));
+  ctx.drawImage(tc.c, t.x - 40, t.y - 40, tc.w, tc.h);
   ctx.restore();
   ctx.save(); ctx.globalAlpha = G.trayA;
   for (const p of G.pieces) if (p.state === 'tray' || p.state === 'back') drawPiece(p, pieceRect(p), true);
@@ -568,23 +550,23 @@ function drawFrost() { // FrostOverlay + ColdFlakes (screen-space)
 }
 function drawHUD(T) {
   const y = L.hud.y;
-  if (G.phase !== 'story' && G.level) {
+  if (G.level) {
     // HUD/FreezeBG (border.png sliced) + FreezeMeterBar (Rectangle 3396, horizontal fill) + snowflake
     const bx = L.ox + 70, bw = 520, bh = 58, by = y + 34;
-    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 10; ctx.shadowOffsetY = 4;
-    slice9('border', bx, by, bw, bh, [60, 60, 60, 60], 0.45); ctx.restore();
+    const bc = shadowed('border', bw, bh, 20, 'rgba(0,0,0,0.25)', 10, 0, 4, (x, px, py, w, h) => slice9('border', px, py, w, h, [60, 60, 60, 60], 0.45, x));
+    ctx.drawImage(bc.c, bx - 20, by - 20, bc.w, bc.h);
     const ix = bx + 10, iw = bw - 20, ih = bh - 18, iy = by + 9;
     const col = [lerp(145, 230, G.barDanger), lerp(210, 51, G.barDanger), lerp(232, 51, G.barDanger)].map(Math.round); // normal (0.57,0.82,0.91) -> danger (0.9,0.2,0.2)
     if (G.meter > 0) { ctx.save(); ctx.beginPath(); ctx.rect(ix, iy, iw * G.meter, ih); ctx.clip(); img(tinted('bar', col[0], col[1], col[2]), ix, iy, iw, ih); ctx.restore(); }
     const pulse = G.barDanger > 0.5 && !G.resolved ? 1 + 0.08 * Math.sin(T * 14) : 1, ss = 96 * pulse;
-    ctx.save(); ctx.shadowColor = 'rgba(0,60,120,0.45)'; ctx.shadowBlur = 10;
-    img(tinted('snow', ...(G.barDanger > 0.5 ? [255, 255, 255] : [255, 255, 255])), bx - 52 - (ss - 96) / 2, by + bh / 2 - ss / 2, ss, ss); ctx.restore();
+    const sc = shadowed('snow', 96, 96, 16, 'rgba(0,60,120,0.45)', 10, 0, 0), sk = ss / 96;
+    ctx.drawImage(sc.c, bx - 52 - (ss - 96) / 2 - 16 * sk, by + bh / 2 - ss / 2 - 16 * sk, sc.w * sk, sc.h * sk);
   }
   // AD: DOWNLOAD NOW (Playschool kit) — top-right, every screen except the install end card
   if (!EndCard.on && IMG.dlbtn) {
     const dw = 300, dh = dw * IMG.dlbtn.height / IMG.dlbtn.width, dx = W - 26 - dw, dy = y + 4, pl = 1 + 0.035 * Math.sin(T * 5);
     L.dl = { x: dx, y: dy, w: dw, h: dh };
-    ctx.save(); ctx.translate(dx + dw / 2, dy + dh / 2); ctx.scale(pl, pl); ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 12; ctx.shadowOffsetY = 5; ctx.drawImage(IMG.dlbtn, -dw / 2, -dh / 2, dw, dh); ctx.restore();
+    ctx.save(); ctx.translate(dx + dw / 2, dy + dh / 2); ctx.scale(pl, pl); const dc = shadowed('dlbtn', dw, dh, 24, 'rgba(0,0,0,0.35)', 12, 0, 5); ctx.drawImage(dc.c, -dw / 2 - 24, -dh / 2 - 24, dc.w, dc.h); ctx.restore();
   } else L.dl = null;
 }
 function drawHand(T) {
@@ -596,8 +578,8 @@ function drawHand(T) {
   const x = lerp(from.x, to.x, k), y = lerp(from.y, to.y, k), im = IMG.hand; if (!im) return;
   const hs = 170, press = t < CFG.handPause ? 1 - 0.1 * Math.sin(t / CFG.handPause * Math.PI) : 1;
   ctx.save(); ctx.globalAlpha = 0.95 * hand.a; ctx.translate(x, y); ctx.scale(press, press); ctx.rotate(-0.15);
-  ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 8;
-  ctx.drawImage(im, -hs * 0.38, -hs * 0.05, hs, hs); ctx.restore();
+  const hc = shadowed('hand', hs, hs, 28, 'rgba(0,0,0,0.35)', 14, 0, 8);
+  ctx.drawImage(hc.c, -hs * 0.38 - 28, -hs * 0.05 - 28, hc.w, hc.h); ctx.restore();
 }
 function drawCaption() {
   if (Caption.a <= 0.01 || !Caption.str) return;
@@ -625,17 +607,22 @@ function drawBanner(T) {
   // AD portrait: WinImage / tryAgain are landscape; the centre crop is fitted to the width and the rest of the
   // screen is extended with the art's own edge colours (sampled at load) so the banner is never cropped.
   const s = W / (im ? im.width : 608), dw = (im ? im.width : 608) * s, dh = (im ? im.height : 753) * s;
-  const cyB = Math.min(H * 0.41, H - 360 - dh * 0.47), top = cyB - dh / 2;
+  const cyB = H * 0.33, top = cyB - dh / 2; // banner art sits high, characters stand below it
   const off = (1 - b.panel) * H; // panel slides up from below by its height (anchoredPosition + down * rect.height)
   ctx.save(); ctx.globalAlpha = b.a; ctx.translate(0, off);
-  const ec = EDGE[bg] || ['#1b5fe0', '#0b3fc0'];
-  ctx.fillStyle = ec[0]; ctx.fillRect(0, -off, W, top + off + 2);
-  ctx.fillStyle = ec[1]; ctx.fillRect(0, top + dh - 2, W, H - top - dh + 2);
+  const ec = EDGE[bg] || ['27,95,224', '11,63,192'];
+  ctx.fillStyle = `rgb(${ec[0]})`; ctx.fillRect(0, -off, W, top + off + 2);
+  ctx.fillStyle = `rgb(${ec[1]})`; ctx.fillRect(0, top + dh - 2, W, H - top - dh + 2);
   if (im) ctx.drawImage(im, L.cx - dw / 2, top, dw, dh);
+  // feather the art's top / bottom edges into the extension colour (no visible seam)
+  const fb = ctx.createLinearGradient(0, top + dh - 160, 0, top + dh);
+  fb.addColorStop(0, `rgba(${ec[1]},0)`); fb.addColorStop(1, `rgb(${ec[1]})`); ctx.fillStyle = fb; ctx.fillRect(0, top + dh - 160, W, 161);
+  const ft = ctx.createLinearGradient(0, top, 0, top + 120);
+  ft.addColorStop(0, `rgb(${ec[0]})`); ft.addColorStop(1, `rgba(${ec[0]},0)`); ctx.fillStyle = ft; ctx.fillRect(0, top - 1, W, 121);
   ctx.restore();
   // side characters: Tappu from the left, Daya from the right
   const tk = win ? 'win_tappu' : 'lose_tappu', dk = win ? 'win_daya' : 'lose_daya';
-  const ti = IMG[tk], di = IMG[dk], base = Math.min(H - 290, top + dh * 0.97);
+  const ti = IMG[tk], di = IMG[dk], base = H - 200;
   ctx.save(); ctx.globalAlpha = Math.min(1, b.a * 1.5);
   if (ti) { const h = win ? 600 : 560, w = h * ti.width / ti.height, x = L.ox + 40 - (1 - b.side) * (w + 80), bob = win ? Math.sin(T * 5) * 8 : Math.sin(T * 60) * 2.5;
     ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.ellipse(x + w * 0.5, base - 6, w * 0.38, 22, 0, 0, 6.283); ctx.fill();
@@ -644,17 +631,6 @@ function drawBanner(T) {
     ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.ellipse(x + w * 0.52, base - 6, w * 0.36, 22, 0, 0, 6.283); ctx.fill();
     ctx.drawImage(di, x + (win ? 0 : bob), base - h + (win ? -Math.abs(bob) : 0), w, h); }
   ctx.restore();
-  // Retry / Next buttons (win: both, lose: Retry (1) only)
-  b.btns = [];
-  if (b.btn > 0) {
-    const bs = 170 * b.btn, by = Math.min(base + 140, H - 130);
-    const defs = win ? [['retry', 'btn_retry', L.cx - 120], ['next', 'btn_next', L.cx + 120]] : [['retry', 'btn_retry', L.cx]];
-    for (const [id, k, x] of defs) {
-      const pl = id === 'next' || !win ? 1 + 0.05 * Math.sin(T * 6) : 1, s = bs * pl;
-      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 16; ctx.shadowOffsetY = 6; img(k, x - s / 2, by - s / 2, s, s); ctx.restore();
-      b.btns.push({ id, x: x - 85, y: by - 85, w: 170, h: 170 });
-    }
-  }
 }
 /* ───────── install end screen (Playschool): layout in the 1080x1920 design space of the reference end slate ───────── */
 const END_LAYOUT = { icon: { x: 288, y: 301, s: 507 }, text: { x: 120, y: 880 }, btn: { x: 194, y: 1124, w: 691, h: 233 } };
@@ -675,37 +651,10 @@ function drawEndCard(T) {
   ctx.restore();
   ctx.globalAlpha = 1;
 }
-function drawStory(T) { // StoryCanvas_Root: Image_SlideBackground (Room_1), Image_Foreground (storyboard), Caption_BG, Button_Skip, dots
-  ctx.fillStyle = '#14141f'; ctx.fillRect(0, 0, W, H);
-  cover('story_bg', 0, 0, W, H, 0.5, 0.5);
-  ctx.fillStyle = 'rgba(20,20,31,0.25)'; ctx.fillRect(0, 0, W, H);
-  const s = CFG.story[clamp(Story.i, 0, CFG.story.length - 1)], im = IMG[s.img];
-  if (im) {
-    const cw = Math.min(W - 60, 1020), ch = cw * im.height / im.width, cx = L.cx - cw / 2 + Story.x * 1200, cy = H * 0.43 - ch / 2;
-    ctx.save(); ctx.globalAlpha = Story.a;
-    ctx.shadowColor = 'rgba(0,0,0,0.4)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 12; ctx.fillStyle = '#fff'; rr(cx - 10, cy - 10, cw + 20, ch + 20, 30); ctx.fill();
-    ctx.shadowColor = 'transparent'; rr(cx, cy, cw, ch, 22); ctx.clip(); ctx.drawImage(im, cx, cy, cw, ch);
-    ctx.restore();
-  }
-  // caption (bottom 20%, black 65%)
-  const capH = Math.max(H * 0.2, 330), lines = wrap(s.cap, W - 140, 56, 500);
-  ctx.save(); ctx.globalAlpha = Story.a; ctx.fillStyle = 'rgba(0,0,0,0.65)'; ctx.fillRect(0, H - capH, W, capH);
-  lines.forEach((l, i) => text(l, L.cx, H - capH / 2 - (lines.length - 1) * 35 + i * 70 - 20, 56, '#ffffff', null, 'center', 0, 500));
-  ctx.restore();
-  // slide dots
-  for (let i = 0; i < CFG.story.length; i++) { ctx.fillStyle = i === Story.i ? '#ffffff' : 'rgba(255,255,255,0.4)'; ctx.beginPath(); ctx.arc(L.cx + (i - 1) * 44, H - 52, i === Story.i ? 12 : 9, 0, 6.283); ctx.fill(); }
-  // SKIP ▶ (below the DOWNLOAD button)
-  const sw = 230, sh = 84, sx = W - 26 - sw, sy = L.hud.y + 160;
-  L.skip = { x: sx, y: sy, w: sw, h: sh };
-  ctx.fillStyle = 'rgba(0,0,0,0.55)'; rr(sx, sy, sw, sh, 42); ctx.fill();
-  text('SKIP  ▶', sx + sw / 2, sy + sh / 2 + 2, 40, '#ffffff', null, 'center', 0, 600);
-}
-
 function render() {
   const T = G.T;
   ctx.setTransform(DPR * SCALE, 0, 0, DPR * SCALE, 0, 0);
   ctx.clearRect(0, 0, W, H);
-  if (G.phase === 'story') { drawStory(T); drawHUD(T); return; }
   if (EndCard.on && EndCard.a >= 1) { drawEndCard(T); return; }
   drawRoom();
   drawWindow(T);
@@ -721,26 +670,33 @@ function render() {
   drawHand(T);
   drawHUD(T);
   drawBanner(T);
-  if (G.storyFade > 0) { ctx.fillStyle = `rgba(20,20,31,${G.storyFade})`; ctx.fillRect(0, 0, W, H); }
+  if (G.cut > 0) { ctx.fillStyle = `rgba(16,70,200,${G.cut})`; ctx.fillRect(0, 0, W, H); }
   if (EndCard.on) drawEndCard(T);
 }
 
 // ───────────────────────── boot ─────────────────────────
 let lastT = 0;
-function frame(ts) { const dt = Math.min(1 / 30, Math.max(0, (ts - lastT) / 1000)); lastT = ts; update(dt); render(); requestAnimationFrame(frame); }
+function step(ts) {
+  // real-time clock: a slow device runs several fixed sub-steps per frame instead of slowing the game (and the freeze
+  // timer) down; a long gap (tab switch) is capped so nothing jumps.
+  let acc = Math.min(0.25, Math.max(0, (ts - lastT) / 1000)); lastT = ts;
+  while (acc > 1e-4) { const d = Math.min(1 / 30, acc); update(d); acc -= d; }
+  render();
+}
+function frame(ts) { step(ts); requestAnimationFrame(frame); }
 function boot() {
   layout(); window.addEventListener('resize', layout);
   sampleEdges('win_bg'); sampleEdges('lose_bg');
-  // LevelFlow.Start -> ProceedPastIntro: first run shows the intro story, then Level 1
-  Story.start();
+  // AD: no intro story — the ad opens directly on Level 1 (LevelFlow.LoadCurrentLevel)
+  loadLevel(0);
   const ld = document.getElementById('load'); if (ld) ld.remove();
   requestAnimationFrame(t => { lastT = t; requestAnimationFrame(frame); });
 }
-window.__ATC = { G, CFG, EndCard, Banner, Story, // QA hooks
+window.__ATC = { G, CFG, EndCard, Banner, // QA hooks
   solveOne: () => { const p = G.pieces.find(q => q.state === 'tray'); if (!p) return false; const r = pieceRect(p); p.state = 'drag'; p.r = { ...r }; G.drag = { p, ox: 0, oy: 0, id: -1 }; const sr = slotRect(G.slots[p.si]); p.r.x = sr.x + sr.w / 2 - r.w / 2; p.r.y = sr.y + sr.h / 2 - r.h / 2; endDrag(); return true; },
   wrongOne: () => { const p = G.pieces.find(q => q.state === 'tray'); if (!p) return; const r = pieceRect(p); p.state = 'drag'; p.r = { ...r, x: 10, y: 10 }; G.drag = { p, ox: 0, oy: 0, id: -1 }; endDrag(); },
   freeze: () => { G.meter = 0.0001; G.remaining = 0.01; },
-  skipStory: () => Story.finish(),
+  step: ts => step(ts), // QA: drive one display frame at timestamp ts (ms)
   advance: sec => { for (let i = 0, n = Math.round(sec * 60); i < n; i++) update(1 / 60); render(); return G.phase; }, // deterministic clock for QA in throttled tabs
   layout: () => ({ W, H, SCALE, L }), dl: () => L.dl,
 };

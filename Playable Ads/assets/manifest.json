@@ -132,20 +132,6 @@
   "bytes": 418,
   "note": "FreezeMeterBar"
  },
- "btn_retry": {
-  "file": "img/btn_retry.webp",
-  "w": 164,
-  "h": 164,
-  "bytes": 4112,
-  "note": "Retry button"
- },
- "btn_next": {
-  "file": "img/btn_next.webp",
-  "w": 164,
-  "h": 164,
-  "bytes": 3256,
-  "note": "Next button"
- },
  "win_bg": {
   "file": "img/win_bg.webp",
   "w": 608,
@@ -187,34 +173,6 @@
   "h": 462,
   "bytes": 20932,
   "note": "LoseBanner/Tappu"
- },
- "story_bg": {
-  "file": "img/story_bg.webp",
-  "w": 528,
-  "h": 594,
-  "bytes": 4768,
-  "note": "Story slide backgroundSprite (Room_1)"
- },
- "story1": {
-  "file": "img/story1.webp",
-  "w": 970,
-  "h": 552,
-  "bytes": 15366,
-  "note": "Storyboard_1"
- },
- "story2": {
-  "file": "img/story2.webp",
-  "w": 970,
-  "h": 552,
-  "bytes": 28334,
-  "note": "Storyboard_2"
- },
- "story3": {
-  "file": "img/story3.webp",
-  "w": 970,
-  "h": 552,
-  "bytes": 20234,
-  "note": "Storyboard_3"
  },
  "L1_1_slot": {
   "file": "img/L1_1_slot.webp",

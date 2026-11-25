@@ -1,6 +1,6 @@
 # Avoid The Cold: Meta Playable Ad (portrait)
 
-The upload file is **`AvoidTheCold_Playable.html`**: one self-contained HTML5 file of about **1.21 MB**, with no external requests.
+The upload file is **`AvoidTheCold_Playable.html`**: one self-contained HTML5 file of about **1.11 MB**, with no external requests.
 Everything else in this folder is source, assets and tooling to rebuild it.
 
 ```
@@ -35,15 +35,16 @@ You only need `build_assets.py` when the Unity art or level data changes. `build
 Audio re-encode example (PowerShell):
 `& "Playable Ads\tools\transcode.ps1" -In "Assets\Audio\SFX\BGSound.mp3" -Out "Playable Ads\assets\audio\bgm.mp3" -Bitrate 48000 -Rate 22050`
 
-## Flow (same scene order as the Unity game)
+## Flow
 
-1. **Intro story** (`StoryCanvas_Root` + `SampleStory.asset`): 3 storyboard slides with the original captions, `whooh` slide SFX, fade / slide-from-right transitions, and SKIP. Tapping moves to the next slide.
-2. **Level 1** (`Level_01`, 4 pieces, 30 s), followed by the **WELL DONE** banner, then **Level 2** (`Level_02`, 3 triangular pieces, 27 s).
-3. **Win** (all slots filled): win SFX, confetti, the window crossfades winter→normal, the curtain settles, Daya and Tapu stop shivering, and the tray and wind hide. The WELL DONE banner follows (panel slides up, Tapu and Daya slide in, Retry/Next appear). After the last level it goes to the **Install screen**.
-4. **Fail** (freeze meter or timer reaches 0): the frost overlay and snowflakes build up and the meter turns red. The **TRY AGAIN** banner (shivering Daya and Tapu, Retry) follows, then the **Install screen**. Retry also opens the install screen.
-5. **Install screen**: the Playschool end slate from the reference playable (icon, "Start your FREE TRIAL now!", store badges). A tap anywhere fires the CTA.
+The ad opens directly on the core gameplay (no intro story).
 
-A **DOWNLOAD NOW** button (top-right) is visible during the story and gameplay. It fires the same CTA.
+1. **Level 1** (`Level_01`, 4 pieces, 14 s freeze time). A hand hint and a one-line instruction show what to do. The freeze timer starts on the viewer's first touch.
+2. **Win** (all slots filled): win SFX, confetti, the window crossfades winter→normal, the curtain settles, Daya and Tapu stop shivering, and the tray and wind hide. The **WELL DONE** banner pops up (panel slides up, Tapu and Daya slide in), holds briefly, and the game moves on by itself to **Level 2** — Unity's `Level_04` (5 pieces, 13 s freeze time). After the last level the **Install screen** opens automatically.
+3. **Fail** (freeze meter or timer reaches 0): the frost overlay and snowflakes build up and the meter turns red. The **TRY AGAIN** banner (shivering Daya and Tapu) pops up, holds briefly, and the same level restarts by itself. The fail path never opens the install screen.
+4. **Install screen**: the Playschool end slate from the reference playable (icon, "Start your FREE TRIAL now!", store badges). A tap anywhere fires the CTA.
+
+A **DOWNLOAD NOW** button (top-right) is visible during gameplay. It fires the same CTA.
 
 ## What was carried over from Unity (script → HTML5)
 
@@ -72,20 +73,24 @@ All animation is plain Canvas 2D in a ~50 KB script. **No external libraries** (
 
 ## Ad-only changes (marked `AD:` in `src/game.js`)
 
-- **Portrait layout**: the window is full-width at the top, the sofa with Daya, Tapu and the cupboard is in the middle, and the piece tray is at the bottom. The design space is 1080 wide; taller phones extend vertically and wider screens (tablets) extend horizontally.
-- The **story is shortened** (9/4/6 s → 4.2/2.8/3.4 s). Tapping advances and SKIP is kept.
-- **Result delays are shortened** (win banner 5 s → 2.4 s, lose 2.5 s → 1.4 s). The win banner auto-advances to the next level.
-- **2 levels** are played (`CFG.adLevels = [0, 1]`). All 5 Unity levels are bundled, so playing more only means adding indices.
+- **Portrait layout**: a wide window (opening ~1.42:1, close to the scene's 1.49:1) on the left of the wall, with the curtain attached at its top-right corner in its natural proportions, flying slightly past the screen edge, the sofa with Daya, Tapu and the cupboard in the middle, and the piece tray at the bottom. The design space is 1080 wide; taller phones extend vertically and wider screens (tablets) extend horizontally.
+- **No intro story**: the storyboard slides are not shipped; the ad opens on Level 1 and the freeze timer starts on the first touch.
+- **No buttons on the result banners**: WELL DONE / TRY AGAIN pop up, hold for 2.6 s after their intro animation, then continue automatically (win → next level or install screen, lose → same level again). The only interaction is in gameplay (plus the DOWNLOAD button and the install screen tap).
+- **Softer motion**: a gentler character shiver and lighter wind streaks than the stormy scene. Characters get a floor contact shadow and a soft drop shadow.
+- Result banners: the art sits higher and the characters stand lower, with the edges blended into the extended blue.
+- **Result delays are shortened** (win banner 5 s → 2.4 s, lose 2.5 s → 1.4 s). 
+- **2 levels** are played: Unity `Level_01` then `Level_04` (`CFG.adLevels = [0, 3]`). All 5 Unity levels are bundled, so swapping or adding levels only means changing indices.
+- **Freeze time 10-15 s** per level (`CFG.levelTime = [14, 13]`; Unity: Level_01 30 s, Level_04 24 s).
 - Loose tray pieces use a stronger glass tint (0.62 instead of 0.31) so they read on small screens. Placed panes keep the original 0.31.
 - A one-line on-screen instruction stands in for the tutorial voice-over.
-- The DOWNLOAD NOW button, the install end screen, and a 100 s fallback that opens the install screen were added.
+- The DOWNLOAD NOW button and the install end screen were added.
 - The wind loop gets quieter once the window is sealed.
 
 ## Meta compatibility
 
 | Requirement (Meta playable ads docs) | Status |
 |---|---|
-| Single HTML file ≤ **2 MB** (zip ≤ 5 MB, `index.html` ≤ 2 MB) | ✅ 1.21 MB single file (images 867 KB, audio 255 KB, font 65 KB, code ~50 KB, all as base64) |
+| Single HTML file ≤ **2 MB** (zip ≤ 5 MB, `index.html` ≤ 2 MB) | ✅ 1.11 MB single file (images 768 KB, audio 255 KB, font 65 KB, code ~45 KB, all as base64) |
 | No external network requests / dynamic loading | ✅ All assets are inlined data URIs. Verified in the browser: the only request is the HTML file itself |
 | CTA must call `FbPlayableAd.onCTAClick()` (no parameters) | ✅ `cta()` calls it when present (install screen and DOWNLOAD button). Tested with a mocked `FbPlayableAd` |
 | No JavaScript redirects (`window.open`, `location.href = …`) | ✅ None. Outside Meta (standalone preview) a temporary `<a target=_blank>` opens the install link |
@@ -99,12 +104,12 @@ All animation is plain Canvas 2D in a ~50 KB script. **No external libraries** (
 
 ## Known limitations
 
-- **No voice-over.** The Unity build streams its VO (Intro, Storyboard1-3, Tutorial, Encouragement, Success, Fail…) from a server through `RuntimeAudioLoader`. No local VO clips exist in the project, so the story captions and the instruction line carry the narration.
+- **No voice-over.** The Unity build streams its VO (Tutorial, Encouragement, Success, Fail…) from a server through `RuntimeAudioLoader`. No local VO clips exist in the project, so a one-line on-screen instruction stands in for the tutorial VO.
 - **Character rigs are approximated.** The PSB bone animations are not exported. The shiver and idle use the project's flat sprites with procedural motion instead of the exact bone curves.
 - **The wind loop is trimmed** to a 12 s seamless-ish section of the 110 s `Winters Wind Sfx.mp3` to save space. All audio is re-encoded to 22 kHz mono at 40-48 kbps.
 - The **Back button** (exits to the Playschool menu) and the Playschool `WinLosePanel` / `GameCompleteUI` paths are not used in the ad.
-- Timing is frame-based (`requestAnimationFrame`, dt capped at 1/30 s), so if the ad runs in a background or throttled tab the game simply runs slower instead of skipping ahead.
+- Timing is **real-time**: each display frame runs as many 1/30 s sub-steps as needed, so the freeze meter empties in its set time even on a slow phone (verified at a simulated 12 fps and at 60 fps). Gaps over 0.25 s (tab switch) are capped so nothing jumps. Drop shadows are pre-rendered once, not blurred every frame.
 
 ## QA hooks
 
-`window.__ATC` exposes `skipStory()`, `solveOne()`, `wrongOne()`, `freeze()` (forces a fail), `advance(seconds)` (a deterministic clock for throttled tabs), plus `G` / `CFG` state. They are harmless in production.
+`window.__ATC` exposes `solveOne()`, `wrongOne()`, `freeze()` (forces a fail), `advance(seconds)` (a deterministic clock for throttled tabs), `step(ms)` (drive one display frame), plus `G` / `CFG` state. They are harmless in production.

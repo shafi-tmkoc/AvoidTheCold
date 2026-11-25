@@ -80,8 +80,7 @@ save("hand", scaled("Sprites/NewUI/Hand 2.png", 0.25), q=82, note="HandTutorialH
 save("snow", scaled("Sprites/snowflake.png", 0.4), lossless=True, note="Freeze meter icon")
 save("border", scaled("Sprites/NewUI/border.png", 1), lossless=True, note="FreezeBG 9-slice")
 save("bar", scaled("Sprites/NewUI/Rectangle 3396.png", 1), lossless=True, note="FreezeMeterBar")
-save("btn_retry", scaled("Sprites/NewUI/Ellipse 948.png", 0.32), q=85, note="Retry button")
-save("btn_next", scaled("Sprites/NewUI/Group 39617943.png", 0.32), q=85, note="Next button")
+# (Retry / Next buttons not shipped - the ad's result banners advance automatically)
 
 # ---------------- result banners (ResultBanners/WinBanner + LoseBanner) ----------------
 # WinImage / tryAgain are 1672x941 landscape; the banner art sits in the centre, so a centre crop works for
@@ -96,10 +95,7 @@ save("win_tappu", scaled("Sprites/Grid Screen/win_tappu.png", 0.8), q=80, note="
 save("lose_daya", scaled("Sprites/Grid Screen/DayaShivering.png", 0.8), q=80, note="LoseBanner/Daya")
 save("lose_tappu", scaled("Sprites/Grid Screen/TappuShivering.png", 0.8), q=80, note="LoseBanner/Tappu")
 
-# ---------------- intro story (StoryCanvas_Root + SampleStory.asset) ----------------
-save("story_bg", rgb(scaled("Sprites/NewArt/Environment/Room_1.png", 0.55, crop=(0, 0, 960, 1080))), q=62, note="Story slide backgroundSprite (Room_1)")
-for i in (1, 2, 3):
-    save("story%d" % i, rgb(scaled("Sprites/StoryBoard/Storyboard_%d.png" % i, 0.5)), q=72, note="Storyboard_%d" % i)
+# (intro story / storyboard intentionally not shipped - the ad opens directly on the core gameplay)
 
 # ---------------- level art + layout (ScriptableObjects/Levels/Level_0N.asset) ----------------
 guid = {}

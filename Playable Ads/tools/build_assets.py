@@ -53,9 +53,14 @@ def rgb(im):
 
 
 # ---------------- environment (Board2D) ----------------
-# BG = Room_2.png. Portrait: only the wallpaper part is shipped; skirting/floor colours are drawn in code
-# (sampled: skirting #F96979 y805-855, floor #FEC479).
-save("wall", rgb(scaled("Sprites/NewArt/Environment/Room_2.png", 0.75, crop=(0, 0, 960, 805))), q=70, note="Room_2 wallpaper (BG)")
+# AD: room background = the supplied 1920x899 art (assets/extra/room_bg.jpg: star/flower/cloud wallpaper over teal tiles),
+# rebuilt for portrait from its repeating parts so nothing is stretched. Measured bands (y px):
+#   wallpaper 0-380 (motif rows every ~95 px, tiles seamlessly downward) | teal trim 381-411 | tile grid 412-851
+#   (grid rows every ~75 px: one 4-row block 484-784 repeats seamlessly) | bottom strip 852-899
+_bg = Image.open(os.path.join(PA, "assets", "extra", "room_bg.jpg")).convert("RGB")
+save("wallband", _bg.crop((0, 0, 1920, 381)), q=74, note="room_bg wallpaper band (tiled upward from the floor line)")
+save("floortop", _bg.crop((0, 381, 1920, 484)), q=78, note="room_bg teal trim + first tile row")
+save("floorblock", _bg.crop((0, 484, 1920, 784)), q=74, note="room_bg 4-row tile block (repeats downward)")
 save("frame", scaled("Sprites/NewArt/Environment/Window_3.png", 0.62), q=82, note="WindowFrame, 9-slice L190 T75 R195 B75 (x0.62)")
 save("outside", rgb(scaled("Sprites/NewArt/Environment/Donkey_BG.jpg", 0.72)), q=72, note="OutsideEnvironment Winter/Normal")
 save("shades", scaled("Sprites/NewArt/outline/Shadow/Level2_Shades.png", 1), q=80, note="OutsideEnvironmentNormal/Window glass shading")
@@ -82,18 +87,16 @@ save("border", scaled("Sprites/NewUI/border.png", 1), lossless=True, note="Freez
 save("bar", scaled("Sprites/NewUI/Rectangle 3396.png", 1), lossless=True, note="FreezeMeterBar")
 # (Retry / Next buttons not shipped - the ad's result banners advance automatically)
 
-# ---------------- result banners (ResultBanners/WinBanner + LoseBanner) ----------------
-# WinImage / tryAgain are 1672x941 landscape; the banner art sits in the centre, so a centre crop works for
-# portrait - the code extends the remaining area with the sampled edge blue.
-for key, p in (("win_bg", "Sprites/Grid Screen/WinImage.png"), ("lose_bg", "Sprites/Grid Screen/tryAgain.png")):
-    im = Image.open(src(p)).convert("RGB")
-    cx = im.width // 2
-    im = im.crop((cx - 380, 0, cx + 380, im.height)).resize((608, 753), Image.LANCZOS)
-    save(key, im, q=74, note=p + " centre crop 760px")
-save("win_daya", scaled("Sprites/Grid Screen/win_daya.png", 0.8), q=80, note="WinBanner/Daya")
-save("win_tappu", scaled("Sprites/Grid Screen/win_tappu.png", 0.8), q=80, note="WinBanner/Tappu")
-save("lose_daya", scaled("Sprites/Grid Screen/DayaShivering.png", 0.8), q=80, note="LoseBanner/Daya")
-save("lose_tappu", scaled("Sprites/Grid Screen/TappuShivering.png", 0.8), q=80, note="LoseBanner/Tappu")
+# ---------------- result panel (reference style: Tappu + YOU WIN! / TRY AGAIN! box) ----------------
+# The boxes are the PlaySchool YouWin / TryAgain art (copied into assets/extra from FindTheLatter Sprites/New_Art).
+for k, f in (("tryagain", "TryAgain.png"),):
+    im = Image.open(os.path.join(PA, "assets", "extra", f)).convert("RGBA"); im = im.crop(im.getbbox())
+    im = im.resize((round(im.width * 0.75), round(im.height * 0.75)), Image.LANCZOS)
+    save(k, im, q=85, note="Box " + f + " (trimmed)")
+# happy Tappu = this project's own win_tappu; sad Tappu = the boy from FindTheLatter's Lose.png (assets/extra)
+im = Image.open(os.path.join(PA, "assets", "extra", "sad_tappu.png")).convert("RGBA"); im = im.crop(im.getbbox())
+im = im.resize((round(im.width * 640 / im.height), 640), Image.LANCZOS)
+save("tappu_sad", im, q=84, note="Result panel sad Tappu")
 
 # (intro story / storyboard intentionally not shipped - the ad opens directly on the core gameplay)
 
@@ -147,6 +150,13 @@ for k in ("endbg", "endicon", "endtext", "endbtn", "dlbtn", "shine", "sparkle", 
     im = Image.open(p)
     manifest[k] = {"file": "img/" + k + ".webp", "w": im.width, "h": im.height, "bytes": os.path.getsize(p), "note": "Playschool kit (reference playable)"}
 
+# ---------------- WIN screen: PlaySchool Tappu_WinLose package (pre-made by PetBridge/Playable Ads/tools/winscreen) ----------------
+WS = os.path.join(PA, "assets", "extra", "winscreen")
+for f in sorted(os.listdir(WS)):
+    if f.endswith(".webp"):
+        shutil.copy(os.path.join(WS, f), os.path.join(OUT_IMG, f))
+        im = Image.open(os.path.join(WS, f))
+        manifest[f[:-5]] = {"file": "img/" + f, "w": im.width, "h": im.height, "bytes": os.path.getsize(os.path.join(WS, f)), "note": "Tappu_WinLose win screen"}
 json.dump(manifest, open(os.path.join(PA, "assets", "manifest.json"), "w"), indent=1)
 total = sum(v["bytes"] for v in manifest.values())
 for k, v in sorted(manifest.items(), key=lambda kv: -kv[1]["bytes"])[:25]:

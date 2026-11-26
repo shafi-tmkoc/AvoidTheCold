@@ -32,8 +32,6 @@ const CFG = {
   winDelay: 2.4,                  // AD: ResultScreenUI.showDelaySeconds is 5 (lose = 5/2); shortened for the ad
   loseDelay: 1.4,
   panelT: 0.45, sideT: 0.4,       // ResultBannerIntroAnimation
-  bannerHold: 2.6,                // AD: banner stays this long after its intro animation, then the game moves on by itself
-                                  //     (win -> next level / install screen, lose -> same level again). No buttons.
 };
 const INSTALL_LINK = 'https://playschool.page.link/X2cE';
 const FONT = "'Fredoka','Arial Rounded MT Bold','Trebuchet MS','Segoe UI',Verdana,sans-serif";
@@ -162,11 +160,11 @@ function layout() {
   L.hud = { y: 34 + Math.min(ex * 0.15, 40) };
   // WindowFrame (sliced) — AD: portrait: window on the left of the wall (opening ~1.42:1, close to the scene's 1.49:1),
   // curtain hanging off its right corner
-  const fw = 910, fh = 580;
-  L.frame = { x: ox + 16, y: 210 + ex * 0.22 + Math.min(ex * 0.15, 40), w: fw, h: fh };
+  const fw = 965, fh = 615;                                    // AD: ~6 % bigger than before (910 x 580), same proportions
+  L.frame = { x: ox + 12, y: 250 + ex * 0.22 + Math.min(ex * 0.15, 40), w: fw, h: fh };   // AD: a little lower (was 210)
   L.in = { x: L.frame.x + FRAME_B.l, y: L.frame.y + FRAME_B.t, w: fw - FRAME_B.l - FRAME_B.r, h: fh - FRAME_B.t - FRAME_B.b };
   // floor + furniture (Board2D/BG, Cupboard, Sofa, Mom, Kid)
-  L.floorY = H - 600;
+  L.floorY = H - 660;                                          // AD: sofa, characters, plant and rug sit 60 px higher (was H - 600)
   L.sofa = { w: 980, h: 980 * 415 / 913 }; L.sofa.x = ox + 196; L.sofa.y = L.floorY + 176 - L.sofa.h;
   L.pot = { w: 250, h: 250 * 488 / 220 }; L.pot.x = ox - 14; L.pot.y = L.floorY + 150 - L.pot.h;
   L.mat = { w: 640, h: 640 * 262 / 466 }; L.mat.x = ox + 380; L.mat.y = L.floorY + 120;
@@ -278,26 +276,21 @@ function idleHint() { // FindNextUnplacedIndex — AD: only pieces currently in 
   if (p) showHintFor(p.i);
 }
 
-// ───────────────────────── result banners (ResultScreenUI + ResultBannerIntroAnimation) ─────────────────────────
-// AD: no Retry / Next buttons — the banner pops up, holds, and the game continues by itself
+// ───────────────────────── result panel (reference style) — AD: no buttons, automatic ─────────────────────────
+// The game stays visible behind a light dim; Tappu pops up in the middle (happy on a win, sad on a loss), the
+// YOU WIN! / TRY AGAIN! box springs in under him, then a short line. Win -> next level or install screen, lose -> install screen.
+const RP = { winAdvance: 3.0, loseAdvance: 2.3 };        // AD: seconds the panel stays before moving on by itself
 const Banner = {
-  kind: null, a: 0, panel: 0, side: 0, t: 0, auto: null,
-  show(kind) {
-    this.kind = kind; this.a = 0; this.panel = 0; this.side = 0; this.t = 0;
-    G.phase = 'banner'; sfx('whoosh', { vol: 0.8 });
-    tween(1 / CFG.fader, t => this.a = t);                                            // CanvasGroupFader 0 -> 1
-    tween(CFG.panelT, t => this.panel = t, { ease: E.outCubic });                     // panel from below
-    tween(CFG.sideT, t => this.side = t, { ease: E.outBack, delay: CFG.panelT });     // Tappu from left, Daya from right
-    const hold = CFG.panelT + CFG.sideT + CFG.bannerHold;
-    if (kind === 'win') {
-      confettiRain(90);
-      const last = G.levelPos + 1 >= CFG.adLevels.length;
-      this.auto = after(hold, () => last ? EndCard.show('win') : (fadeCut(), nextLevel()));   // win -> next level / install screen
-    } else {
-      this.auto = after(hold, () => { fadeCut(); loadLevel(G.levelPos); loopVol('wind', 0.29, 0.5); }); // lose -> same level again
+  kind: null, t: 0, advanced: false,
+  show(kind) { this.kind = kind; this.t = 0; this.advanced = false; G.phase = 'banner'; if (kind === 'win') confettiRain(140); sfx('whoosh', { vol: 0.8 }); },
+  hide() { this.kind = null; },
+  step() {
+    if (!this.kind || this.advanced) return;
+    if (this.t >= (this.kind === 'win' ? RP.winAdvance : RP.loseAdvance)) {
+      this.advanced = true;
+      if (this.kind === 'win' && G.levelPos + 1 < CFG.adLevels.length) { this.hide(); fadeCut(); nextLevel(); } else EndCard.show(this.kind);
     }
   },
-  hide() { this.kind = null; kill(this.auto); this.auto = null; },
 };
 // banner -> gameplay: fade out of the banner blue instead of a hard cut
 function fadeCut() { G.cut = 1; tween(0.45, t => G.cut = 1 - t); }
@@ -307,7 +300,7 @@ const EndCard = {
   on: false, t: 0, reason: null, a: 0,
   show(reason) {
     if (this.on) return; this.on = true; this.reason = reason; this.t = 0; G.phase = 'end';
-    Banner.hide(); hideHint(); Caption.hide(); tween(0.4, t => this.a = t); sfx('whoosh', { vol: 0.6 });
+    hideHint(); Caption.hide(); tween(0.4, t => this.a = t); sfx('whoosh', { vol: 0.6 });
     loopVol('wind', 0, 0.5);
   },
 };
@@ -393,7 +386,7 @@ function update(dt) {
   G.T += dt;
   for (const t of tweens.slice()) { t.t += dt; if (t.t < 0) continue; const k = clamp(t.t / t.dur, 0, 1); t.fn(t.ease(k)); if (k >= 1) { tweens.splice(tweens.indexOf(t), 1); t.done && t.done(); } }
   for (const t of timers.slice()) { t.t -= dt; if (t.t <= 0) { timers.splice(timers.indexOf(t), 1); t.fn(); } }
-  if (EndCard.on) EndCard.t += dt; if (Banner.kind) Banner.t += dt;
+  if (EndCard.on) EndCard.t += dt; if (Banner.kind) { Banner.t += dt; Banner.step(); }
   // CountdownTimer + FreezeMeterValue (meter -= dt / duration); MissionResolver fails on whichever hits 0 first
   if (G.phase === 'play' && G.meterActive && G.firstTouch >= 0) { // AD: the freeze timer starts on the viewer's first touch
     G.remaining = Math.max(0, G.remaining - dt); G.meter = clamp(G.meter - dt / G.duration, 0, 1);
@@ -450,10 +443,15 @@ function wrap(str, maxW, size, weight = 500) {
 
 // ───────────────────────── scene drawing ─────────────────────────
 function drawRoom() {
-  // Board2D/BG = Room_2: wallpaper + skirting + floor (sampled colours)
-  cover('wall', 0, 0, W, L.floorY + 2, 0.5, 1);
-  ctx.fillStyle = '#f96979'; ctx.fillRect(0, L.floorY, W, 62);
-  ctx.fillStyle = '#fec479'; ctx.fillRect(0, L.floorY + 62, W, H - L.floorY - 62);
+  // AD: the supplied room art (wallpaper over teal tiles), rebuilt for portrait from its repeating parts at 1:1 scale:
+  // wallpaper bands stacked upward from the floor line, then the teal trim + tile rows repeated down to the bottom.
+  const x0 = L.cx - 960, wb = IMG.wallband, ft = IMG.floortop, fb = IMG.floorblock;
+  if (!wb || !ft || !fb) { ctx.fillStyle = '#fdebb3'; ctx.fillRect(0, 0, W, H); return; }
+  const sx = Math.max(1, W / 1920);                        // wider than 1920 (never on phones): scale up evenly
+  const bw = 1920 * sx, bx = L.cx - bw / 2, bh = wb.height * sx;
+  for (let y = L.floorY - bh; y > -bh; y -= bh - 1) ctx.drawImage(wb, bx, y, bw, bh);
+  ctx.drawImage(ft, bx, L.floorY, bw, ft.height * sx);
+  for (let y = L.floorY + ft.height * sx - 1; y < H; y += fb.height * sx - 1) ctx.drawImage(fb, bx, y, bw, fb.height * sx);
 }
 function drawWindow(T) {
   const f = L.frame, r = L.in;
@@ -583,11 +581,12 @@ function drawHand(T) {
 }
 function drawCaption() {
   if (Caption.a <= 0.01 || !Caption.str) return;
-  const y = L.frame.y + L.frame.h + 70, lines = wrap(Caption.str, 900, 50, 600);
+  // AD: in the strip between the top bar and the window, so it never covers the characters on the sofa
+  const y = (L.hud.y + 122 + L.frame.y) / 2, lines = wrap(Caption.str, 960, 44, 600);
   ctx.save(); ctx.globalAlpha = Caption.a;
-  ctx.font = `600 50px ${FONT}`; const tw = Math.max(...lines.map(l => ctx.measureText(l).width)) + 70, th = lines.length * 60 + 34;
-  ctx.fillStyle = 'rgba(30,20,70,0.72)'; rr(L.cx - tw / 2, y - th / 2, tw, th, 34); ctx.fill();
-  lines.forEach((l, i) => text(l, L.cx, y - (lines.length - 1) * 30 + i * 60, 50, '#ffffff', null));
+  ctx.font = `600 44px ${FONT}`; const tw = Math.max(...lines.map(l => ctx.measureText(l).width)) + 64, th = lines.length * 52 + 30;
+  ctx.fillStyle = 'rgba(30,20,70,0.72)'; rr(L.cx - tw / 2, y - th / 2, tw, th, 30); ctx.fill();
+  lines.forEach((l, i) => text(l, L.cx, y - (lines.length - 1) * 26 + i * 52, 44, '#ffffff', null));
   ctx.restore();
 }
 function drawFx() {
@@ -601,36 +600,55 @@ function drawFx() {
   ctx.globalAlpha = 1;
   for (const c of confetti) { ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(c.rot); ctx.scale(1, Math.cos(c.rot * 2)); ctx.fillStyle = c.c; ctx.fillRect(-c.s / 2, -c.s / 4, c.s, c.s / 2); ctx.restore(); }
 }
-function drawBanner(T) {
+/* ───────── WIN screen: PlaySchool asset library Tappu_WinLose.unitypackage (WinLose.prefab + Tappu_Win.anim) ─────────
+   Drawn like the prefab, back to front: Shine (turns 0 -> 90 deg and pulses), orange Circle, two Trumpets (squash, pivot at the
+   mouthpiece), Tappu (frames recorded from the rig in Unity; the 1.2 s loop is mirrored, so 10 frames play forward then back
+   at 15 fps), Ribbon (bobs and pulses) with YOU WIN! on it. Data: tools/winscreen (make_winscreen.py / WinFrameRecorder.cs). */
+const WINS = {"source":"Tappu_WinLose.unitypackage: WinLose.prefab + Tappu_Win.anim (1.2 s loop)","fps":30,"length":1.2,"tappu":{"cols":5,"fw":526,"fh":520,"ppu":85,"frames":[0,2,4,6,8,10,12,14,16,18],"left":-3.0938,"top":3.6719,"w":6.1875,"h":6.1172},"circle":{"d":5.0348,"color":"#ffa606"},"shine":{"size":25.2704},"trumpet":{"w":29.5318,"h":15.0788,"px":0.06421174,"py":0.5386851,"x":0,"y":-0.7033,"rot":21.193},"ribbon":{"w":15.2576,"h":3.8442},"curves":[[0,0.33557,0.15,-3.1737,0.57581],[0.2,0.33435,0.14912,-3.172,0.57531],[0.8,0.33108,0.14675,-3.1673,0.57389],[1.77,0.32635,0.14333,-3.1598,0.57167],[3.09,0.32074,0.13927,-3.15,0.56876],[4.73,0.31483,0.135,-3.1383,0.56528],[6.67,0.30922,0.13095,-3.125,0.56134],[8.88,0.30449,0.12752,-3.1106,0.55705],[11.36,0.30122,0.12516,-3.0954,0.55253],[14.06,0.3,0.12428,-3.0798,0.5479],[16.98,0.30122,0.12516,-3.0642,0.54327],[20.07,0.30449,0.12752,-3.049,0.53875],[23.33,0.30922,0.13095,-3.0346,0.53447],[26.73,0.31483,0.135,-3.0214,0.53053],[30.25,0.32074,0.13927,-3.0097,0.52704],[33.85,0.32635,0.14333,-2.9999,0.52413],[37.53,0.33108,0.14675,-2.9924,0.52191],[41.25,0.33435,0.14912,-2.9876,0.5205],[45,0.33557,0.15,-2.986,0.52],[48.75,0.33435,0.14912,-2.9876,0.5205],[52.47,0.33108,0.14675,-2.9924,0.52191],[56.15,0.32635,0.14333,-2.9999,0.52413],[59.75,0.32074,0.13927,-3.0097,0.52704],[63.27,0.31483,0.135,-3.0214,0.53053],[66.67,0.30922,0.13095,-3.0346,0.53447],[69.93,0.30449,0.12752,-3.049,0.53875],[73.03,0.30122,0.12516,-3.0642,0.54327],[75.94,0.3,0.12428,-3.0798,0.5479],[78.64,0.30122,0.12516,-3.0954,0.55253],[81.11,0.30449,0.12752,-3.1106,0.55705],[83.33,0.30922,0.13095,-3.125,0.56134],[85.27,0.31483,0.135,-3.1383,0.56528],[86.91,0.32074,0.13927,-3.15,0.56876],[88.23,0.32635,0.14333,-3.1598,0.57167],[89.2,0.33108,0.14675,-3.1673,0.57389],[89.8,0.33435,0.14912,-3.172,0.57531],[90,0.33557,0.15,-3.1737,0.57581]],"order":"shine, circle, trumpets, Tappu, ribbon (checked against a full Unity render)"};
+function winCurves(t) {
+  const c = WINS.curves, ft = (t % WINS.length) * WINS.fps, i = Math.min(c.length - 2, Math.floor(ft)), f = ft - i;
+  return c[i].map((v, k) => v + (c[i + 1][k] - v) * f);
+}
+function drawWinScreen(t, line) {
+  const sheet = IMG.win_tappu; if (!WINS || !sheet) return false;
+  const M = WINS, cv = winCurves(t), pop = E.outBack(clamp(t / 0.5, 0, 1)), D2R = Math.PI / 180;
+  const U = Math.min(W * 0.86 / (M.ribbon.w * M.curves[0][4]), H * 0.46 / 9.6), cx = W / 2, cy = H * 0.43;   // px per world unit, prefab root on screen
+  ctx.save(); ctx.translate(cx, cy); ctx.scale(U * pop, U * pop);                             // world units from here (y up = -y)
+  if (IMG.win_shine) { const s = M.shine.size * cv[1]; ctx.save(); ctx.rotate(-cv[0] * D2R); ctx.drawImage(IMG.win_shine, -s / 2, -s / 2, s, s); ctx.restore(); }
+  ctx.fillStyle = M.circle.color; ctx.beginPath(); ctx.arc(0, 0, M.circle.d / 2, 0, Math.PI * 2); ctx.fill();
+  if (IMG.win_trumpet) for (const flip of [1, -1]) {                                           // Trumpet_0 (+21 deg) and Trumpet_0 (1) (flipX, -21 deg)
+    const T = M.trumpet, w = T.w * cv[2], h = T.h * 0.15;
+    ctx.save(); ctx.translate(T.x, -T.y); ctx.rotate(-flip * T.rot * D2R); ctx.scale(flip, 1); ctx.drawImage(IMG.win_trumpet, -T.px * w, -(1 - T.py) * h, w, h); ctx.restore();
+  }
+  const n = Math.round((t % M.length) * M.fps) % Math.round(M.length * M.fps), half = Math.round(M.length * M.fps / 2);
+  const k = n <= half ? n : 2 * half - n, si = Math.min(M.tappu.frames.length - 1, Math.round(k / (M.tappu.frames[1] - M.tappu.frames[0])));
+  const A = M.tappu; ctx.drawImage(sheet, (si % A.cols) * A.fw, Math.floor(si / A.cols) * A.fh, A.fw, A.fh, A.left, -A.top, A.w, A.h);
+  const rs = cv[4], rw = M.ribbon.w * rs, rh = M.ribbon.h * rs, ry = -cv[3];
+  if (IMG.win_ribbon) ctx.drawImage(IMG.win_ribbon, -rw / 2, ry - rh / 2, rw, rh);
+  ctx.restore();
+  const ty = cy + (ry - rh * 0.1) * U * pop, fs = rh * 0.36 * U * pop;                         // YOU WIN! on the ribbon's front band
+  if (fs > 4) text('YOU WIN!', cx, ty, fs, '#ffffff', '#a8141c', 'center', 0.16, 600);
+  ctx.save(); ctx.globalAlpha = clamp((t - 0.6) / 0.3, 0, 1);
+  text(line, cx, cy + (ry + rh / 2) * U + 64, 58, '#ffe45c', 'rgba(20,20,40,0.75)', 'center', 0.14, 600); ctx.restore();
+  return true;
+}
+function drawBanner(T) { // reference-style result panel over the dimmed game
   const b = Banner; if (!b.kind) return;
-  const win = b.kind === 'win', bg = win ? 'win_bg' : 'lose_bg', im = IMG[bg];
-  // AD portrait: WinImage / tryAgain are landscape; the centre crop is fitted to the width and the rest of the
-  // screen is extended with the art's own edge colours (sampled at load) so the banner is never cropped.
-  const s = W / (im ? im.width : 608), dw = (im ? im.width : 608) * s, dh = (im ? im.height : 753) * s;
-  const cyB = H * 0.33, top = cyB - dh / 2; // banner art sits high, characters stand below it
-  const off = (1 - b.panel) * H; // panel slides up from below by its height (anchoredPosition + down * rect.height)
-  ctx.save(); ctx.globalAlpha = b.a; ctx.translate(0, off);
-  const ec = EDGE[bg] || ['27,95,224', '11,63,192'];
-  ctx.fillStyle = `rgb(${ec[0]})`; ctx.fillRect(0, -off, W, top + off + 2);
-  ctx.fillStyle = `rgb(${ec[1]})`; ctx.fillRect(0, top + dh - 2, W, H - top - dh + 2);
-  if (im) ctx.drawImage(im, L.cx - dw / 2, top, dw, dh);
-  // feather the art's top / bottom edges into the extension colour (no visible seam)
-  const fb = ctx.createLinearGradient(0, top + dh - 160, 0, top + dh);
-  fb.addColorStop(0, `rgba(${ec[1]},0)`); fb.addColorStop(1, `rgb(${ec[1]})`); ctx.fillStyle = fb; ctx.fillRect(0, top + dh - 160, W, 161);
-  const ft = ctx.createLinearGradient(0, top, 0, top + 120);
-  ft.addColorStop(0, `rgb(${ec[0]})`); ft.addColorStop(1, `rgba(${ec[0]},0)`); ctx.fillStyle = ft; ctx.fillRect(0, top - 1, W, 121);
-  ctx.restore();
-  // side characters: Tappu from the left, Daya from the right
-  const tk = win ? 'win_tappu' : 'lose_tappu', dk = win ? 'win_daya' : 'lose_daya';
-  const ti = IMG[tk], di = IMG[dk], base = H - 200;
-  ctx.save(); ctx.globalAlpha = Math.min(1, b.a * 1.5);
-  if (ti) { const h = win ? 600 : 560, w = h * ti.width / ti.height, x = L.ox + 40 - (1 - b.side) * (w + 80), bob = win ? Math.sin(T * 5) * 8 : Math.sin(T * 60) * 2.5;
-    ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.ellipse(x + w * 0.5, base - 6, w * 0.38, 22, 0, 0, 6.283); ctx.fill();
-    ctx.drawImage(ti, x + (win ? 0 : bob), base - h + (win ? -Math.abs(bob) : 0), w, h); }
-  if (di) { const h = win ? 680 : 680, w = h * di.width / di.height, x = L.ox + 1080 - 40 - w + (1 - b.side) * (w + 80), bob = win ? Math.sin(T * 5 + 1.3) * 8 : Math.sin(T * 55 + 1) * 2.5;
-    ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.ellipse(x + w * 0.52, base - 6, w * 0.36, 22, 0, 0, 6.283); ctx.fill();
-    ctx.drawImage(di, x + (win ? 0 : bob), base - h + (win ? -Math.abs(bob) : 0), w, h); }
-  ctx.restore();
+  const win = b.kind === 'win', t = b.t, last = G.levelPos + 1 >= CFG.adLevels.length;
+  ctx.save(); ctx.globalAlpha = 0.38 * clamp(t / 0.3, 0, 1); ctx.fillStyle = '#0b1a33'; ctx.fillRect(0, 0, W, H); ctx.restore();
+  const line = win ? (last ? 'Everyone is warm!' : 'Well done!') : 'Too cold! Try again!';
+  if (win && drawWinScreen(t, line)) return;                       // win: the Tappu_WinLose package screen
+  const boxCy = H * 0.6, boxW = Math.min(560, W * 0.52), box = IMG[win ? 'youwin' : 'tryagain'], boxH = box ? boxW * box.height / box.width : 300;
+  // Tappu: pops up from a small scale (OutBack); a happy bounce on a win, a slow sad sway on a loss; feet just on the box
+  const ti = IMG[win ? 'tappu_happy' : 'tappu_sad'];
+  if (ti) { const th = Math.min(560, H * 0.29), tw = th * ti.width / ti.height, k = E.outBack(clamp(t / 0.5, 0, 1)), by = boxCy - boxH / 2 + 12;
+    const bounce = win ? -Math.abs(Math.sin(t * 5)) * 18 * clamp((t - 0.5) / 0.3, 0, 1) : 0, sway = win ? 0 : Math.sin(t * 2.2) * 0.04;
+    const sc = shadowed(win ? 'tapH' : 'tapS', tw, th, 26, 'rgba(0,0,0,0.35)', 18, 0, 10, (x, ax, ay, w, h) => x.drawImage(ti, ax, ay, w, h));
+    ctx.save(); ctx.translate(L.cx, by + bounce); ctx.rotate(sway); ctx.scale(k, k); ctx.drawImage(sc.c, -tw / 2 - 26, -th - 26, sc.w, sc.h); ctx.restore(); }
+  // YOU WIN! / TRY AGAIN! box springs in (OutElastic); the lose box wobbles a little
+  if (box) { const k = E.outElastic(clamp((t - 0.2) / 0.7, 0, 1)), bw = boxW * k, bh = bw * box.height / box.width;
+    ctx.save(); ctx.translate(L.cx, boxCy); if (!win) ctx.rotate(Math.sin(t * 10) * 0.025 * clamp(1.6 - t, 0, 1)); ctx.drawImage(box, -bw / 2, -bh / 2, bw, bh); ctx.restore(); }
+  ctx.save(); ctx.globalAlpha = clamp((t - 0.6) / 0.3, 0, 1); text(line, L.cx, boxCy + boxH / 2 + 70, 58, win ? '#ffe45c' : '#ff8a80', 'rgba(20,20,40,0.75)', 'center', 0.14, 600); ctx.restore();
 }
 /* ───────── install end screen (Playschool): layout in the 1080x1920 design space of the reference end slate ───────── */
 const END_LAYOUT = { icon: { x: 288, y: 301, s: 507 }, text: { x: 120, y: 880 }, btn: { x: 194, y: 1124, w: 691, h: 233 } };
@@ -686,7 +704,6 @@ function step(ts) {
 function frame(ts) { step(ts); requestAnimationFrame(frame); }
 function boot() {
   layout(); window.addEventListener('resize', layout);
-  sampleEdges('win_bg'); sampleEdges('lose_bg');
   // AD: no intro story — the ad opens directly on Level 1 (LevelFlow.LoadCurrentLevel)
   loadLevel(0);
   const ld = document.getElementById('load'); if (ld) ld.remove();

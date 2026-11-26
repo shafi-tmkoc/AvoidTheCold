@@ -1,6 +1,6 @@
 # Avoid The Cold: Meta Playable Ad (portrait)
 
-The upload file is **`AvoidTheCold_Playable.html`**: one self-contained HTML5 file of about **1.11 MB**, with no external requests.
+The upload file is **`AvoidTheCold_Playable.html`**: one self-contained HTML5 file of about **1.50 MB**, with no external requests.
 Everything else in this folder is source, assets and tooling to rebuild it.
 
 ```
@@ -40,8 +40,8 @@ Audio re-encode example (PowerShell):
 The ad opens directly on the core gameplay (no intro story).
 
 1. **Level 1** (`Level_01`, 4 pieces, 14 s freeze time). A hand hint and a one-line instruction show what to do. The freeze timer starts on the viewer's first touch.
-2. **Win** (all slots filled): win SFX, confetti, the window crossfades winter→normal, the curtain settles, Daya and Tapu stop shivering, and the tray and wind hide. The **WELL DONE** banner pops up (panel slides up, Tapu and Daya slide in), holds briefly, and the game moves on by itself to **Level 2** — Unity's `Level_04` (5 pieces, 13 s freeze time). After the last level the **Install screen** opens automatically.
-3. **Fail** (freeze meter or timer reaches 0): the frost overlay and snowflakes build up and the meter turns red. The **TRY AGAIN** banner (shivering Daya and Tapu) pops up, holds briefly, and the same level restarts by itself. The fail path never opens the install screen.
+2. **Win** (all slots filled): win SFX, confetti, the window crossfades winter→normal, the curtain settles, Daya and Tapu stop shivering, and the tray and wind hide. The **win panel** pops up: the Tappu_WinLose win screen (cheering Tappu with trumpets and a turning shine, YOU WIN! on the red ribbon) over the dimmed room, with "Well done!" under it and confetti. After 3 s the game moves on to the next level (or the install screen after the last one).
+3. **Fail** (freeze meter or timer reaches 0): the frost overlay and snowflakes build up and the meter turns red. The **lose panel** shows sad Tappu on the red TRY AGAIN! box with "Too cold! Try again!" for 2.3 s, then the **install screen** opens.
 4. **Install screen**: the Playschool end slate from the reference playable (icon, "Start your FREE TRIAL now!", store badges). A tap anywhere fires the CTA.
 
 A **DOWNLOAD NOW** button (top-right) is visible during gameplay. It fires the same CTA.
@@ -59,7 +59,7 @@ A **DOWNLOAD NOW** button (top-right) is visible during gameplay. It fires the s
 | `AnimatorStateOnPuzzleComplete` | Curtain `CurtainSway` → `CurtainSwayToNormal`. Daya/Tappu Shivering → SittingIdle (sprite swap, as in the anim). |
 | `HideOnPuzzleComplete` / `ShowOnPuzzleComplete` | Tray and wind lines fade out. Confetti plays. |
 | `LevelTutorialSequencer` / `IdleHandTutorial` / `HandTutorialUI` | Hand hint for the first 2 pieces of level 1, then an idle hint after 7 s. The hand moves 0.9 s with a 0.3 s pause at each end. |
-| `ResultScreenUI` / `ResultBannerIntroAnimation` | Panel slides up 0.45 s OutCubic, sides slide in 0.4 s OutBack, then the buttons appear. |
+| Result panel (reference style, replaces `ResultScreenUI` WELL DONE / TRY AGAIN banners) | The game stays visible under a light dim. Tappu pops up in the middle (OutBack 0.5 s): happy and bouncing on a win (cheering pose), sad and gently swaying on a loss (the boy from FindTheLatter's `Lose.png`). The YouWin / TryAgain box springs in under his feet (OutElastic), then the game's line fades in; confetti on a win. Both Tappu images are copied into `assets/extra`. The YouWin / TryAgain boxes are copied into `assets/extra` from FindTheLatter. **Wins now use the Tappu_WinLose screen (see Win screen); this describes the lose panel.** |
 | `AudioManager` | BG music loop (`BGSound`), wind loop (`Winters Wind Sfx`, vol 0.29), `connected`, `win sfx 03`, `whooh`, `bottle-pop`. |
 
 ### Animation implementation
@@ -73,11 +73,12 @@ All animation is plain Canvas 2D in a ~50 KB script. **No external libraries** (
 
 ## Ad-only changes (marked `AD:` in `src/game.js`)
 
-- **Portrait layout**: a wide window (opening ~1.42:1, close to the scene's 1.49:1) on the left of the wall, with the curtain attached at its top-right corner in its natural proportions, flying slightly past the screen edge, the sofa with Daya, Tapu and the cupboard in the middle, and the piece tray at the bottom. The design space is 1080 wide; taller phones extend vertically and wider screens (tablets) extend horizontally.
+- **Portrait layout**: a wide window (opening ~1.42:1, close to the scene's 1.49:1) on the left of the wall, with the curtain attached at its top-right corner in its natural proportions, flying slightly past the screen edge, the sofa with Daya, Tapu and the cupboard in the middle, and the piece tray at the bottom. The window frame is 965 × 615 and starts 250 px from the top; the floor line (sofa, characters, plant, rug) is 660 px above the bottom. The tutorial line sits in the strip between the top bar and the window, so it never covers the characters.
+- **New room background** (supplied art, `assets/extra/room_bg.jpg`, 1920 × 899 landscape) replaces Unity's Room_2 wallpaper and the flat pink skirting / peach floor. It's rebuilt for portrait from its repeating parts at its original scale, so nothing is stretched: the star / flower / cloud wallpaper band (top 380 px) is stacked upward from the floor line, then the teal trim and one 4-row tile block (rows every ~75 px) repeat down to the bottom of the screen. The design space is 1080 wide; taller phones extend vertically and wider screens (tablets) extend horizontally.
 - **No intro story**: the storyboard slides are not shipped; the ad opens on Level 1 and the freeze timer starts on the first touch.
-- **No buttons on the result banners**: WELL DONE / TRY AGAIN pop up, hold for 2.6 s after their intro animation, then continue automatically (win → next level or install screen, lose → same level again). The only interaction is in gameplay (plus the DOWNLOAD button and the install screen tap).
+- **The result panel advances by itself and has no buttons:** a win moves on after 3 s, a loss opens the install screen after 2.3 s. Interaction exists only in gameplay (plus the DOWNLOAD button and the install screen tap).
 - **Softer motion**: a gentler character shiver and lighter wind streaks than the stormy scene. Characters get a floor contact shadow and a soft drop shadow.
-- Result banners: the art sits higher and the characters stand lower, with the edges blended into the extended blue.
+- The Daya and Tappu banner art (WinImage / tryAgain backgrounds, win and shivering poses) is no longer shipped.
 - **Result delays are shortened** (win banner 5 s → 2.4 s, lose 2.5 s → 1.4 s). 
 - **2 levels** are played: Unity `Level_01` then `Level_04` (`CFG.adLevels = [0, 3]`). All 5 Unity levels are bundled, so swapping or adding levels only means changing indices.
 - **Freeze time 10-15 s** per level (`CFG.levelTime = [14, 13]`; Unity: Level_01 30 s, Level_04 24 s).
@@ -86,11 +87,33 @@ All animation is plain Canvas 2D in a ~50 KB script. **No external libraries** (
 - The DOWNLOAD NOW button and the install end screen were added.
 - The wind loop gets quieter once the window is sealed.
 
+## Win screen (PlaySchool Tappu_WinLose package)
+
+Every win uses the screen from the asset-library package `Tappu_WinLose.unitypackage` (prefab `WinLose`, animation `Tappu_Win`, 1.2 s loop), drawn over the dimmed game. From back to front:
+
+- the **shine** turns and pulses;
+- an **orange circle**;
+- two **trumpets**, which squash in time with the music;
+- **Tappu cheering**, with his rigged arms, head and blinking face;
+- the **red ribbon**, which bobs. YOU WIN! is written on it and the game's line sits under it.
+
+How it was made:
+
+- **Tappu's frames are recorded from Unity**, not redrawn. The loop mirrors itself, so 10 frames play forward then back at 15 fps.
+- **The other pieces follow the clip's recorded curves.** The order was checked against a full Unity render.
+- **Art and code are shared by all five playables.** They live in `assets/extra/winscreen` (about 350 KB: `win_tappu`, `win_shine`, `win_trumpet`, `win_ribbon`, `win_screen.json`) and the `drawWinScreen()` block in `src/game.js`.
+- **The master copy is in PetBridge:** `PetBridge/Playable Ads/tools/winscreen`:
+  - `WinFrameRecorder.cs` records the frames in Unity batch mode;
+  - `make_winscreen.py` packs them;
+  - `install_winscreen.py` puts the art and code into a playable.
+
+Timing: the panel stays 3 s, then moves to the next level, or to the install screen after the last one. The lose panel (sad Tappu on TRY AGAIN!) is unchanged.
+
 ## Meta compatibility
 
 | Requirement (Meta playable ads docs) | Status |
 |---|---|
-| Single HTML file ≤ **2 MB** (zip ≤ 5 MB, `index.html` ≤ 2 MB) | ✅ 1.11 MB single file (images 768 KB, audio 255 KB, font 65 KB, code ~45 KB, all as base64) |
+| Single HTML file ≤ **2 MB** (zip ≤ 5 MB, `index.html` ≤ 2 MB) | ✅ 1.08 MB single file (images 735 KB, audio 255 KB, font 65 KB, code ~46 KB, all as base64) |
 | No external network requests / dynamic loading | ✅ All assets are inlined data URIs. Verified in the browser: the only request is the HTML file itself |
 | CTA must call `FbPlayableAd.onCTAClick()` (no parameters) | ✅ `cta()` calls it when present (install screen and DOWNLOAD button). Tested with a mocked `FbPlayableAd` |
 | No JavaScript redirects (`window.open`, `location.href = …`) | ✅ None. Outside Meta (standalone preview) a temporary `<a target=_blank>` opens the install link |

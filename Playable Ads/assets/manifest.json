@@ -1,10 +1,24 @@
 {
- "wall": {
-  "file": "img/wall.webp",
-  "w": 720,
-  "h": 604,
-  "bytes": 4706,
-  "note": "Room_2 wallpaper (BG)"
+ "wallband": {
+  "file": "img/wallband.webp",
+  "w": 1920,
+  "h": 381,
+  "bytes": 11162,
+  "note": "room_bg wallpaper band (tiled upward from the floor line)"
+ },
+ "floortop": {
+  "file": "img/floortop.webp",
+  "w": 1920,
+  "h": 103,
+  "bytes": 3304,
+  "note": "room_bg teal trim + first tile row"
+ },
+ "floorblock": {
+  "file": "img/floorblock.webp",
+  "w": 1920,
+  "h": 300,
+  "bytes": 5826,
+  "note": "room_bg 4-row tile block (repeats downward)"
  },
  "frame": {
   "file": "img/frame.webp",
@@ -132,47 +146,19 @@
   "bytes": 418,
   "note": "FreezeMeterBar"
  },
- "win_bg": {
-  "file": "img/win_bg.webp",
-  "w": 608,
-  "h": 753,
-  "bytes": 20712,
-  "note": "Sprites/Grid Screen/WinImage.png centre crop 760px"
+ "tryagain": {
+  "file": "img/tryagain.webp",
+  "w": 453,
+  "h": 266,
+  "bytes": 16530,
+  "note": "Box TryAgain.png (trimmed)"
  },
- "lose_bg": {
-  "file": "img/lose_bg.webp",
-  "w": 608,
-  "h": 753,
-  "bytes": 22910,
-  "note": "Sprites/Grid Screen/tryAgain.png centre crop 760px"
- },
- "win_daya": {
-  "file": "img/win_daya.webp",
-  "w": 310,
-  "h": 516,
-  "bytes": 21308,
-  "note": "WinBanner/Daya"
- },
- "win_tappu": {
-  "file": "img/win_tappu.webp",
-  "w": 346,
-  "h": 462,
-  "bytes": 21514,
-  "note": "WinBanner/Tappu"
- },
- "lose_daya": {
-  "file": "img/lose_daya.webp",
-  "w": 310,
-  "h": 516,
-  "bytes": 18592,
-  "note": "LoseBanner/Daya"
- },
- "lose_tappu": {
-  "file": "img/lose_tappu.webp",
-  "w": 346,
-  "h": 462,
-  "bytes": 20932,
-  "note": "LoseBanner/Tappu"
+ "tappu_sad": {
+  "file": "img/tappu_sad.webp",
+  "w": 285,
+  "h": 640,
+  "bytes": 31192,
+  "note": "Result panel sad Tappu"
  },
  "L1_1_slot": {
   "file": "img/L1_1_slot.webp",
@@ -740,5 +726,33 @@
   "h": 128,
   "bytes": 2886,
   "note": "Playschool kit (reference playable)"
+ },
+ "win_ribbon": {
+  "file": "img/win_ribbon.webp",
+  "w": 512,
+  "h": 129,
+  "bytes": 5944,
+  "note": "Tappu_WinLose win screen"
+ },
+ "win_shine": {
+  "file": "img/win_shine.webp",
+  "w": 512,
+  "h": 512,
+  "bytes": 45226,
+  "note": "Tappu_WinLose win screen"
+ },
+ "win_tappu": {
+  "file": "img/win_tappu.webp",
+  "w": 2630,
+  "h": 1040,
+  "bytes": 287122,
+  "note": "Tappu_WinLose win screen"
+ },
+ "win_trumpet": {
+  "file": "img/win_trumpet.webp",
+  "w": 480,
+  "h": 245,
+  "bytes": 20362,
+  "note": "Tappu_WinLose win screen"
  }
 }
